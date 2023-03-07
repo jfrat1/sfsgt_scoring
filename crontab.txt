@@ -1,0 +1,1 @@
+* * * * * sh /Users/jfratello/Documents/Code/python/sfsgt_scoring/run.sh > /Users/jfratello/Documents/Code/python/sfsgt_scoring/log.txt
