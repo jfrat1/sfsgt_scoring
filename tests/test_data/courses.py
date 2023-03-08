@@ -1,4 +1,4 @@
-from ...src.classes import Course, Tee, Hole
+from ...src.course import Course, Tee, Hole
 
 PRESIDIO_BLUE_TEE = Tee(
     name='Blue',
@@ -32,23 +32,35 @@ PRESIDIO = Course(
         PRESIDIO_BLACK_TEE,
     ],
     holes=[
-        Hole(num=1, par=4),
-        Hole(num=2, par=5),
-        Hole(num=3, par=4),
-        Hole(num=4, par=3),
-        Hole(num=5, par=4),
-        Hole(num=6, par=4),
-        Hole(num=7, par=3),
-        Hole(num=8, par=4),
-        Hole(num=9, par=5),
-        Hole(num=10, par=5),
-        Hole(num=11, par=4),
-        Hole(num=12, par=4),
-        Hole(num=13, par=3),
-        Hole(num=14, par=4),
-        Hole(num=15, par=3),
-        Hole(num=16, par=4),
-        Hole(num=17, par=4),
-        Hole(num=18, par=5),
+        Hole(num=i, par=par)
+        for i, par in enumerate([
+            4, 5, 4, 3, 4, 4, 3, 4, 5,
+            5, 4, 4, 3, 4, 3, 4, 4, 5,
+        ])
     ]
 )
+
+SHARP_PARK_WHITE_TEE = Tee(
+    name="White",
+    par=72,
+    rating=70.3,
+    slope=125,
+    distance=6195,
+)
+
+SHARP_PARK = Course(
+    name="Sharp Park",
+    tees=[
+        SHARP_PARK_WHITE_TEE,
+    ],
+    holes=[
+        Hole(num=i, par=par)
+        for i, par in enumerate([
+            4, 4, 4, 5, 3, 4, 4, 3, 5,
+            4, 4, 3, 5, 4, 3, 4, 4, 5,
+        ])
+    ]
+)
+
+
+

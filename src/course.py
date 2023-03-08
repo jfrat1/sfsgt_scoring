@@ -36,6 +36,9 @@ class Course():
     def total_par(self) -> int:
         return sum(hole.par for hole in self.holes)
 
+    def num_holes(self) -> int:
+        return len(self.holes)
+
 
 
 

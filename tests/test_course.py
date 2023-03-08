@@ -31,3 +31,7 @@ def test_course_available_tees():
 def test_course_total_par():
     course = test_data.courses.PRESIDIO
     assert course.total_par() == 72
+
+def test_course_num_holes():
+    course = test_data.courses.PRESIDIO
+    assert course.num_holes() == 18
