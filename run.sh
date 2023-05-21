@@ -6,10 +6,13 @@
 EXEC_TIME=`date "+%Y-%m-%d %T"`
 echo "Execution time: ${EXEC_TIME}"
 
-BASEDIR=$(dirname $0)
-echo "Script location: ${BASEDIR}"
+# This is the absolute path to the directory where this shell scrips is located
+# NOTE - requires that we're running in bash, so the files must include the !/bin/bash shebang line
+BASE_DIR_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-PYTHON="${BASEDIR}/.venv/bin/python"
-PY_FILE_PATH="${BASEDIR}/hello_world.py"
+PYTHON="${BASE_DIR_PATH}/.venv/bin/python"
+PY_FILE_PATH="${BASE_DIR_PATH}/python/season_2023.py"
+
+echo "Executing: $PY_FILE_PATH"``
 
 $PYTHON $PY_FILE_PATH
