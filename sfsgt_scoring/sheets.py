@@ -1,5 +1,6 @@
 # Following along with parts of
 # https://www.makeuseof.com/tag/read-write-google-sheets-python/
+import functools
 import pathlib
 import pandas as pd
 from typing import List
@@ -28,14 +29,12 @@ class SheetController():
 
         self.sheet: gspread.spreadsheet.Spreadsheet = gspread_client.open(sheet_name)
 
-    def worksheets(self) -> List[gspread.worksheet.Worksheet]:
-        return self.sheet.worksheets()
-
+    @functools.lru_cache()
     def worksheet(self, worksheet_name: str) -> gspread.worksheet.Worksheet:
         return self.sheet.worksheet(worksheet_name)
 
     def worksheet_to_df(self, worksheet_name: str) -> pd.DataFrame:
-        ws = self.sheet.worksheet(worksheet_name)
+        ws = self.worksheet(worksheet_name)
         return pd.DataFrame.from_records(ws.get_all_records())
 
     def worksheet_range_to_df(
@@ -44,7 +43,7 @@ class SheetController():
         range_name: str,
         has_header_row: bool = False,
     ) -> pd.DataFrame:
-        ws = self.sheet.worksheet(worksheet_name)
+        ws = self.worksheet(worksheet_name)
         values = ws.get_values(range_name)
 
         columns = None
