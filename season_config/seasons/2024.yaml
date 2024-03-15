@@ -1,0 +1,44 @@
+name: SFSGT 2024
+sheet_id: 1qhjZM-opDs_w6xxGDko4vgNa2dgxkeJYA20mly7Aa3M
+players_sheet_name: Player Handicaps
+leaderboard_sheet_name: Leaderboard
+events: {
+  1: {
+    event_name: Presidio,
+    course_name: presidio,
+    tee: blue,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  2: {
+    event_name: Poppy Ridge,
+    course_name: poppy ridge zinfandel/merlot,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B15
+  },
+  3: {
+    event_name: Harding Park,
+    course_name: harding park,
+    tee: blue,
+    type: major,
+    scorecard_sheet_start_cell: B15
+  },
+  4: {
+    event_name: Sharp Park,
+    course_name: sharp park,
+    tee: White,
+    type: standard,
+    scorecard_sheet_start_cell: B15
+  },
+  5: {
+    event_name: Baylands,
+    course_name: baylands,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B15
+  }
+}
+
+
+
