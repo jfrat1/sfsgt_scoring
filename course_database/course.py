@@ -1,7 +1,7 @@
 import pathlib
 
-from pydantic import BaseModel, ConfigDict, field_validator
-from pydantic_yaml import parse_yaml_file_as
+import pydantic
+import pydantic_yaml
 
 
 class CourseLoadError(Exception):
@@ -9,14 +9,14 @@ class CourseLoadError(Exception):
 
 def load_course_file(file_path: pathlib.Path) -> "Course":
     try:
-        return parse_yaml_file_as(Course, file_path)
+        return pydantic_yaml.parse_yaml_file_as(Course, file_path)
 
     except ValueError as exc:
         raise CourseLoadError(f"Unable to load course file at {file_path}.") from exc
 
 
-class Course(BaseModel):
-    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
+class Course(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str
     hole_par: dict[int, int]
@@ -36,7 +36,7 @@ class Course(BaseModel):
             ) from exc
 
 
-    @field_validator('hole_par')
+    @pydantic.field_validator('hole_par')
     @classmethod
     def check_hole_par(cls, hole_pars: dict[int, int]) -> dict[int, int]:
         hole_numbers = list(hole_pars.keys())
@@ -51,8 +51,8 @@ class Course(BaseModel):
         return hole_pars
 
 
-class TeeInfo(BaseModel):
-    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
+class TeeInfo(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
     rating: float
     slope: int
