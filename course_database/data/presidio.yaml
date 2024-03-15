@@ -1,0 +1,28 @@
+{
+  name: presidio,
+  hole_par: {
+    1: 4,
+    2: 5,
+    3: 4,
+    4: 3,
+    5: 4,
+    6: 4,
+    7: 3,
+    8: 4,
+    9: 5,
+    10: 5,
+    11: 4,
+    12: 4,
+    13: 3,
+    14: 4,
+    15: 3,
+    16: 4,
+    17: 4,
+    18: 5,
+  },
+  tees: {
+    black: {rating: 72.6, slope: 135, distance: 6481},
+    white: {rating: 71.1, slope: 132, distance: 6103},
+    blue: {rating: 69.5, slope: 129, distance: 5746},
+  }
+}

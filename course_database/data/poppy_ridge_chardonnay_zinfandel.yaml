@@ -1,0 +1,31 @@
+{
+  name: poppy ridge chardonnay/zinfandel,
+  hole_par: {
+    # Chardonnay
+    1: 4,
+    2: 4,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 4,
+    7: 3,
+    8: 4,
+    9: 5,
+    # Zinfandel
+    10: 4,
+    11: 3,
+    12: 4,
+    13: 4,
+    14: 5,
+    15: 4,
+    16: 3,
+    17: 5,
+    18: 4,
+  },
+  tees: {
+    black: {rating: 74.3, slope: 136, distance: 7048},
+    blue: {rating: 72.4, slope: 132, distance: 6613},
+    white: {rating: 70.2, slope: 128, distance: 6134},
+  }
+}
+

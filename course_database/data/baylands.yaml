@@ -1,0 +1,28 @@
+{
+  name: baylands,
+  hole_par: {
+    1: 5,
+    2: 4,
+    3: 5,
+    4: 3,
+    5: 4,
+    6: 4,
+    7: 4,
+    8: 3,
+    9: 5,
+    10: 4,
+    11: 4,
+    12: 3,
+    13: 5,
+    14: 4,
+    15: 3,
+    16: 4,
+    17: 3,
+    18: 5,
+  },
+  tees: {
+    black: {rating: 72.2, slope: 125, distance: 6680},
+    blue: {rating: 69.6, slope: 119, distance: 6110},
+    white: {rating: 66.8, slope: 110, distance: 5776},
+  }
+}
