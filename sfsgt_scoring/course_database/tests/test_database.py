@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 
-from course_database import database
+from sfsgt_scoring.course_database import database
 
 BAYLANDS_COURSE_DATA_YAML = """
 {

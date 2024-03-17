@@ -1,6 +1,6 @@
 import pathlib
 
-from .config import load_season_config_file, SeasonConfig
+from sfsgt_scoring.season_config.config import load_season_config_file, SeasonConfig
 
 SEASON_CONFIG_PATH = pathlib.Path(__file__).parent / "seasons"
 

@@ -1,7 +1,7 @@
 import pathlib
 from typing import List, Set, NamedTuple
 
-from . import course
+from sfsgt_scoring.course_database import course
 
 class DatabaseLoadError(Exception):
     """Exception to be raised when an error is encountered when loading the database."""

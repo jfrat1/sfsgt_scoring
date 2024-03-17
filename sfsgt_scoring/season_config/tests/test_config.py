@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 
-from season_config import config
+from sfsgt_scoring.season_config import config
 
 TEST_SEASON_CONFIG_YAML = """
 name: SFSGT 2024
@@ -85,3 +85,9 @@ def test_load_season_config_file_wrong_event_keys_raises_error() -> None:
         with pytest.raises(config.SeasonConfigLoadError):
             config.load_season_config_file(config_file)
 
+
+def test_event_names() -> None:
+    with temp_season_config_file() as config_file:
+        season_config = config.load_season_config_file(config_file)
+
+        assert season_config.event_names() == {"Presidio", "Poppy Ridge", "Harding Park"}

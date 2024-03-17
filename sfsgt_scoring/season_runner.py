@@ -1,0 +1,45 @@
+from sfsgt_scoring import season_config, season, spreadsheet
+
+
+class SeasonRunner:
+    """Season runner class responsible for processing a season and updating its spreadsheet.
+
+    Design thoughts:
+    - should construct/hold a sheet controller object - to read and write data to the sheet
+      - may need to consider a few layers of abstraction down this leg to separate the
+        business logic (read player + scorecard data, write event + season results) from
+        low-level logic (read/write specific cells from a specific sheet)
+
+    - should construct/hold a season object - to calculate results data for the season
+
+
+    """
+
+    def __init__(self, season_cfg: season_config.SeasonConfig) -> None:
+        self.season_cfg = season_cfg
+        self.season_sheet = self._create_season_sheet()
+
+    def _create_season_sheet(self) -> spreadsheet.SeasonSheet:
+        sheet_config = spreadsheet.SeasonSheetConfig(
+            sheet_id=self.season_cfg.sheet_id,
+            leaderboard_sheet_name=self.season_cfg.leaderboard_sheet_name,
+            players_sheet_name=self.season_cfg.players_sheet_name,
+            events=self.season_cfg.event_names(),
+        )
+        return spreadsheet.SeasonSheet(config=sheet_config)
+
+    def run(self) -> None:
+        sheet_read_data = self._read_spreadsheet_data()
+        season = self._create_season(spreadsheet_data=sheet_read_data)
+        season_results = season.results()
+        self._write_spreadsheet_data(season_results=season_results)
+        pass
+
+    def _read_spreadsheet_data(self) -> spreadsheet.SeasonSheetReadData:
+        pass
+
+    def _create_season(self, spreadsheet_data: spreadsheet.SeasonSheetReadData) -> season.Season:
+        pass
+
+    def _write_spreadsheet_data(self, season_results: season.SeasonResults) -> None:
+        pass

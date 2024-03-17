@@ -1,1 +1,1 @@
-from .database import database_from_folder, CourseDatabase
+from sfsgt_scoring.course_database.database import database_from_folder, CourseDatabase

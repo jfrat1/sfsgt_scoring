@@ -24,6 +24,9 @@ class SeasonConfig(pydantic.BaseModel):
     leaderboard_sheet_name: str
     events: dict[int, "EventConfig"]
 
+    def event_names(self) -> set[str]:
+        return {event.event_name for event in self.events.values()}
+
     @pydantic.field_validator('events')
     @classmethod
     def check_events(cls, events: dict[int, "EventConfig"]) -> dict[int, "EventConfig"]:
@@ -34,6 +37,7 @@ class SeasonConfig(pydantic.BaseModel):
             raise ValueError("Keys in events dict must be start with 1 and increment by 1 for each new event.")
 
         return events
+
 
 class EventConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
