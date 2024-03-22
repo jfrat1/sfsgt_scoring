@@ -1,0 +1,84 @@
+import pandas as pd
+from pandas import testing as pd_testing
+
+from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
+
+
+def test_numericise_all_values_nominal() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            ["23", "34", "56"],
+            ["1.6", "14.8", "22.7"],
+        ]
+    )
+
+    numericised_df = dataframe.numericise_all_values(input_df)
+    pd_testing.assert_frame_equal(
+        left=numericised_df,
+        right=pd.DataFrame(
+            data=[
+                [23, 34, 56],
+                [1.6, 14.8, 22.7]
+            ]
+        )
+    )
+
+
+def test_numericise_all_values_doesnt_modify_non_numeric_strings() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            ["23", "34", "foo"],
+            ["1.6", "bar", "22.7"],
+        ]
+    )
+
+    numericised_df = dataframe.numericise_all_values(input_df)
+    pd_testing.assert_frame_equal(
+        left=numericised_df,
+        right=pd.DataFrame(
+            data=[
+                [23, 34, "foo"],
+                [1.6, "bar", 22.7]
+            ]
+        )
+    )
+
+
+def test_numericise_all_values_doesnt_modify_empty_strings() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            ["23", "34", ""],
+            ["1.6", "", "22.7"],
+        ]
+    )
+
+    numericised_df = dataframe.numericise_all_values(input_df)
+    pd_testing.assert_frame_equal(
+        left=numericised_df,
+        right=pd.DataFrame(
+            data=[
+                [23, 34, ""],
+                [1.6, "", 22.7]
+            ]
+        )
+    )
+
+
+def test_numericise_all_values_doesnt_modify_numeric_values() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            ["23", "34", 56],
+            ["1.6", 14.8, "22.7"],
+        ]
+    )
+
+    numericised_df = dataframe.numericise_all_values(input_df)
+    pd_testing.assert_frame_equal(
+        left=numericised_df,
+        right=pd.DataFrame(
+            data=[
+                [23, 34, 56],
+                [1.6, 14.8, 22.7]
+            ]
+        )
+    )

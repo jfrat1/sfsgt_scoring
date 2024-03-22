@@ -1,6 +1,7 @@
 import gspread
 import pandas as pd
 
+
 class GoogleWorksheet:
     def __init__(self, worksheet: gspread.worksheet.Worksheet) -> None:
         self.worksheet = worksheet
@@ -10,10 +11,10 @@ class GoogleWorksheet:
 
     def range_to_df(
         self,
-        range_name: str,
+        range: str,
         has_header_row: bool = False,
     ) -> pd.DataFrame:
-        values = self.worksheet.get_values(range_name)
+        values = self.worksheet.get_values(range_name=range)
 
         columns = None
         if has_header_row:
