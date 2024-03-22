@@ -1,9 +1,7 @@
-import pathlib
 from typing import NamedTuple
 
 from sfsgt_scoring.spreadsheet import google
 from sfsgt_scoring.spreadsheet.season import read_data, write_data, worksheet
-
 
 
 class SeasonSheetConfig(NamedTuple):
@@ -12,8 +10,10 @@ class SeasonSheetConfig(NamedTuple):
     players_sheet_name: str
     events: list[str]
 
+
 class SeasonSheetVerificationError(Exception):
     """Exception to be raised if the structure or data of the season sheet is not valid."""
+
 
 class SeasonSheet:
     def __init__(self, config: SeasonSheetConfig) -> None:
@@ -36,13 +36,11 @@ class SeasonSheet:
                 f"Some required worksheets are missing: {missing_worksheets}"
             )
 
-
     def read(self) -> read_data.SeasonSheetReadData:
         pass
 
     def write(self, data: write_data.SeasonSheetWriteData) -> None:
         pass
-
 
 
 class SeasonWorksheets(NamedTuple):

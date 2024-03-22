@@ -1,3 +1,4 @@
+import copy
 from unittest import mock
 
 import pandas as pd
@@ -84,6 +85,59 @@ def create_test_event_worksheet(
         players=players,
         scorecard_start_cell=scorecard_start_cell,
     )
+
+
+def test_player_hole_scores_constructor_all_integer_hole_scores() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
+    event.PlayerHoleScores(
+        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+    )
+
+
+def test_player_hole_scores_constructor_missing_some_hole_scores() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, None, 6, 6, 5, 4, 4, 4, 4, None, 5]
+    event.PlayerHoleScores(
+        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+    )
+
+
+def test_player_hole_scores_constructor_missing_all_hole_scores() -> None:
+    hole_scores = [None] * 18
+    event.PlayerHoleScores(
+        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+    )
+
+
+def test_player_hole_scores_constructor_missing_keys_raises_error() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5]
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.PlayerHoleScores(
+            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 10), hole_scores)}
+        )
+
+
+def test_player_hole_scores_constructor_integer_keys_raises_error() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.PlayerHoleScores(
+            {hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+        )
+
+
+def test_player_hols_scores_construct_string_value_raises_error() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "5", 6, 6, 5, 4, 4, 4, 4, 4, 5]
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.PlayerHoleScores(
+            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+        )
+
+
+def test_player_hols_scores_construct_empty_string_value_raises_error() -> None:
+    hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "", 6, 6, 5, 4, 4, 4, 4, 4, 5]
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.PlayerHoleScores(
+            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+        )
 
 
 def test_is_cell_a1_notation_true() -> None:
@@ -202,3 +256,18 @@ def test_generate_read_data() -> None:
 
     read_data = event_worksheet._generate_read_data(worksheet_data=TEST_WORKSHEET_DATA_PROCESSED)
     assert read_data == EXPECTED_TEST_READ_DATA
+
+
+def test_generate_read_data_with_empty_cells() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    test_data = TEST_WORKSHEET_DATA_PROCESSED.copy()
+    test_data = test_data.astype(object)
+    test_data.loc["Stanton Turner", "9"] = ""
+
+    read_data = event_worksheet._generate_read_data(worksheet_data=test_data)
+
+    expected_read_data = copy.deepcopy(EXPECTED_TEST_READ_DATA)
+    expected_read_data.player_scores["Stanton Turner"]["9"] = None
+
+    assert read_data == expected_read_data

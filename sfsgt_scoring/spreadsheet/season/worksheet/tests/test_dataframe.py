@@ -78,7 +78,47 @@ def test_numericise_all_values_doesnt_modify_numeric_values() -> None:
         right=pd.DataFrame(
             data=[
                 [23, 34, 56],
-                [1.6, 14.8, 22.7]
+                [1.6, 14.8, 22.7],
             ]
         )
     )
+
+
+def test_replace_empty_string_with_none() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            ["23", "34", ""],
+            ["1.6", "14.8", "22.7"],
+        ]
+    )
+
+    modified_df = dataframe.replace_empty_strings_with_none(input_df)
+    expected_df = pd.DataFrame(
+        data=[
+            ["23", "34", None],
+            ["1.6", "14.8", "22.7"],
+        ]
+    )
+    pd_testing.assert_frame_equal(left=modified_df, right=expected_df)
+
+
+def test_replace_empty_string_with_none_integer_values() -> None:
+    input_df = pd.DataFrame(
+        data=[
+            [2, 4, 6],
+            [3, "", 9]
+        ]
+    )
+
+    modified_df = dataframe.replace_empty_strings_with_none(input_df)
+    expected_df = pd.DataFrame(
+        data=[
+            [2, 4, 6],
+            [3, None, 9],
+        ]
+    ).astype(dtype={1: object})  # cast 2nd column to object dtype to match modified_df
+
+    # Beware: this compares null-like values (None). Pandas is warning that a future
+    # version will consider null values non-matching and will raise here.
+    # Fix it when that time comes.
+    pd_testing.assert_frame_equal(left=modified_df, right=expected_df)

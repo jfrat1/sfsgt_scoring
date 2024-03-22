@@ -31,7 +31,7 @@ class PlayerHoleScoresVerificationError(Exception):
     """Exception to be raised when a player hole score definition is invalid when being instantiated."""
 
 
-class PlayerHoleScores(collections.UserDict[int, int | None]):
+class PlayerHoleScores(collections.UserDict[str, int | None]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._verify_keys()
@@ -170,8 +170,11 @@ class EventWorksheet:
             )
 
     def _generate_read_data(self, worksheet_data: pd.DataFrame) -> EventReadData:
-        player_scores: dict[str, PlayerHoleScores] = {}
-        for player_name, scores_ser in worksheet_data.iterrows():
-            player_scores[player_name] = PlayerHoleScores(scores_ser.to_dict())
+        worksheet_data_modified = dataframe.replace_empty_strings_with_none(worksheet_data)
+
+        player_scores = {
+            player_name: PlayerHoleScores(scores_ser.to_dict())
+            for (player_name, scores_ser) in worksheet_data_modified.iterrows()
+        }
 
         return EventReadData(player_scores=player_scores)
