@@ -42,7 +42,7 @@ TEST_WORKSHEET_DATA_PROCESSED = pd.DataFrame(
 )
 
 
-def create_player_hole_scores(hole_scores: list[int]) -> event.PlayerHoleScores:
+def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
     assert len(hole_scores) == 18
 
     hole_numbers = range(1, 19)
@@ -50,7 +50,7 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.PlayerHoleScores:
         str(hole_num): hole_score
         for (hole_num, hole_score) in zip(hole_numbers, hole_scores)
     }
-    return event.PlayerHoleScores(data)
+    return event.HoleScores(data)
 
 
 EXPECTED_TEST_READ_DATA = event.EventReadData(
@@ -82,28 +82,28 @@ def create_test_event_worksheet(
 ) -> event.EventWorksheet:
     return event.EventWorksheet(
         worksheet=stub_google_worksheet(data=raw_worksheet_data),
-        players=players,
+        players=set(players),
         scorecard_start_cell=scorecard_start_cell,
     )
 
 
 def test_player_hole_scores_constructor_all_integer_hole_scores() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
-    event.PlayerHoleScores(
+    event.HoleScores(
         {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
     )
 
 
 def test_player_hole_scores_constructor_missing_some_hole_scores() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, None, 6, 6, 5, 4, 4, 4, 4, None, 5]
-    event.PlayerHoleScores(
+    event.HoleScores(
         {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
     )
 
 
 def test_player_hole_scores_constructor_missing_all_hole_scores() -> None:
     hole_scores = [None] * 18
-    event.PlayerHoleScores(
+    event.HoleScores(
         {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
     )
 
@@ -111,7 +111,7 @@ def test_player_hole_scores_constructor_missing_all_hole_scores() -> None:
 def test_player_hole_scores_constructor_missing_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
-        event.PlayerHoleScores(
+        event.HoleScores(
             {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 10), hole_scores)}
         )
 
@@ -119,7 +119,7 @@ def test_player_hole_scores_constructor_missing_keys_raises_error() -> None:
 def test_player_hole_scores_constructor_integer_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
-        event.PlayerHoleScores(
+        event.HoleScores(
             {hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
         )
 
@@ -127,7 +127,7 @@ def test_player_hole_scores_constructor_integer_keys_raises_error() -> None:
 def test_player_hols_scores_construct_string_value_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "5", 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
-        event.PlayerHoleScores(
+        event.HoleScores(
             {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
         )
 
@@ -135,7 +135,7 @@ def test_player_hols_scores_construct_string_value_raises_error() -> None:
 def test_player_hols_scores_construct_empty_string_value_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "", 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
-        event.PlayerHoleScores(
+        event.HoleScores(
             {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
         )
 

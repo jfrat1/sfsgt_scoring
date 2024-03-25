@@ -20,20 +20,23 @@ def real_players_worksheet() -> google.GoogleWorksheet:
 def test_read_real_players_worksheet() -> None:
     player_ws = players.PlayersWorksheet(
         worksheet=real_players_worksheet(),
-        events=["Presidio", "Poppy Ridge", "Harding Park"],
+        events={"Presidio", "Poppy Ridge", "Harding Park"},
     )
 
     read_data = player_ws.read()
     expected_read_data = players.PlayersReadData(
         player_handicaps={
-            "Stanton Turner": players.PlayerHandicaps(
-                handicap_index_by_event={"Presidio": 14, "Poppy Ridge": 14, "Harding Park": 13.5}
+            "Stanton Turner": players.HandicapIndexByEvent(
+                data={"Presidio": 14, "Poppy Ridge": 14, "Harding Park": 13.5},
+                events={"Presidio", "Poppy Ridge", "Harding Park"},
             ),
-            "John Fratello": players.PlayerHandicaps(
-                handicap_index_by_event={"Presidio": 16, "Poppy Ridge": 16, "Harding Park": 16}
+            "John Fratello": players.HandicapIndexByEvent(
+                data={"Presidio": 16, "Poppy Ridge": 16, "Harding Park": 16},
+                events={"Presidio", "Poppy Ridge", "Harding Park"},
             ),
-            "Steve Harasym": players.PlayerHandicaps(
-                handicap_index_by_event={"Presidio": 8, "Poppy Ridge": 8, "Harding Park": 8.5}
+            "Steve Harasym": players.HandicapIndexByEvent(
+                data={"Presidio": 8, "Poppy Ridge": 8, "Harding Park": 8.5},
+                events={"Presidio", "Poppy Ridge", "Harding Park"},
             ),
         }
     )

@@ -4,8 +4,10 @@ import pathlib
 import pydantic
 import pydantic_yaml
 
+
 class SeasonConfigLoadError(Exception):
     """Exception to be raised when an error is encountered while loading a season config file."""
+
 
 def load_season_config_file(file_path: pathlib.Path) -> "SeasonConfig":
     try:
@@ -43,6 +45,7 @@ class EventConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
 
     event_name: str
+    sheet_name: str
     course_name: str
     tee: str
     type: "EventType"

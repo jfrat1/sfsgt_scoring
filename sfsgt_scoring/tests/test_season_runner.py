@@ -8,6 +8,7 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
     events={
         1: season_config.config.EventConfig(
             event_name="Standard Event",
+            sheet_name="Standard Event Scorecard",
             course_name="course_a",
             tee="white",
             type=season_config.config.EventType.STANDARD,
@@ -15,6 +16,7 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
         ),
         2: season_config.config.EventConfig(
             event_name="Major Event",
+            sheet_name="Major Event Scorecard",
             course_name="course_b",
             tee="blue",
             type=season_config.config.EventType.MAJOR,

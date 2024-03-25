@@ -6,7 +6,7 @@ from pandas import testing as pd_testing
 
 from sfsgt_scoring.spreadsheet.season.worksheet import players
 
-TEST_EVENTS = ["Event A", "Event B"]
+TEST_EVENTS = {"Event A", "Event B"}
 
 TEST_WORKSHEET_DATA_RAW = pd.DataFrame(
     data=[["Geoff", 12.5, 12.0], ["Bolt", 4, 4.3]],
@@ -16,12 +16,14 @@ TEST_WORKSHEET_DATA = TEST_WORKSHEET_DATA_RAW.set_index(keys="Player", inplace=F
 
 EXPECTED_TEST_READ_DATA = players.PlayersReadData(
     player_handicaps={
-        "Geoff": players.PlayerHandicaps(
-            handicap_index_by_event={"Event A": 12.5, "Event B": 12.0}
+        "Geoff": players.HandicapIndexByEvent(
+            data={"Event A": 12.5, "Event B": 12.0},
+            events={"Event A", "Event B"},
         ),
-        "Bolt": players.PlayerHandicaps(
-            handicap_index_by_event={"Event A": 4.0, "Event B": 4.3}
-        )
+        "Bolt": players.HandicapIndexByEvent(
+            data={"Event A": 4.0, "Event B": 4.3},
+            events={"Event A", "Event B"},
+        ),
     }
 )
 
@@ -41,6 +43,21 @@ def test_read_nominal() -> None:
     players_worksheet = create_test_players_worksheet()
 
     assert players_worksheet.read() == EXPECTED_TEST_READ_DATA
+
+
+def test_handicap_by_event_constructor() -> None:
+    players.HandicapIndexByEvent(
+        events={"foo", "bar"},
+        data={"foo": 12.2, "bar": 14.2},
+    )
+
+
+def test_handicap_by_event_constructor_wrong_keys_raises_error() -> None:
+    with pytest.raises(players.PlayerHandicapsVerificationError):
+        players.HandicapIndexByEvent(
+            events={"bar", "baz"},
+            data={"foo": 12.2, "bar": 14.2},
+        )
 
 
 def test_read_with_string_numerics_in_raw_worksheet_data() -> None:

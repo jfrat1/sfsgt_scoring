@@ -1,14 +1,15 @@
 import pathlib
-from typing import List, Set, NamedTuple
+from typing import NamedTuple
 
 from sfsgt_scoring.course_database import course
+
 
 class DatabaseLoadError(Exception):
     """Exception to be raised when an error is encountered when loading the database."""
 
 
 def database_from_folder(courses_dir: pathlib.Path) -> "CourseDatabase":
-    courses: List[course.Course] = []
+    courses: list[course.Course] = []
     for course_file in courses_dir.glob("*"):
         try:
             course_ = course.load_course_file(course_file)
@@ -26,7 +27,7 @@ class GetCourseError(Exception):
 
 
 class CourseDatabase(NamedTuple):
-    courses: List[course.Course]
+    courses: list[course.Course]
 
     def get_course(self, course_name: str) -> course.Course:
         candidate_courses = [course_ for course_ in self.courses if course_.name == course_name]

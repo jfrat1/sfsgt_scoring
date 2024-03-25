@@ -1,4 +1,3 @@
-import collections
 from typing import Any, NamedTuple
 
 import pandas as pd
@@ -24,14 +23,14 @@ READ_DATA_LAST_COL_INDEX = EVENT_WORKSHEET_COLUMNS.index(READ_DATA_LAST_COLUMN)
 
 
 class EventReadData(NamedTuple):
-    player_scores: dict[str, "PlayerHoleScores"]
+    player_scores: dict[str, "HoleScores"]
 
 
 class PlayerHoleScoresVerificationError(Exception):
     """Exception to be raised when a player hole score definition is invalid when being instantiated."""
 
 
-class PlayerHoleScores(collections.UserDict[str, int | None]):
+class HoleScores(dict[str, int | None]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._verify_keys()
@@ -56,6 +55,32 @@ class PlayerHoleScores(collections.UserDict[str, int | None]):
                 )
 
 
+class EventWriteData(NamedTuple):
+    players: dict[str, "PlayerEventWriteData"]
+    birdies: set["PlayerHole"]
+    eagles: set["PlayerHole"]
+    hole_scores_over_max: set["PlayerHole"]
+
+
+class PlayerEventWriteData(NamedTuple):
+    front_9_strokes: int
+    back_9_strokes: int
+    gross_strokes: int
+    net_strokes: int
+    gross_rank: int
+    net_rank: int
+    gross_points: float
+    net_points: float
+    event_points: float
+    event_rank: int
+
+
+class PlayerHole(NamedTuple):
+    player: str
+    hole: int
+
+
+
 class InvalidCellDefinition(Exception):
     """Exception to be raised if a worksheet cell definition is invalid."""
 
@@ -68,7 +93,7 @@ class EventWorksheet:
     def __init__(
         self,
         worksheet: google.GoogleWorksheet,
-        players: list[str],
+        players: set[str],
         scorecard_start_cell: str,
     ) -> None:
         self._worksheet = worksheet
@@ -148,10 +173,11 @@ class EventWorksheet:
 
     def _check_index_labels(self, worksheet_data: pd.DataFrame) -> None:
         expected_index = self._players
-        if not list(worksheet_data.index) == expected_index:
+        index = set(worksheet_data.index)
+        if not index == expected_index:
             raise EventWorksheetVerificationError(
                 f"Worksheet data row labels do not match expectations."
-                f"\nExpected: {expected_index}, \nFound:{worksheet_data.index}"
+                f"\nExpected: {expected_index}, \nFound:{index}"
             )
 
     def _check_data_values(self, worksheet_data: pd.DataFrame) -> None:
@@ -173,7 +199,7 @@ class EventWorksheet:
         worksheet_data_modified = dataframe.replace_empty_strings_with_none(worksheet_data)
 
         player_scores = {
-            player_name: PlayerHoleScores(scores_ser.to_dict())
+            player_name: HoleScores(scores_ser.to_dict())
             for (player_name, scores_ser) in worksheet_data_modified.iterrows()
         }
 

@@ -15,6 +15,7 @@ leaderboard_sheet_name: Leaderboard
 events: {
   1: {
     event_name: Presidio,
+    sheet_name: Presidio Scorecard,
     course_name: presidio,
     tee: blue,
     type: standard,
@@ -22,6 +23,7 @@ events: {
   },
   2: {
     event_name: Poppy Ridge,
+    sheet_name: Poppy Ridge Scorecard,
     course_name: poppy ridge zinfandel/merlot,
     tee: white,
     type: standard,
@@ -29,6 +31,7 @@ events: {
   },
   3: {
     event_name: Harding Park,
+    sheet_name: Harding Park Scorecard,
     course_name: harding park,
     tee: blue,
     type: major,
@@ -36,6 +39,7 @@ events: {
   },
 }
 """
+
 
 @contextlib.contextmanager
 def temp_season_config_file(yaml_data: str = TEST_SEASON_CONFIG_YAML) -> Generator[pathlib.Path, None, None]:
@@ -55,6 +59,7 @@ def test_load_season_config_file() -> None:
         assert season_config.players_sheet_name == "Player Handicaps"
         assert season_config.leaderboard_sheet_name == "Leaderboard"
 
+
 TEST_SEASON_CONFIG_YAML_WRONG_EVENT_KEYS = """
 name: SFSGT 2024
 sheet_id: test_sheet_id
@@ -66,19 +71,20 @@ events: {
     course_name: presidio,
     tee: blue,
     type: standard,
-    sheet_name: Presidio Scorecard,
     scorecard_sheet_start_cell: B8,
+    not_a_key: Foo Bar,
   },
   3: {
     event_name: Harding Park,
     course_name: harding park,
     tee: blue,
     type: major,
-    sheet_name: Harding Park Scorecard,
     scorecard_sheet_start_cell: B8,
+    not_a_key: Foo Bar,
   },
 }
 """
+
 
 def test_load_season_config_file_wrong_event_keys_raises_error() -> None:
     with temp_season_config_file(yaml_data=TEST_SEASON_CONFIG_YAML_WRONG_EVENT_KEYS) as config_file:

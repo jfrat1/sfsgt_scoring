@@ -20,7 +20,7 @@ def real_event_worksheet() -> google.GoogleWorksheet:
     return google_sheet.worksheet(worksheet_name=TEST_WORKSHEET_NAME)
 
 
-def create_player_hole_scores(hole_scores: list[int]) -> event.PlayerHoleScores:
+def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
     assert len(hole_scores) == 18
 
     hole_numbers = range(1, 19)
@@ -28,13 +28,13 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.PlayerHoleScores:
         str(hole_num): hole_score
         for (hole_num, hole_score) in zip(hole_numbers, hole_scores)
     }
-    return event.PlayerHoleScores(data)
+    return event.HoleScores(data)
 
 
 def test_read_real_event_worksheet() -> None:
     event_ws = event.EventWorksheet(
         worksheet=real_event_worksheet(),
-        players=["Stanton Turner", "John Fratello", "Steve Harasym"],
+        players={"Stanton Turner", "John Fratello", "Steve Harasym"},
         scorecard_start_cell=SCORECARD_START_CELL,
     )
     read_data = event_ws.read()

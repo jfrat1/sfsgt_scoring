@@ -20,11 +20,18 @@ class SeasonRunner:
         self.season_sheet = self._create_season_sheet()
 
     def _create_season_sheet(self) -> spreadsheet.SeasonSheet:
+        # Consider not reaching so far into the season config
+        event_configs = {
+            event.event_name: spreadsheet.SeasonSheetEventConfig(
+                sheet_name=event.sheet_name,
+                scorecard_start_cell=event.scorecard_sheet_start_cell,
+            ) for event in self.season_cfg.events.values()
+        }
         sheet_config = spreadsheet.SeasonSheetConfig(
             sheet_id=self.season_cfg.sheet_id,
             leaderboard_sheet_name=self.season_cfg.leaderboard_sheet_name,
             players_sheet_name=self.season_cfg.players_sheet_name,
-            events=self.season_cfg.event_names(),
+            events=event_configs,
         )
         return spreadsheet.SeasonSheet(config=sheet_config)
 

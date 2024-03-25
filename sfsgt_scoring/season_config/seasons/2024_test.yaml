@@ -1,5 +1,5 @@
-name: SFSGT 2024
-sheet_id: 1qhjZM-opDs_w6xxGDko4vgNa2dgxkeJYA20mly7Aa3M
+name: SFSGT 2024 Test
+sheet_id: 1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ
 players_sheet_name: Player Handicaps
 leaderboard_sheet_name: Leaderboard
 events: {
@@ -27,22 +27,6 @@ events: {
     type: major,
     scorecard_sheet_start_cell: B15
   },
-  4: {
-    event_name: Sharp Park,
-    sheet_name: Sharp Park Scorecard (Real),
-    course_name: sharp park,
-    tee: White,
-    type: standard,
-    scorecard_sheet_start_cell: B15
-  },
-  5: {
-    event_name: Baylands,
-    sheet_name: Baylands Scorecard (Real),
-    course_name: baylands,
-    tee: white,
-    type: standard,
-    scorecard_sheet_start_cell: B15
-  }
 }
 
 

@@ -1,6 +1,7 @@
+import collections
+import functools
 from typing import Any, NamedTuple
 
-from gspread import utils
 import pandas as pd
 
 from sfsgt_scoring.spreadsheet import google
@@ -11,11 +12,25 @@ PLAYER_COLUMN_NAME = "Player"
 
 
 class PlayersReadData(NamedTuple):
-    player_handicaps: dict[str, "PlayerHandicaps"]
+    player_handicaps: dict[str, "HandicapIndexByEvent"]
 
 
-class PlayerHandicaps(NamedTuple):
-    handicap_index_by_event: dict[str, float]
+class PlayerHandicapsVerificationError(Exception):
+    """Exception to be raised when player handicap data does not meet expectations."""
+
+
+class HandicapIndexByEvent(dict[str, float]):
+    def __init__(self, data: dict[str, float], events: set[str]):
+        super().__init__(data)
+        self._verify_keys(events)
+
+    def _verify_keys(self, events: set[str]):
+        keys = set(self.keys())
+        if keys != events:
+            raise PlayerHandicapsVerificationError(
+                "Player handicaps keys do not match events list."
+                f"\nExpected: {events} \nFound: {keys}"
+            )
 
 
 class PlayerWorksheetVerificationError(Exception):
@@ -23,7 +38,7 @@ class PlayerWorksheetVerificationError(Exception):
 
 
 class PlayersWorksheet:
-    def __init__(self, worksheet: google.GoogleWorksheet, events: list[str]) -> None:
+    def __init__(self, worksheet: google.GoogleWorksheet, events: set[str]) -> None:
         self._worksheet = worksheet
         self._events = events
 
@@ -31,6 +46,11 @@ class PlayersWorksheet:
         worksheet_data = self._get_worksheet_data()
         return self._generate_read_data(worksheet_data)
 
+    def player_names(self) -> set[str]:
+        worksheet_data = self._get_worksheet_data()
+        return set(worksheet_data.index)
+
+    @functools.lru_cache()
     def _get_worksheet_data(self) -> pd.DataFrame:
         worksheet_data_raw = self._worksheet.to_df()
         worksheet_data = self._process_raw_worksheet_data(worksheet_data_raw)
@@ -84,8 +104,8 @@ class PlayersWorksheet:
         }
         return PlayersReadData(player_handicaps=player_handicaps)
 
-    def _generate_player_handicaps(self, player_row: pd.Series) -> PlayerHandicaps:
+    def _generate_player_handicaps(self, player_row: pd.Series) -> HandicapIndexByEvent:
         handicaps_by_event = {
             event_name: handicap_index for event_name, handicap_index in player_row.items()
         }
-        return PlayerHandicaps(handicap_index_by_event=handicaps_by_event)
+        return HandicapIndexByEvent(data=handicaps_by_event, events=self._events)
