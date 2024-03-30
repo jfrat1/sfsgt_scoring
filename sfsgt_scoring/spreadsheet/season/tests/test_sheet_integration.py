@@ -1,42 +1,15 @@
-from unittest import mock
-
 import pytest
 
 from sfsgt_scoring import season_config
 from sfsgt_scoring.spreadsheet.season import sheet
-from sfsgt_scoring.spreadsheet.season.worksheet import players, event, leaderboard
-
-# This google sheet is a copy of the 2024 sheet with a small amount of fake
-# data input for use in these tests.
-TEST_GOOGLE_SHEET_ID = "1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ"
-# Name of the worksheet that has the player data
-TEST_WORKSHEET_NAME = "Presidio Scorecard (Real)"
+from sfsgt_scoring.spreadsheet.season.worksheet import players, event
 
 pytestmark = pytest.mark.integration
 
 
-def stub_google_sheet_worksheet_titles() -> set[str]:
-    return [
-        "Leaderboard",
-        "Player Handicaps",
-        "Presidio Scorecard (Real)",
-        "Poppy Ridge Scorecard (Real)",
-        "Harding Park Scorecard (Real)",
-    ]
-
-
-def configure_stub_google_sheet(stub: mock.MagicMock) -> None:
-    stub_google_sheet_obj = stub.return_value
-
-    stub_google_sheet_obj.worksheet_titles.side_effect = stub_google_sheet_worksheet_titles
-
-
-# @mock.patch.object(sheet.google, "GoogleSheet", autospec=True)
-def test_sheet_read(
-    # stub_google_sheet: mock.MagicMock,
-) -> None:
-    # configure_stub_google_sheet(stub_google_sheet)
-
+def test_sheet_read() -> None:
+    # This config defines a real spreadsheet which is a copy of the 2024 spreadsheet,
+    # but with fake data for use in these tests.
     config = season_config.load_season_config("2024_test")
 
     event_configs = {

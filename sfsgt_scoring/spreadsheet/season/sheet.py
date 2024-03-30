@@ -78,7 +78,7 @@ class SeasonSheet:
         players_worksheet = self._create_players_worksheet()
         player_names = players_worksheet.player_names()
         return SeasonWorksheets(
-            players=self._create_players_worksheet(),
+            players=players_worksheet,
             leaderboard=self._create_leaderboard_worksheet(player_names=player_names),
             events=self._create_event_worksheets(player_names=player_names),
         )

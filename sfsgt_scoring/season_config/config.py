@@ -29,6 +29,9 @@ class SeasonConfig(pydantic.BaseModel):
     def event_names(self) -> set[str]:
         return {event.event_name for event in self.events.values()}
 
+    def event_configs(self) -> list["EventConfig"]:
+        return list(self.events.values())
+
     @pydantic.field_validator('events')
     @classmethod
     def check_events(cls, events: dict[int, "EventConfig"]) -> dict[int, "EventConfig"]:

@@ -1,0 +1,199 @@
+from typing import Generator, NamedTuple
+
+import pytest
+from unittest import mock
+
+from sfsgt_scoring.spreadsheet.season import sheet
+from sfsgt_scoring.spreadsheet.season.worksheet import event, players
+
+TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
+    sheet_id="test_sheet_id",
+    leaderboard_sheet_name="Leaderboard",
+    players_sheet_name="Player Handicaps",
+    events={
+        "Presidio": sheet.SeasonSheetEventConfig(
+            sheet_name="Presidio Scorecard",
+            scorecard_start_cell="B8",
+        ),
+        "Harding Park": sheet.SeasonSheetEventConfig(
+            sheet_name="Harding Park Scorecard",
+            scorecard_start_cell="B8",
+        ),
+    }
+)
+
+TEST_EVENTS = [
+    "Presidio",
+    "Harding Park",
+]
+
+TEST_PLAYERS = [
+    "Stanton Turner",
+]
+
+TEST_WORKSHEET_TITLES = [
+    "Leaderboard",
+    "Player Handicaps",
+    "Presidio Scorecard",
+    "Harding Park Scorecard",
+]
+
+TEST_PLAYERS_READ_DATA = players.PlayersReadData(
+    player_handicaps={
+        "Stanton Turner": players.HandicapIndexByEvent(
+            data={"Presidio": 12.0, "Harding Park": 12.2},
+            events={"Presidio", "Harding Park"},
+        )
+    }
+)
+
+TEST_PRESIDIO_EVENT_READ_DATA = event.EventReadData(
+    player_scores={
+        "Stanton Turner": event.HoleScores(
+            {
+                '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5
+            }
+        )
+    }
+)
+
+TEST_HARDING_PARK_EVENT_READ_DATA = event.EventReadData(
+    player_scores={
+        "Stanton Turner": event.HoleScores(
+            {
+                '1': 6, '2': 3, '3': 5, '4': 5, '5': 5, '6': 7, '7': 4, '8': 5, '9': 5, '10': 6, '11': 5, '12': 5, '13': 6, '14': 4, '15': 3, '16': 4, '17': 4, '18': 5
+            }
+        )
+    }
+)
+
+
+def configure_google_sheet_stub(stubbed_google_sheet_constructor: mock.MagicMock) -> None:
+    stub_google_sheet = stubbed_google_sheet_constructor.return_value
+    stub_google_sheet.worksheet_titles.return_value = set(TEST_WORKSHEET_TITLES)
+
+
+@pytest.fixture()
+def stub_google_sheet_constructor() -> Generator[mock.MagicMock, None, None]:
+    with mock.patch.object(sheet.google, "GoogleSheet", autospec=True) as stub:
+        configure_google_sheet_stub(stub)
+        yield stub
+
+
+def configure_players_worksheet_stub(stubbed_players_worksheet_constructor: mock.MagicMock) -> None:
+    stub_players_worksheet = stubbed_players_worksheet_constructor.return_value
+    stub_players_worksheet.player_names.return_value = set(TEST_PLAYERS)
+    stub_players_worksheet.read.return_value = TEST_PLAYERS_READ_DATA
+
+
+@pytest.fixture()
+def stub_players_worksheet_constructor() -> Generator[mock.MagicMock, None, None]:
+    with mock.patch.object(sheet.worksheet, "PlayersWorksheet", autospec=True) as stub:
+        configure_players_worksheet_stub(stub)
+        yield stub
+
+
+@pytest.fixture()
+def stub_leaderboard_worksheet_constructor() -> Generator[mock.MagicMock, None, None]:
+    with mock.patch.object(sheet.worksheet, "LeaderboardWorksheet", autospec=True) as stub:
+        yield stub
+
+
+def configure_event_worksheet_stub(stubbed_event_worksheet_constructor: mock.MagicMock) -> None:
+    stub_presidio_worksheet = mock.MagicMock(spec=event.EventWorksheet)
+    stub_presidio_worksheet.read.return_value = TEST_PRESIDIO_EVENT_READ_DATA
+
+    stub_harding_park_worsheet = mock.MagicMock(spec=event.EventWorksheet)
+    stub_harding_park_worsheet.read.return_value = TEST_HARDING_PARK_EVENT_READ_DATA
+
+    stubbed_event_worksheet_constructor.side_effect = [
+        stub_presidio_worksheet,
+        stub_harding_park_worsheet,
+    ]
+
+
+@pytest.fixture()
+def stub_event_worksheet_constructor() -> Generator[mock.MagicMock, None, None]:
+    with mock.patch.object(sheet.worksheet, "EventWorksheet", autospec=True) as stub:
+        configure_event_worksheet_stub(stub)
+        yield stub
+
+
+class CollaboratorStubs(NamedTuple):
+    google_sheet: mock.MagicMock
+    players_worksheet: mock.MagicMock
+    leaderboard_worksheet: mock.MagicMock
+    event_worksheet: mock.MagicMock
+
+
+@pytest.fixture()
+def stubs(
+    stub_google_sheet_constructor: mock.MagicMock,
+    stub_players_worksheet_constructor: mock.MagicMock,
+    stub_leaderboard_worksheet_constructor: mock.MagicMock,
+    stub_event_worksheet_constructor: mock.MagicMock,
+) -> Generator[CollaboratorStubs, None, None]:
+    yield CollaboratorStubs(
+        google_sheet=stub_google_sheet_constructor,
+        players_worksheet=stub_players_worksheet_constructor,
+        leaderboard_worksheet=stub_leaderboard_worksheet_constructor,
+        event_worksheet=stub_event_worksheet_constructor,
+    )
+
+
+def test_sheet_construct(
+    stubs: CollaboratorStubs,
+) -> None:
+    sheet.SeasonSheet(config=TEST_SHEET_CONFIG)
+
+    assert stubs.google_sheet.return_value.worksheet.call_args_list == [
+        mock.call(worksheet_name="Player Handicaps"),
+        mock.call(worksheet_name="Leaderboard"),
+        mock.call(worksheet_name="Presidio Scorecard"),
+        mock.call(worksheet_name="Harding Park Scorecard"),
+    ]
+
+    # The same MagicMock object is returned for all calls to the google_sheet.worksheet()
+    # method. These returned objects are passed along to the worksheet class constructors.
+    shared_worksheet_stub = stubs.google_sheet.return_value.worksheet.return_value
+
+    stubs.players_worksheet.assert_called_once_with(
+        worksheet=shared_worksheet_stub,
+        events=set(TEST_EVENTS),
+    )
+
+    stubs.leaderboard_worksheet.assert_called_once_with(
+        worksheet=shared_worksheet_stub,
+        players=set(TEST_PLAYERS),
+    )
+
+    assert stubs.event_worksheet.call_args_list == [
+        mock.call(
+            worksheet=shared_worksheet_stub,
+            players=set(TEST_PLAYERS),
+            scorecard_start_cell="B8",
+        ),
+        mock.call(
+            worksheet=shared_worksheet_stub,
+            players=set(TEST_PLAYERS),
+            scorecard_start_cell="B8",
+        ),
+    ]
+
+
+def test_sheet_constructor_wrong_worksheet_titles_raises_error(
+    stubs: CollaboratorStubs,
+) -> None:
+    stubs.google_sheet.return_value.worksheet_titles.return_value = {"Wrong Title"}
+    with pytest.raises(sheet.SeasonSheetVerificationError):
+        sheet.SeasonSheet(config=TEST_SHEET_CONFIG)
+
+
+def test_sheet_read(stubs: CollaboratorStubs) -> None:
+    season_sheet = sheet.SeasonSheet(config=TEST_SHEET_CONFIG)
+
+    read_data = season_sheet.read()
+
+    assert read_data.players == TEST_PLAYERS_READ_DATA
+    assert read_data.events["Presidio"] == TEST_PRESIDIO_EVENT_READ_DATA
+    assert read_data.events["Harding Park"] == TEST_HARDING_PARK_EVENT_READ_DATA
