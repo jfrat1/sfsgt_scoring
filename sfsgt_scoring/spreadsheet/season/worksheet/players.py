@@ -1,4 +1,3 @@
-import collections
 import functools
 from typing import Any, NamedTuple
 
