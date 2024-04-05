@@ -1,6 +1,6 @@
 {
   name: baylands,
-  hole_par: {
+  hole_pars: {
     1: 5,
     2: 4,
     3: 5,

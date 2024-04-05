@@ -1,6 +1,6 @@
 {
   name: poppy ridge zinfandel/merlot,
-  hole_par: {
+  hole_pars: {
     # Zinfandel
     1: 4,
     2: 3,

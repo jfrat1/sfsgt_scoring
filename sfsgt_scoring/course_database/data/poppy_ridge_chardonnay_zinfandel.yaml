@@ -1,6 +1,6 @@
 {
   name: poppy ridge chardonnay/zinfandel,
-  hole_par: {
+  hole_pars: {
     # Chardonnay
     1: 4,
     2: 4,

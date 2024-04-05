@@ -131,3 +131,9 @@ def test_generate_read_data() -> None:
     read_data = players_worksheet._generate_read_data(TEST_WORKSHEET_DATA)
 
     assert read_data == EXPECTED_TEST_READ_DATA
+
+
+def test_players_read_data_player_names() -> None:
+    players_read_data = EXPECTED_TEST_READ_DATA
+
+    assert players_read_data.player_names() == {"Geoff", "Bolt"}

@@ -5,12 +5,12 @@ from typing import Generator
 
 import pytest
 
-from sfsgt_scoring.course_database import database
+from .. import database
 
 BAYLANDS_COURSE_DATA_YAML = """
 {
   name: baylands,
-  hole_par: {
+  hole_pars: {
     1: 5,
     2: 4,
     3: 5,
@@ -41,7 +41,7 @@ BAYLANDS_COURSE_DATA_YAML = """
 PRESIDIO_COURSE_DATA_YAML = """
 {
   name: presidio,
-  hole_par: {
+  hole_pars: {
     1: 4,
     2: 5,
     3: 4,
@@ -74,6 +74,7 @@ TEST_COURSE_FILES = {
     "presidio.yaml": PRESIDIO_COURSE_DATA_YAML
 }
 
+
 @contextlib.contextmanager
 def temp_course_data_dir(course_files: dict[str, str] = TEST_COURSE_FILES) -> Generator[pathlib.Path, None, None]:
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -98,13 +99,15 @@ def test_get_course_nominal() -> None:
         course = course_db.get_course("baylands")
 
         assert course.name == "baylands"
-        assert course.hole_par[1] == 5
+        assert course.hole_pars[1] == 5
+
 
 def test_get_course_not_found_raises_error() -> None:
     with temp_course_data_dir() as courses_dir:
         course_db = database.database_from_folder(courses_dir)
         with pytest.raises(database.GetCourseError):
             course_db.get_course("not a known course")
+
 
 def test_get_course_multiple_found_raises_error() -> None:
     course_files = TEST_COURSE_FILES

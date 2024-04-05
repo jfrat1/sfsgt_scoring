@@ -3,8 +3,8 @@ from typing import Generator, NamedTuple
 import pytest
 from unittest import mock
 
-from sfsgt_scoring.spreadsheet.season import sheet
-from sfsgt_scoring.spreadsheet.season.worksheet import event, players
+from .. import sheet
+from ..worksheet import event, players
 
 TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
     sheet_id="test_sheet_id",
@@ -29,6 +29,7 @@ TEST_EVENTS = [
 
 TEST_PLAYERS = [
     "Stanton Turner",
+    "John Fratello",
 ]
 
 TEST_WORKSHEET_TITLES = [
@@ -43,27 +44,33 @@ TEST_PLAYERS_READ_DATA = players.PlayersReadData(
         "Stanton Turner": players.HandicapIndexByEvent(
             data={"Presidio": 12.0, "Harding Park": 12.2},
             events={"Presidio", "Harding Park"},
-        )
+        ),
+        "John Fratello": players.HandicapIndexByEvent(
+            data={"Presidio": 15.8, "Harding Park": 15.4},
+            events={"Presidio", "Harding Park"},
+        ),
     }
 )
 
 TEST_PRESIDIO_EVENT_READ_DATA = event.EventReadData(
     player_scores={
         "Stanton Turner": event.HoleScores(
-            {
-                '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5
-            }
-        )
+            {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+        ),
+        "John Fratello": event.HoleScores(
+            {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+        ),
     }
 )
 
 TEST_HARDING_PARK_EVENT_READ_DATA = event.EventReadData(
     player_scores={
         "Stanton Turner": event.HoleScores(
-            {
-                '1': 6, '2': 3, '3': 5, '4': 5, '5': 5, '6': 7, '7': 4, '8': 5, '9': 5, '10': 6, '11': 5, '12': 5, '13': 6, '14': 4, '15': 3, '16': 4, '17': 4, '18': 5
-            }
-        )
+            {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+        ),
+        "John Fratello": event.HoleScores(
+            {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+        ),
     }
 )
 
@@ -141,11 +148,7 @@ def stubs(
     )
 
 
-def test_sheet_construct(
-    stubs: CollaboratorStubs,
-) -> None:
-    sheet.SeasonSheet(config=TEST_SHEET_CONFIG)
-
+def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> None:
     assert stubs.google_sheet.return_value.worksheet.call_args_list == [
         mock.call(worksheet_name="Player Handicaps"),
         mock.call(worksheet_name="Leaderboard"),
@@ -181,6 +184,35 @@ def test_sheet_construct(
     ]
 
 
+def test_sheet_construct_with_configuration(
+    stubs: CollaboratorStubs,
+) -> None:
+    sheet.SeasonSheet(config=TEST_SHEET_CONFIG)
+
+    verify_stub_calls_during_object_configuration(stubs)
+
+
+def test_sheet_construct_in_unconfigured_state() -> None:
+    sheet_ = sheet.SeasonSheet()
+
+    assert not sheet_.is_configured
+    assert sheet_.config is None
+    assert sheet_.google_sheet is None
+
+
+def test_sheet_configure_after_constructing_in_unconfigured_state(
+    stubs: CollaboratorStubs,
+) -> None:
+    sheet_ = sheet.SeasonSheet()
+    sheet_.configure(config=TEST_SHEET_CONFIG)
+
+    assert sheet_.is_configured
+    assert sheet_.config is not None
+    assert sheet_.google_sheet is not None
+
+    verify_stub_calls_during_object_configuration(stubs)
+
+
 def test_sheet_constructor_wrong_worksheet_titles_raises_error(
     stubs: CollaboratorStubs,
 ) -> None:
@@ -197,3 +229,31 @@ def test_sheet_read(stubs: CollaboratorStubs) -> None:
     assert read_data.players == TEST_PLAYERS_READ_DATA
     assert read_data.events["Presidio"] == TEST_PRESIDIO_EVENT_READ_DATA
     assert read_data.events["Harding Park"] == TEST_HARDING_PARK_EVENT_READ_DATA
+
+
+def test_sheet_read_data_get_player_names() -> None:
+    sheet_read_data = sheet.SeasonSheetReadData(
+        players=TEST_PLAYERS_READ_DATA,
+        events={
+            "Presidio": TEST_PRESIDIO_EVENT_READ_DATA,
+            "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
+        }
+    )
+    assert sheet_read_data.player_names() == {"Stanton Turner", "John Fratello"}
+
+
+def test_sheet_read_data_get_event_names() -> None:
+    sheet_read_data = sheet.SeasonSheetReadData(
+        players=TEST_PLAYERS_READ_DATA,
+        events={
+            "Presidio": TEST_PRESIDIO_EVENT_READ_DATA,
+            "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
+        }
+    )
+    assert sheet_read_data.event_names() == {"Presidio", "Harding Park"}
+
+
+def test_sheet_read_in_unconfigured_state_raises_error() -> None:
+    sheet_ = sheet.SeasonSheet()
+    with pytest.raises(sheet.SeasonSheetNotConfiguredError):
+        sheet_.read()

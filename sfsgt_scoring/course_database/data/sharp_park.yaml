@@ -1,6 +1,6 @@
 {
   name: sharp park,
-  hole_par: {
+  hole_pars: {
     1: 4,
     2: 4,
     3: 4,

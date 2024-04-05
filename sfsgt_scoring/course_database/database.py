@@ -1,11 +1,22 @@
 import pathlib
 from typing import NamedTuple
 
-from sfsgt_scoring.course_database import course
+from . import course
+
+
+DEFAULT_COURSE_DATABASE_PATH = pathlib.Path(__file__).parent / "data"
 
 
 class DatabaseLoadError(Exception):
-    """Exception to be raised when an error is encountered when loading the database."""
+    """Exception to be raised when an error is encountered while attempting to load the database."""
+
+
+class GetCourseError(Exception):
+    """Exception to be raised when an error is encountered while searching for a course by name."""
+
+
+def load_default_database() -> "CourseDatabase":
+    return database_from_folder(courses_dir=DEFAULT_COURSE_DATABASE_PATH)
 
 
 def database_from_folder(courses_dir: pathlib.Path) -> "CourseDatabase":
@@ -20,10 +31,6 @@ def database_from_folder(courses_dir: pathlib.Path) -> "CourseDatabase":
             ) from exc
 
     return CourseDatabase(courses)
-
-
-class GetCourseError(Exception):
-    """Exception to be raised when an error is encountered while searching for a course by name."""
 
 
 class CourseDatabase(NamedTuple):

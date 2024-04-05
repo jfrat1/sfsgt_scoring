@@ -1,1 +1,1 @@
-from sfsgt_scoring.course_database.database import database_from_folder, CourseDatabase
+from .database import load_default_database, database_from_folder, CourseDatabase  # noqa: F401 - names exposed for public import

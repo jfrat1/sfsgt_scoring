@@ -1,6 +1,6 @@
 {
   name: presidio,
-  hole_par: {
+  hole_pars: {
     1: 4,
     2: 5,
     3: 4,

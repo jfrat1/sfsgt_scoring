@@ -13,6 +13,9 @@ PLAYER_COLUMN_NAME = "Player"
 class PlayersReadData(NamedTuple):
     player_handicaps: dict[str, "HandicapIndexByEvent"]
 
+    def player_names(self) -> set[str]:
+        return set(self.player_handicaps.keys())
+
 
 class PlayerHandicapsVerificationError(Exception):
     """Exception to be raised when player handicap data does not meet expectations."""

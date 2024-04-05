@@ -1,6 +1,6 @@
 {
   name: poppy ridge merlot/chardonnay,
-  hole_par: {
+  hole_pars: {
     # Merlot
     1: 4,
     2: 3,
