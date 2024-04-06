@@ -1,7 +1,7 @@
 
 from typing import NamedTuple
 
-from .event import event
+from . import event
 
 
 class SeasonInput(NamedTuple):
@@ -77,5 +77,6 @@ class Season:
         #    - total season points
         #    - season rank
         #    - # of below par scores (birdie, eagle, albatross listed separately)
-        return None
 
+        # TODO - Unimplemented
+        return None

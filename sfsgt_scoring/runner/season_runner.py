@@ -1,5 +1,5 @@
 from sfsgt_scoring import course_database, season_config, season
-from sfsgt_scoring.season.event import event as season_event
+from sfsgt_scoring.season import event as season_event
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 
@@ -99,14 +99,14 @@ class SeasonRunner:
     def _event_course_input(
         self,
         event_config: season_config.EventConfig,
-    ) -> season_event.CourseData:
+    ) -> season_event.CourseInput:
         course_name = event_config.course_name
         tee_name = event_config.tee
 
         course_info = self.course_db.get_course(course_name)
         tee_info = course_info.get_tee_info(tee_name)
 
-        return season_event.CourseData(
+        return season_event.CourseInput(
             name=event_config.course_name,
             tee=season_event.CourseTeeData(
                 name=tee_name,

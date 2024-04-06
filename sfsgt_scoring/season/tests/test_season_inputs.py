@@ -1,10 +1,9 @@
-from .. import season
-from ..event import event
+from .. import season, event
 
 
 def test_season_inputs_construct() -> None:
     poppy_ridge_event = event.EventInput(
-        course=event.CourseData(
+        course=event.CourseInput(
             name="Poppy Ridge",
             tee=event.CourseTeeData(
                 name="White",
@@ -36,16 +35,16 @@ def test_season_inputs_construct() -> None:
         players={
             "Stanton Turner": event.EventPlayerInput(
                 handicap_index=14,
-                hole_scores={'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5},
+                hole_scores={'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5},  # noqa: E501
             ),
             "John Fratello": event.EventPlayerInput(
                 handicap_index=15.8,
-                hole_scores={'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6},
+                hole_scores={'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6},  # noqa: E501
             ),
         }
     )
     harding_park_event = event.EventInput(
-        course=event.CourseData(
+        course=event.CourseInput(
             name="Harding Park",
             tee=event.CourseTeeData(
                 name="Blue",
@@ -77,11 +76,11 @@ def test_season_inputs_construct() -> None:
         players={
             "Stanton Turner": event.EventPlayerInput(
                 handicap_index=14.2,
-                hole_scores={'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5},
+                hole_scores={'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5},  # noqa: E501
             ),
             "John Fratello": event.EventPlayerInput(
                 handicap_index=15.4,
-                hole_scores={'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6},
+                hole_scores={'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6},  # noqa: E501
             ),
         }
     )

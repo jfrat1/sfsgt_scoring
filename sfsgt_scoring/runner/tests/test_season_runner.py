@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from sfsgt_scoring import course_database, season_config, season
-from sfsgt_scoring.season.event import event as season_event
+from sfsgt_scoring.season import event as season_event
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 from sfsgt_scoring.spreadsheet.season.worksheet import (
     players as players_worksheet,
@@ -57,20 +57,20 @@ TEST_SEASON_SHEET_READ_DATA = season_spreadsheet.SeasonSheetReadData(
         "Standard Event": event_worksheet.EventReadData(
             player_scores={
                 "Stanton Turner": event_worksheet.HoleScores(
-                    {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+                    {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}  # noqa: E501
                 ),
                 "John Fratello": event_worksheet.HoleScores(
-                    {'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6}
+                    {'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6}  # noqa: E501
                 )
             }
         ),
         "Major Event": event_worksheet.EventReadData(
             player_scores={
                 "Stanton Turner": event_worksheet.HoleScores(
-                    {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}
+                    {'1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5}  # noqa: E501
                 ),
                 "John Fratello": event_worksheet.HoleScores(
-                    {'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6}
+                    {'1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6}  # noqa: E501
                 )
             }
         ),
@@ -78,13 +78,13 @@ TEST_SEASON_SHEET_READ_DATA = season_spreadsheet.SeasonSheetReadData(
 )
 
 
-class TestCourseData(NamedTuple):
+class CourseDataForTests(NamedTuple):
     rating: float
     slope: int
     hole_pars: dict[int, int]
 
 
-STANDARD_EVENT_COURSE_DATA = TestCourseData(
+STANDARD_EVENT_COURSE_DATA = CourseDataForTests(
     rating=72.2,
     slope=130,
     hole_pars={
@@ -109,7 +109,7 @@ STANDARD_EVENT_COURSE_DATA = TestCourseData(
     },
 )
 
-MAJOR_EVENT_COURSE_DATA = TestCourseData(
+MAJOR_EVENT_COURSE_DATA = CourseDataForTests(
     rating=72.8,
     slope=138,
     hole_pars={
@@ -137,7 +137,7 @@ MAJOR_EVENT_COURSE_DATA = TestCourseData(
 TEST_SEASON_INPUT = season.SeasonInput(
     events={
         "Standard Event": season_event.EventInput(
-            course=season_event.CourseData(
+            course=season_event.CourseInput(
                 name="standard_event_course",
                 tee=season_event.CourseTeeData(
                     name="white",
@@ -151,19 +151,19 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 "Stanton Turner": season_event.EventPlayerInput(
                     handicap_index=12.0,
                     hole_scores={
-                        '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5
+                        '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5  # noqa: E501
                     },
                 ),
                 "John Fratello": season_event.EventPlayerInput(
                     handicap_index=16.4,
                     hole_scores={
-                        '1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6
+                        '1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6  # noqa: E501
                     },
                 ),
             }
         ),
         "Major Event": season_event.EventInput(
-            course=season_event.CourseData(
+            course=season_event.CourseInput(
                 name="major_event_course",
                 tee=season_event.CourseTeeData(
                     name="blue",
@@ -177,13 +177,13 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 "Stanton Turner": season_event.EventPlayerInput(
                     handicap_index=12.2,
                     hole_scores={
-                        '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5
+                        '1': 5, '2': 4, '3': 5, '4': 6, '5': 5, '6': 6, '7': 4, '8': 4, '9': 5, '10': 6, '11': 6, '12': 5, '13': 4, '14': 4, '15': 4, '16': 4, '17': 4, '18': 5  # noqa: E501
                     },
                 ),
                 "John Fratello": season_event.EventPlayerInput(
                     handicap_index=16.2,
                     hole_scores={
-                        '1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6
+                        '1': 5, '2': 7, '3': 6, '4': 3, '5': 5, '6': 6, '7': 3, '8': 5, '9': 6, '10': 7, '11': 6, '12': 4, '13': 3, '14': 5, '15': 3, '16': 4, '17': 5, '18': 6  # noqa: E501
                     },
                 ),
             }

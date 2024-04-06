@@ -1,4 +1,4 @@
-from .sheet import (  # noqa: F401 - names exposed for public import
+from .sheet import (  # noqa: F401 - names exposed for public use
     SeasonSheet,
     SeasonSheetConfig,
     SeasonSheetEventConfig,
@@ -6,4 +6,4 @@ from .sheet import (  # noqa: F401 - names exposed for public import
     SeasonSheetWriteData,
 )
 
-from . import worksheet  # noqa: F401 - names exposed for public import
+from . import worksheet  # noqa: F401 - names exposed for public use
