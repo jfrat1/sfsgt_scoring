@@ -27,13 +27,13 @@ def test_incomplete_player_event_result_singleton_implementation() -> None:
 def test_player_event_result_is_complete_result_false() -> None:
     result_ = results.PlayerEventResult(
         individual_result=results.IncompletePlayerEventInividualResult(),
-        cumulative_result=results.CumulativePlayerEventResult(
+        cumulative_result=results.PlayerEventCumulativeResult(
             gross_score_points=100.0,
             net_score_points=100.0,
             event_points=200.0,
-            gross_score_rank=rank.EventRank(3),
-            net_score_rank=rank.EventRank(5),
-            event_rank=rank.EventRank(4),
+            gross_score_rank=rank.RankValue(3),
+            net_score_rank=rank.RankValue(5),
+            event_rank=rank.RankValue(4),
         )
     )
 
@@ -50,13 +50,13 @@ def test_player_event_result_is_complete_result_true() -> None:
             total_net=72,
             notable_holes=results.NotableHoles(),
         ),
-        cumulative_result=results.CumulativePlayerEventResult(
+        cumulative_result=results.PlayerEventCumulativeResult(
             gross_score_points=100.0,
             net_score_points=100.0,
             event_points=200.0,
-            gross_score_rank=rank.EventRank(3),
-            net_score_rank=rank.EventRank(5),
-            event_rank=rank.EventRank(4),
+            gross_score_rank=rank.RankValue(3),
+            net_score_rank=rank.RankValue(5),
+            event_rank=rank.RankValue(4),
         )
     )
 
@@ -76,13 +76,13 @@ def test_player_event_result_complete_result_property_getters() -> None:
             total_net=72,
             notable_holes=notable_holes,
         ),
-        cumulative_result=results.CumulativePlayerEventResult(
+        cumulative_result=results.PlayerEventCumulativeResult(
             gross_score_points=100.0,
             net_score_points=100.0,
             event_points=200.0,
-            gross_score_rank=rank.EventRank(3),
-            net_score_rank=rank.EventRank(5),
-            event_rank=rank.EventRank(4),
+            gross_score_rank=rank.RankValue(3),
+            net_score_rank=rank.RankValue(5),
+            event_rank=rank.RankValue(4),
         )
     )
 
@@ -95,9 +95,9 @@ def test_player_event_result_complete_result_property_getters() -> None:
     assert result_.gross_score_points == 100.0
     assert result_.net_score_points == 100.0
     assert result_.event_points == 200.0
-    assert result_.gross_score_rank == rank.EventRank(3)
-    assert result_.net_score_rank == rank.EventRank(5)
-    assert result_.event_rank == rank.EventRank(4)
+    assert result_.gross_score_rank == rank.RankValue(3)
+    assert result_.net_score_rank == rank.RankValue(5)
+    assert result_.event_rank == rank.RankValue(4)
 
 
 def test_incomplete_individual_player_event_result_api_calls_raises_error() -> None:
@@ -144,13 +144,13 @@ def test_individual_player_event_result_property_getters() -> None:
 
 
 def test_cumulative_player_event_result_construct() -> None:
-    results.CumulativePlayerEventResult(
+    results.PlayerEventCumulativeResult(
         gross_score_points=100.0,
         net_score_points=100.0,
         event_points=200.0,
-        gross_score_rank=rank.EventRank(3),
-        net_score_rank=rank.EventRank(5),
-        event_rank=rank.EventRank(4),
+        gross_score_rank=rank.RankValue(3),
+        net_score_rank=rank.RankValue(5),
+        event_rank=rank.RankValue(4),
     )
 
 

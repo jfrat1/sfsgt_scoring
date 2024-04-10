@@ -67,7 +67,6 @@ TEST_PLAYERS_AT_EACH_RANK_WITH_TIES: dict[int, set[str]] = {
     10: {"Player_5"},
 }
 
-
 TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT = {
     "Player_1": 20.0,
     "Player_2": 19.25,
@@ -92,12 +91,12 @@ def test_points_construct_major_event() -> None:
     assert points_._points_by_rank == points.MAJOR_EVENT_POINTS_BY_RANK
 
 
-def test_player_points_no_ties_standard_event() -> None:
+def test_player_points_from_ranks_no_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
     assert points_.player_points_from_ranks(TEST_PLAYER_RANKS_NO_TIES) == TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT
 
 
-def test_player_points_with_ties_standard_event() -> None:
+def test_player_points_from_ranks_with_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
     assert points_.player_points_from_ranks(TEST_PLAYER_RANKS_WITH_TIES) == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
 

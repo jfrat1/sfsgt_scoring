@@ -13,7 +13,7 @@ class PlayerEventResult:
     def __init__(
         self,
         individual_result: "IPlayerEventIndividualResult",
-        cumulative_result: "CumulativePlayerEventResult",
+        cumulative_result: "PlayerEventCumulativeResult",
 
     ) -> None:
         self._individual_result = individual_result
@@ -59,15 +59,15 @@ class PlayerEventResult:
         return self._cumulative_result.event_points
 
     @property
-    def gross_score_rank(self) -> rank.IEventRank:
+    def gross_score_rank(self) -> rank.IRankValue:
         return self._cumulative_result.gross_score_rank
 
     @property
-    def net_score_rank(self) -> rank.IEventRank:
+    def net_score_rank(self) -> rank.IRankValue:
         return self._cumulative_result.net_score_rank
 
     @property
-    def event_rank(self) -> rank.IEventRank:
+    def event_rank(self) -> rank.IRankValue:
         return self._cumulative_result.event_rank
 
     def __eq__(self, other: Any) -> bool:
@@ -207,13 +207,13 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
         )
 
 
-class CumulativePlayerEventResult(NamedTuple):
+class PlayerEventCumulativeResult(NamedTuple):
     gross_score_points: float
     net_score_points: float
     event_points: float
-    gross_score_rank: rank.IEventRank
-    net_score_rank: rank.IEventRank
-    event_rank: rank.IEventRank
+    gross_score_rank: rank.IRankValue
+    net_score_rank: rank.IRankValue
+    event_rank: rank.IRankValue
 
 
 class NotableHoleDuplicationError(Exception):

@@ -90,6 +90,8 @@ class Points():
         self._verify_player_ranks(player_ranks)
         players_at_each_rank = self._players_at_each_rank(player_ranks)
 
+        # TODO: Consider adding verification of the points awarded to prove that we've
+        # distributed them correctly for the ranks that are present
         return self._player_points(players_at_each_rank)
 
     def _verify_player_ranks(self, player_ranks: dict[str, int]):
