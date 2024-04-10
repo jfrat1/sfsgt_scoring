@@ -9,6 +9,9 @@ from .inputs import (  # noqa: F401 - names exposed for public use
     EventInput,
     EventType,
     EventPlayerInput,
+    IScorecard,
+    Scorecard,
+    IncompleteScorecard,
 )
 
 from .results import (

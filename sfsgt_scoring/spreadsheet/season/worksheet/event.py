@@ -1,7 +1,8 @@
+import abc
 from typing import Any, NamedTuple
 
 import pandas as pd
-from gspread import utils
+from gspread import utils as gspread_utils
 
 from sfsgt_scoring.spreadsheet import google
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
@@ -23,36 +24,66 @@ READ_DATA_LAST_COL_INDEX = EVENT_WORKSHEET_COLUMNS.index(READ_DATA_LAST_COLUMN)
 
 
 class EventReadData(NamedTuple):
-    player_scores: dict[str, "HoleScores"]
+    player_scores: dict[str, "IHoleScores"]
 
 
 class PlayerHoleScoresVerificationError(Exception):
     """Exception to be raised when a player hole score definition is invalid when being instantiated."""
 
 
-class HoleScores(dict[str, int | None]):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+class IHoleScores(abc.ABC):
+    @abc.abstractmethod
+    def scores(self) -> dict[int, int]: pass
+
+
+class IncompleteScore(IHoleScores):
+    def __new__(cls):
+        # Implement the singleton pattern for this class because there may be many
+        # instances of it and they are stateless/identical.
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(IncompleteScore, cls).__new__(cls)
+        return cls.instance
+
+    def __init__(self):
+        pass
+
+    def scores(self) -> dict[int, int]:
+        return {}
+
+
+class HoleScores(IHoleScores):
+    def __init__(self, scores: dict[int, int]) -> None:
+        self._scores = scores
         self._verify_keys()
         self._verify_values()
 
     def _verify_keys(self) -> None:
-        expected_keys = {str(hole) for hole in range(1, 19)}
-        actual_keys = set(self.keys())
+        expected_keys = {hole for hole in range(1, 19)}
+        actual_keys = set(self._scores.keys())
         if expected_keys != actual_keys:
             raise PlayerHoleScoresVerificationError(
-                "Keys in the PlayerHoleScore dictionary must be strings containing hole numbers 1 through 18. "
+                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "
                 f"\nExpected: {expected_keys}\nFound: {actual_keys}"
             )
 
     def _verify_values(self) -> None:
-        values = self.values()
-        for value in values:
-            is_value_none_or_int = value is None or isinstance(value, int)
-            if not is_value_none_or_int:
-                raise PlayerHoleScoresVerificationError(
-                    f"Values in the PlayerHoleScore dictionary must be None or int type. Found: {self.values()}"
-                )
+        values = self._scores.values()
+        are_all_values_int_type = all(isinstance(value, int) for value in values)
+
+        if not are_all_values_int_type:
+            raise PlayerHoleScoresVerificationError(
+                f"Values in the HoleScores dictionary must int type. Found: {values}"
+            )
+
+    def scores(self) -> dict[int, int]:
+        return self._scores
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, HoleScores):
+            return NotImplemented
+
+        else:
+            return self._scores == other._scores
 
 
 class EventWriteData(NamedTuple):
@@ -78,7 +109,6 @@ class PlayerEventWriteData(NamedTuple):
 class PlayerHole(NamedTuple):
     player: str
     hole: int
-
 
 
 class InvalidCellDefinition(Exception):
@@ -110,7 +140,7 @@ class EventWorksheet:
             )
 
     def _is_cell_a1_notation(self, cell_name: str) -> bool:
-        match = utils.CELL_ADDR_RE.match(string=cell_name)
+        match = gspread_utils.CELL_ADDR_RE.match(string=cell_name)
         is_a1_notation = match is not None
         return is_a1_notation
 
@@ -132,11 +162,11 @@ class EventWorksheet:
         return f"{self._scorecard_start_cell}:{self._read_range_end_cell()}"
 
     def _read_range_end_cell(self) -> str:
-        (start_row, start_col) = utils.a1_to_rowcol(self._scorecard_start_cell)
+        (start_row, start_col) = gspread_utils.a1_to_rowcol(self._scorecard_start_cell)
 
         end_row = start_row + self._read_range_row_offset()
         end_col = start_col + self._read_range_col_offset()
-        return utils.rowcol_to_a1(row=end_row, col=end_col)
+        return gspread_utils.rowcol_to_a1(row=end_row, col=end_col)
 
     def _read_range_row_offset(self) -> int:
         return self._num_players() - 1
@@ -152,7 +182,7 @@ class EventWorksheet:
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
         column_labels = EVENT_WORKSHEET_COLUMNS[READ_DATA_FIRST_COL_INDEX:READ_DATA_LAST_COL_INDEX+1]
-        worksheet_data.columns = column_labels
+        worksheet_data.columns = pd.Index(column_labels)
         worksheet_data.drop(columns=["Out", "Player Initial"], inplace=True)
         worksheet_data.set_index(keys="Player", inplace=True)
 
@@ -183,7 +213,7 @@ class EventWorksheet:
     def _check_data_values(self, worksheet_data: pd.DataFrame) -> None:
         for row_name, row in worksheet_data.iterrows():
             for col_name, value in row.items():
-                self._check_data_value(value=value, row_name=row_name, col_name=col_name)
+                self._check_data_value(value=value, row_name=str(row_name), col_name=str(col_name))
 
     def _check_data_value(self, value: Any, row_name: str, col_name: str) -> None:
         is_numeric = isinstance(value, (int, float))
@@ -199,8 +229,19 @@ class EventWorksheet:
         worksheet_data_modified = dataframe.replace_empty_strings_with_none(worksheet_data)
 
         player_scores = {
-            player_name: HoleScores(scores_ser.to_dict())
+            str(player_name): self._generate_hole_scores(scores_ser)
             for (player_name, scores_ser) in worksheet_data_modified.iterrows()
         }
 
         return EventReadData(player_scores=player_scores)
+
+    def _generate_hole_scores(self, scores_ser: pd.Series) -> IHoleScores:
+        if scores_ser.isna().any():
+            return IncompleteScore()
+        else:
+            scores_dict_raw = scores_ser.to_dict()
+            scores_dict = {
+                int(hole_num): hole_score
+                for hole_num, hole_score in scores_dict_raw.items()
+            }
+            return HoleScores(scores=scores_dict)

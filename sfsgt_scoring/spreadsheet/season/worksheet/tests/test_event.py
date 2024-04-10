@@ -47,7 +47,7 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
 
     hole_numbers = range(1, 19)
     data = {
-        str(hole_num): hole_score
+        hole_num: hole_score
         for (hole_num, hole_score) in zip(hole_numbers, hole_scores)
     }
     return event.HoleScores(data)
@@ -90,37 +90,42 @@ def create_test_event_worksheet(
 def test_player_hole_scores_constructor_all_integer_hole_scores() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     event.HoleScores(
-        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+        scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
     )
 
 
-def test_player_hole_scores_constructor_missing_some_hole_scores() -> None:
+def test_player_hole_scores_constructor_missing_some_hole_scores_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, None, 6, 6, 5, 4, 4, 4, 4, None, 5]
-    event.HoleScores(
-        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
-    )
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.HoleScores(
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore
+        )
 
 
-def test_player_hole_scores_constructor_missing_all_hole_scores() -> None:
+def test_player_hole_scores_constructor_missing_all_hole_scores_raises_error() -> None:
     hole_scores = [None] * 18
-    event.HoleScores(
-        {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
-    )
+    with pytest.raises(event.PlayerHoleScoresVerificationError):
+        event.HoleScores(
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore
+        )
 
 
 def test_player_hole_scores_constructor_missing_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 10), hole_scores)}
+            scores={
+                hole_num: hole_score
+                for hole_num, hole_score in zip(range(1, len(hole_scores) + 1), hole_scores)
+            }
         )
 
 
-def test_player_hole_scores_constructor_integer_keys_raises_error() -> None:
+def test_player_hole_scores_constructor_string_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            {hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+            scores={str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore # noqa: E501
         )
 
 
@@ -128,7 +133,7 @@ def test_player_hols_scores_construct_string_value_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "5", 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore
         )
 
 
@@ -136,7 +141,7 @@ def test_player_hols_scores_construct_empty_string_value_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "", 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            {str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore
         )
 
 
@@ -258,16 +263,33 @@ def test_generate_read_data() -> None:
     assert read_data == EXPECTED_TEST_READ_DATA
 
 
-def test_generate_read_data_with_empty_cells() -> None:
+def test_generate_read_data_with_empty_scores_for_one_player() -> None:
     event_worksheet = create_test_event_worksheet()
 
-    test_data = TEST_WORKSHEET_DATA_PROCESSED.copy()
+    test_data: pd.DataFrame = TEST_WORKSHEET_DATA_PROCESSED.copy()
     test_data = test_data.astype(object)
     test_data.loc["Stanton Turner", "9"] = ""
 
     read_data = event_worksheet._generate_read_data(worksheet_data=test_data)
 
-    expected_read_data = copy.deepcopy(EXPECTED_TEST_READ_DATA)
-    expected_read_data.player_scores["Stanton Turner"]["9"] = None
+    expected_read_data: event.EventReadData = copy.deepcopy(EXPECTED_TEST_READ_DATA)
+    expected_read_data.player_scores["Stanton Turner"] = event.IncompleteScore()
+
+    assert read_data == expected_read_data
+
+
+def test_generate_read_data_with_empty_scores_for_all_players() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    test_data: pd.DataFrame = TEST_WORKSHEET_DATA_PROCESSED.copy()
+    test_data = test_data.astype(object)
+    test_data.loc[:] = ""  # type: ignore
+
+    read_data = event_worksheet._generate_read_data(worksheet_data=test_data)
+
+    expected_read_data: event.EventReadData = copy.deepcopy(EXPECTED_TEST_READ_DATA)
+    expected_read_data.player_scores["Stanton Turner"] = event.IncompleteScore()
+    expected_read_data.player_scores["John Fratello"] = event.IncompleteScore()
+    expected_read_data.player_scores["Steve Harasym"] = event.IncompleteScore()
 
     assert read_data == expected_read_data

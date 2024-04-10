@@ -125,12 +125,28 @@ class SeasonRunner:
         event_players: dict[str, season_event.EventPlayerInput] = {}
 
         for player_name in player_names:
+            handicap_index = spreadsheet_data.players.player_handicaps[player_name][event_name]
+            hole_scores = self._event_player_hole_scores_input(
+                spreadsheet_data.events[event_name].player_scores[player_name]
+            )
+
             event_players[player_name] = season_event.EventPlayerInput(
-                handicap_index=spreadsheet_data.players.player_handicaps[player_name][event_name],
-                hole_scores=spreadsheet_data.events[event_name].player_scores[player_name],
+                handicap_index=handicap_index,
+                scorecard=hole_scores,
             )
 
         return event_players
+
+    def _event_player_hole_scores_input(
+        self,
+        hole_scores_sheet_data: season_spreadsheet.worksheet.IHoleScores,
+    ) -> season_event.IScorecard:
+        if isinstance(hole_scores_sheet_data, season_spreadsheet.worksheet.IncompleteScore):
+            return season.event.IncompleteScorecard()
+        else:
+            return season.event.Scorecard(
+                strokes_per_hole=hole_scores_sheet_data.scores()
+            )
 
     def _config_to_season_event_type(self, config_event_type: season_config.EventType) -> season.EventType:
         match config_event_type:

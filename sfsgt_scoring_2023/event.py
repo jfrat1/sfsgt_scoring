@@ -90,7 +90,7 @@ class EventScorecard:
         self.player_scorecards = player_scorecards
 
 @dataclasses.dataclass(eq=True, frozen=True, kw_only=True)
-class EventPlayerResult:
+class PlayerEventResult:
     """Event results for an individual player."""
     # Individual player data:
     # course_handicap: number of strokes a player is given against the course
@@ -124,9 +124,9 @@ class EventPlayerResult:
 
 class EventResult:
     """Results for all players in an event."""
-    def __init__(self, player_results: Dict[str, EventPlayerResult]) -> None:
-        if not all(isinstance(result, EventPlayerResult) for result in player_results.values()):
-            raise ValueError("All player result value must be EventPlayerResult type.")
+    def __init__(self, player_results: Dict[str, PlayerEventResult]) -> None:
+        if not all(isinstance(result, PlayerEventResult) for result in player_results.values()):
+            raise ValueError("All player result value must be PlayerEventResult type.")
 
         self.player_results = player_results
 
@@ -134,7 +134,7 @@ class EventResult:
         """Dataframe with the full set of results from the event.
 
         Player names are in the dataframe index.
-        Column names match the attributes of EventPlayerResult
+        Column names match the attributes of PlayerEventResult
         """
         df = pd.DataFrame(
             {
@@ -354,7 +354,7 @@ class Event:
 
         return EventResult(
             player_results={
-                str(player_name): EventPlayerResult(**player_result_ser.to_dict())
+                str(player_name): PlayerEventResult(**player_result_ser.to_dict())
                 for player_name, player_result_ser in results_df.iterrows()
             }
         )

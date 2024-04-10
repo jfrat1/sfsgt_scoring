@@ -1,5 +1,6 @@
+import abc
 import enum
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Dict
 
 
 class EventInput(NamedTuple):
@@ -92,10 +93,85 @@ class CourseHolePars(dict[int, int]):
                     f"values: {allowed_hole_pars}. Found {hole_par} for hole {hole_num}."
                 )
 
+    def total_par(self) -> int:
+        return sum(self.values())
+
+
+class EventPlayerDataVerificationError(Exception):
+    """Exception to be raised when a player's event data does not meet requirements."""
+
 
 class EventPlayerInput(NamedTuple):
     handicap_index: float
-    hole_scores: "HoleScores"
+    scorecard: "IScorecard"
 
 
-HoleScores = dict[str, int | None]
+# TODO: rename to something about "strokes"
+class IScorecard(abc.ABC):
+    @abc.abstractmethod
+    def strokes_per_hole(self) -> dict[int, int]: pass
+
+    @abc.abstractmethod
+    def hole_strokes(self, hole_num: int) -> int: pass
+
+
+class IncompleteScorecardRequestError(Exception):
+    """Exception to be raised when requests are made to an incomplete score."""
+
+
+class IncompleteScorecard(IScorecard):
+    def __new__(cls):
+        # Implement the singleton pattern for this class because there may be many
+        # instances of it and they are stateless/identical.
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(IncompleteScorecard, cls).__new__(cls)
+        return cls.instance
+
+    def __init__(self):
+        pass
+
+    def strokes_per_hole(self) -> dict[int, int]:
+        raise IncompleteScorecardRequestError(
+            "Requests cannot be made to an incomplete score because it does not contain any data"
+        )
+
+    def hole_strokes(self, hole_num: int) -> int:
+        raise IncompleteScorecardRequestError(
+            "Requests cannot be made to an incomplete score because it does not contain any data"
+        )
+
+
+class Scorecard(IScorecard):
+    def __init__(self, strokes_per_hole: dict[int, int]) -> None:
+        self._strokes_per_hole = strokes_per_hole
+
+    def _verify_keys(self) -> None:
+        expected_keys = {hole for hole in range(1, 19)}
+        actual_keys = set(self._strokes_per_hole.keys())
+        if expected_keys != actual_keys:
+            raise EventPlayerDataVerificationError(
+                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "
+                f"\nExpected: {expected_keys}\nFound: {actual_keys}"
+            )
+
+    def _verify_values(self) -> None:
+        values = self._strokes_per_hole.values()
+        are_all_values_int_type = all(isinstance(value, int) for value in values)
+
+        if not are_all_values_int_type:
+            raise EventPlayerDataVerificationError(
+                f"Values in the HoleScores dictionary must int type. Found: {values}"
+            )
+
+    def strokes_per_hole(self) -> dict[int, int]:
+        return self._strokes_per_hole
+
+    def hole_strokes(self, hole_num: int) -> int:
+        return self._strokes_per_hole[hole_num]
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Scorecard):
+            return NotImplemented
+
+        else:
+            return self._strokes_per_hole == other._strokes_per_hole
