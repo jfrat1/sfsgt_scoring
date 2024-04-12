@@ -14,7 +14,7 @@ class GoogleWorksheet:
         range: str,
         has_header_row: bool = False,
     ) -> pd.DataFrame:
-        values = self.worksheet.get_values(range_name=range, maintain_size=True)
+        values: list[list[str]] = self.worksheet.get_values(range_name=range, maintain_size=True)
 
         columns = None
         if has_header_row:

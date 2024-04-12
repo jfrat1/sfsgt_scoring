@@ -68,6 +68,13 @@ class IRankValue(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def rank(self) -> int: pass
 
+    def __int__(self) -> int:
+        return self.rank()
+
+    def __add__(self, addend: Union[int, "IRankValue"]) -> "RankValue":
+        new_rank = self.rank() + int(addend)
+        return RankValue(new_rank)
+
     def __lt__(self, other: Any) -> bool:
         if not isinstance(other, IRankValue):
             return NotImplemented
@@ -95,13 +102,6 @@ class RankValue(IRankValue):
 
     def __repr__(self) -> str:
         return f"RankValue({self.as_str()})"
-
-    def __int__(self) -> int:
-        return self._rank
-
-    def __add__(self, addend: Union[int, "RankValue"]) -> "RankValue":
-        new_rank = self._rank + int(addend)
-        return RankValue(new_rank)
 
 
 class NoRankValue(IRankValue):

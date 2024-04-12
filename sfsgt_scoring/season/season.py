@@ -40,7 +40,7 @@ class CumulativePlayerResult(NamedTuple):
 class Season:
     def __init__(self, input: SeasonInput) -> None:
         self._input = input
-        # self._events = self._create_events()
+        self._events = self._create_events()
         # load scoring config (TBD, haven't defined this yet)
         # configure events
         #  - load course info from database and combine with player score data
@@ -80,3 +80,11 @@ class Season:
 
         # TODO - Unimplemented
         return None
+
+    def _event_results(self) -> EventResults:
+        return {
+            event_name: event_.result()
+            for event_name, event_ in self._events.items()
+        }
+
+

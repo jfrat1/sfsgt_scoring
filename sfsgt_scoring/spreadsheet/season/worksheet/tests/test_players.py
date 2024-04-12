@@ -67,7 +67,7 @@ def test_read_with_string_numerics_in_raw_worksheet_data() -> None:
     test_data = test_data.astype(object)
     for (index, row) in test_data.iterrows():
         for (column, value) in row.items():
-            test_data.loc[index, column] = str(value)
+            test_data.loc[str(index), str(column)] = str(value)
 
     players_worksheet = players.PlayersWorksheet(
         worksheet=stub_google_worksheet(data=test_data),

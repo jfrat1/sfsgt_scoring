@@ -90,7 +90,7 @@ class PlayersWorksheet:
     def _check_data_values(self, worksheet_data: pd.DataFrame) -> None:
         for row_name, row in worksheet_data.iterrows():
             for col_name, value in row.items():
-                self._check_data_value(value=value, row_name=row_name, col_name=col_name)
+                self._check_data_value(value=value, row_name=str(row_name), col_name=str(col_name))
 
     def _check_data_value(self, value: Any, row_name: str, col_name: str) -> None:
         if not isinstance(value, (int, float)):
@@ -101,13 +101,13 @@ class PlayersWorksheet:
 
     def _generate_read_data(self, worksheet_data: pd.DataFrame) -> PlayersReadData:
         player_handicaps = {
-            player_name: self._generate_player_handicaps(player_row)
+            str(player_name): self._generate_player_handicaps(player_row)
             for player_name, player_row in worksheet_data.iterrows()
         }
         return PlayersReadData(player_handicaps=player_handicaps)
 
     def _generate_player_handicaps(self, player_row: pd.Series) -> HandicapIndexByEvent:
         handicaps_by_event = {
-            event_name: handicap_index for event_name, handicap_index in player_row.items()
+            str(event_name): handicap_index for event_name, handicap_index in player_row.items()
         }
         return HandicapIndexByEvent(data=handicaps_by_event, events=self._events)
