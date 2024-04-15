@@ -1,20 +1,8 @@
 import pytest
 
-from .. import rank, results
+from ... import rank
 
-
-# def test_event_player_result_construct() -> None:
-#     result = results.PlayerEventResult(
-#         course_handicap=18,
-#         front_9_gross=36,
-#         back_9_gross=36,
-#         total_gross=72,
-#         total_net=64,
-#         notable_holes=results.NotableHoles(),
-#     )
-
-#     # Check initial values
-#     assert 0.0 == result._event_points == result._gross_score_points == result._net_score_points
+from .. import results
 
 
 def test_incomplete_player_event_result_singleton_implementation() -> None:

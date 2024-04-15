@@ -2,7 +2,7 @@ import abc
 import enum
 from typing import Any, NamedTuple
 
-from . import rank
+from .. import rank
 
 
 class EventResult(NamedTuple):
@@ -14,7 +14,6 @@ class PlayerEventResult:
         self,
         individual_result: "IPlayerEventIndividualResult",
         cumulative_result: "PlayerEventCumulativeResult",
-
     ) -> None:
         self._individual_result = individual_result
         self._cumulative_result = cumulative_result
@@ -70,6 +69,18 @@ class PlayerEventResult:
     def event_rank(self) -> rank.IRankValue:
         return self._cumulative_result.event_rank
 
+    @property
+    def num_birdies(self) -> int:
+        return self._individual_result.num_birdies
+
+    @property
+    def num_eagles(self) -> int:
+        return self._individual_result.num_eagles
+
+    @property
+    def num_albatrosses(self) -> int:
+        return self._individual_result.num_albatrosses
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, PlayerEventResult):
             return NotImplemented
@@ -104,6 +115,18 @@ class IPlayerEventIndividualResult(abc.ABC):
     @property
     @abc.abstractmethod
     def notable_holes(self) -> "NotableHoles": pass
+
+    @property
+    @abc.abstractmethod
+    def num_birdies(self) -> int: pass
+
+    @property
+    @abc.abstractmethod
+    def num_eagles(self) -> int: pass
+
+    @property
+    @abc.abstractmethod
+    def num_albatrosses(self) -> int: pass
 
 
 class IncompletePlayerEventIndividualResultApiCallError(Exception):
@@ -151,6 +174,25 @@ class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
     def notable_holes(self) -> "NotableHoles":  # type: ignore
         self._disallowed_api_call_error()
 
+    @property
+    def num_birdies(self) -> int:
+        return 0
+
+    @property
+    def num_eagles(self) -> int:
+        return 0
+
+    @property
+    def num_albatrosses(self) -> int:
+        return 0
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, IncompletePlayerEventInividualResult):
+            return NotImplemented
+
+        # Use 'is' because this class implements the singleton pattern
+        return self is other
+
 
 class PlayerEventIndividualResult(IPlayerEventIndividualResult):
     def __init__(
@@ -192,6 +234,18 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
     @property
     def notable_holes(self) -> "NotableHoles":
         return self._notable_holes
+
+    @property
+    def num_birdies(self) -> int:
+        return self._notable_holes.num_birdies()
+
+    @property
+    def num_eagles(self) -> int:
+        return self._notable_holes.num_eagles()
+
+    @property
+    def num_albatrosses(self) -> int:
+        return self._notable_holes.num_albatrosses()
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, PlayerEventIndividualResult):
@@ -238,6 +292,15 @@ class NotableHoles:
 
     def over_max_holes(self) -> set[int]:
         return self._over_max_holes
+
+    def num_birdies(self) -> int:
+        return len(self._birdie_holes)
+
+    def num_eagles(self) -> int:
+        return len(self._eagle_holes)
+
+    def num_albatrosses(self) -> int:
+        return len(self._albatross_holes)
 
     def set_hole(self, hole_num: int, score_type: "NotableHoleType"):
         if self._has_hole_num_been_set(hole_num):

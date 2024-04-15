@@ -1,6 +1,8 @@
 from typing import TypeVar
 
-from . import course, inputs, player, points, rank, results
+from .. import rank
+
+from . import course, inputs, player, points, results
 
 
 class EventProcessingError(Exception):

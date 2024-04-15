@@ -78,7 +78,7 @@ class SeasonRunner:
             ) for event in event_names
         }
 
-        return season.SeasonInput(events=events)
+        return season.SeasonInput(events=events, player_names=player_names)
 
     def _event_input(
         self,
@@ -161,4 +161,5 @@ class SeasonRunner:
                 raise ValueError(f"Unknown config event type: {config_event_type}")
 
     def _write_spreadsheet_data(self, season_results: season.SeasonResults) -> None:
+        import ipdb; ipdb.set_trace()
         pass

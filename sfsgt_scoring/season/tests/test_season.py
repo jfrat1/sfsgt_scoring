@@ -1,7 +1,10 @@
-from .. import season, event
+import copy
+
+from .. import season, event, rank
+from ..event import results as event_results
 
 
-TEST_SEASON_INPUT = season.SeasonInput(
+SEASON_INPUT = season.SeasonInput(
     events={
         "Standard Event": event.EventInput(
             course=event.CourseInput(
@@ -93,10 +96,226 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 ),
             }
         )
+    },
+    player_names={"Stanton Turner", "John Fratello"},
+)
+
+STANTON_NOTABLE_HOLES = event_results.NotableHoles()
+
+# The same sets of notable holes apply to both events
+JOHN_NOTABLE_HOLES = event_results.NotableHoles()
+JOHN_NOTABLE_HOLES.set_hole(4, event_results.NotableHoleType.EAGLE)
+JOHN_NOTABLE_HOLES.set_hole(7, event_results.NotableHoleType.BIRDIE)
+JOHN_NOTABLE_HOLES.set_hole(12, event_results.NotableHoleType.BIRDIE)
+JOHN_NOTABLE_HOLES.set_hole(13, event_results.NotableHoleType.BIRDIE)
+JOHN_NOTABLE_HOLES.set_hole(15, event_results.NotableHoleType.BIRDIE)
+
+STANDARD_EVENT_RESULT = event_results.EventResult(
+    players={
+        "Stanton Turner": event_results.PlayerEventResult(
+            individual_result=event_results.PlayerEventIndividualResult(
+                course_handicap=14,
+                front_9_gross=44,
+                back_9_gross=42,
+                total_gross=86,
+                total_net=72,
+                notable_holes=STANTON_NOTABLE_HOLES,
+            ),
+            cumulative_result=event_results.PlayerEventCumulativeResult(
+                gross_score_points=50.0,
+                net_score_points=45.0,
+                event_points=95.0,
+                gross_score_rank=rank.RankValue(1),
+                net_score_rank=rank.RankValue(2),
+                event_rank=rank.RankValue(1),
+            ),
+        ),
+        "John Fratello": event_results.PlayerEventResult(
+            individual_result=event_results.PlayerEventIndividualResult(
+                course_handicap=19,
+                front_9_gross=46,
+                back_9_gross=43,
+                total_gross=89,
+                total_net=70,
+                notable_holes=JOHN_NOTABLE_HOLES,
+            ),
+            cumulative_result=event_results.PlayerEventCumulativeResult(
+                gross_score_points=45.0,
+                net_score_points=50.0,
+                event_points=95.0,
+                gross_score_rank=rank.RankValue(2),
+                net_score_rank=rank.RankValue(1),
+                event_rank=rank.RankValue(1),
+            ),
+        ),
+    }
+)
+
+MAJOR_EVENT_RESULT = event_results.EventResult(
+    players={
+        "Stanton Turner": event_results.PlayerEventResult(
+            individual_result=event_results.PlayerEventIndividualResult(
+                course_handicap=15,
+                front_9_gross=44,
+                back_9_gross=42,
+                total_gross=86,
+                total_net=71,
+                notable_holes=STANTON_NOTABLE_HOLES,
+            ),
+            cumulative_result=event_results.PlayerEventCumulativeResult(
+                gross_score_points=100.0,
+                net_score_points=90.0,
+                event_points=190.0,
+                gross_score_rank=rank.RankValue(1),
+                net_score_rank=rank.RankValue(2),
+                event_rank=rank.RankValue(1),
+            ),
+        ),
+        "John Fratello": event_results.PlayerEventResult(
+            individual_result=event_results.PlayerEventIndividualResult(
+                course_handicap=21,
+                front_9_gross=46,
+                back_9_gross=43,
+                total_gross=89,
+                total_net=68,
+                notable_holes=JOHN_NOTABLE_HOLES,
+            ),
+            cumulative_result=event_results.PlayerEventCumulativeResult(
+                gross_score_points=90.0,
+                net_score_points=100.0,
+                event_points=190.0,
+                gross_score_rank=rank.RankValue(2),
+                net_score_rank=rank.RankValue(1),
+                event_rank=rank.RankValue(1),
+            ),
+        ),
+    }
+)
+
+EVENT_RESULTS = {
+    "Standard Event": STANDARD_EVENT_RESULT,
+    "Major Event": MAJOR_EVENT_RESULT,
+}
+
+STANTON_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
+    season_points=285.0,
+    num_birdies=0,
+    num_eagles=0,
+    num_albatrosses=0,
+    num_wins=2,
+    num_top_fives=0,
+    num_top_tens=0,
+)
+STANTON_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(STANTON_CUMULATIVE_RESULTS_UNRANKED)
+STANTON_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
+
+JOHN_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
+    season_points=285.0,
+    num_birdies=8,
+    num_eagles=2,
+    num_albatrosses=0,
+    num_wins=2,
+    num_top_fives=0,
+    num_top_tens=0,
+)
+JOHN_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(JOHN_CUMULATIVE_RESULTS_UNRANKED)
+JOHN_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
+
+CUMULATIVE_RESULTS_UNRANKED = {
+    "Stanton Turner": STANTON_CUMULATIVE_RESULTS_UNRANKED,
+    "John Fratello": JOHN_CUMULATIVE_RESULTS_UNRANKED,
+}
+
+CUMULATIVE_RESULTS_RANKED = season.CumulativeResults(
+    players={
+        "Stanton Turner": STANTON_CUMULATIVE_RESULTS_RANKED,
+        "John Fratello": JOHN_CUMULATIVE_RESULTS_RANKED,
     }
 )
 
 
 def test_season_construct() -> None:
-    season_ = season.Season(TEST_SEASON_INPUT)
-    assert season_._input == TEST_SEASON_INPUT
+    season_ = season.Season(SEASON_INPUT)
+
+    assert season_._input == SEASON_INPUT
+
+    assert set(season_._events.keys()) == {"Standard Event", "Major Event"}
+
+
+def test_season_results() -> None:
+    season_ = season.Season(SEASON_INPUT)
+
+    season_results = season_.results()
+
+    assert season_results == season.SeasonResults(
+        events=EVENT_RESULTS,
+        cumulative=CUMULATIVE_RESULTS_RANKED,
+    )
+
+
+def test_event_results() -> None:
+    season_ = season.Season(SEASON_INPUT)
+
+    season_event_results = season_._event_results()
+    assert season_event_results == EVENT_RESULTS
+
+
+def test_cumulative_results() -> None:
+    season_ = season.Season(SEASON_INPUT)
+
+    season_cumulative_results = season_._cumulative_results(EVENT_RESULTS)
+    assert season_cumulative_results == CUMULATIVE_RESULTS_RANKED
+
+
+def test_cumulative_results_unranked() -> None:
+    season_ = season.Season(SEASON_INPUT)
+
+    unranked_results = season_._unranked_cumulative_results(EVENT_RESULTS)
+
+    assert unranked_results == CUMULATIVE_RESULTS_UNRANKED
+
+
+def test_player_cumulative_results() -> None:
+    season_ = season.Season(SEASON_INPUT)
+
+    assert season_._player_cumulative_results(
+        event_results=EVENT_RESULTS,
+        player_name="Stanton Turner",
+    ) == STANTON_CUMULATIVE_RESULTS_UNRANKED
+
+    assert season_._player_cumulative_results(
+        event_results=EVENT_RESULTS,
+        player_name="John Fratello",
+    ) == JOHN_CUMULATIVE_RESULTS_UNRANKED
+
+
+def test_player_season_ranks() -> None:
+    def make_player_result(season_points: float) -> season.CumulativePlayerResult:
+        return season.CumulativePlayerResult(
+            season_points=season_points,
+            num_albatrosses=0,
+            num_birdies=0,
+            num_eagles=0,
+        )
+
+    cumulative_player_results = {
+        "Player1": make_player_result(season_points=100),
+        "Player2": make_player_result(season_points=100),
+        "Player3": make_player_result(season_points=105),
+        "Player4": make_player_result(season_points=110),
+        "Player5": make_player_result(season_points=120),
+        "Player6": make_player_result(season_points=110),
+    }
+
+    season_ = season.Season(SEASON_INPUT)
+
+    player_ranks = season_._player_season_ranks(cumulative_player_results)
+
+    assert player_ranks == {
+        "Player1": rank.RankValue(5),
+        "Player2": rank.RankValue(5),
+        "Player3": rank.RankValue(4),
+        "Player4": rank.RankValue(2),
+        "Player5": rank.RankValue(1),
+        "Player6": rank.RankValue(2),
+    }

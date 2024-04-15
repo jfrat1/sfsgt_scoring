@@ -14,6 +14,7 @@ from .inputs import (  # noqa: F401 - names exposed for public use
     IncompleteScorecard,
 )
 
-from .results import (
+from .results import (  # noqa: F401 - names exposed for public use
     EventResult,
+    PlayerEventResult
 )

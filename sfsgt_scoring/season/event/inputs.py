@@ -1,12 +1,15 @@
 import abc
 import enum
-from typing import Any, NamedTuple, Dict
+from typing import Any, NamedTuple
 
 
 class EventInput(NamedTuple):
     course: "CourseInput"
     type: "EventType"
     players: dict[str, "EventPlayerInput"]
+
+    def player_names(self) -> set[str]:
+        return set(self.players.keys())
 
 
 class EventType(enum.Enum):

@@ -184,7 +184,8 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 ),
             }
         )
-    }
+    },
+    player_names={"Stanton Turner", "John Fratello"},
 )
 
 

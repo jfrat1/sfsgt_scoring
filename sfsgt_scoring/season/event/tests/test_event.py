@@ -1,4 +1,5 @@
-from .. import inputs, event, rank, results
+from ... import rank
+from .. import inputs, event, results
 
 TEST_EVENT_INPUT = inputs.EventInput(
     course=inputs.CourseInput(
