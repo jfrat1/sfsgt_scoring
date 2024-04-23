@@ -16,5 +16,6 @@ from .inputs import (  # noqa: F401 - names exposed for public use
 
 from .results import (  # noqa: F401 - names exposed for public use
     EventResult,
-    PlayerEventResult
+    PlayerEventResult,
+    IncompletePlayerEventInividualResult,
 )

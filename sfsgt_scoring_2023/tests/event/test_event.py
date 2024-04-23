@@ -1,12 +1,9 @@
-from unittest import mock
-
 import pandas as pd
 import pytest
 
 from sfsgt_scoring_2023 import event
 from sfsgt_scoring_2023 import player
 from sfsgt_scoring_2023 import course
-
 
 
 PLAYER_GROUP_BOLT_GEOFF = player.PlayerGroup(

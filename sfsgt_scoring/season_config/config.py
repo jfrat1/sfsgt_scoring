@@ -59,8 +59,8 @@ class SeasonConfig(pydantic.BaseModel):
     def event_names(self) -> set[str]:
         return {event.event_name for event in self.events.values()}
 
-    def event_configs(self) -> list["EventConfig"]:
-        return list(self.events.values())
+    def event_configs(self) -> dict[int, "EventConfig"]:
+        return self.events
 
     def get_event_config(self, event_name: str) -> "EventConfig":
         candidate_events = [

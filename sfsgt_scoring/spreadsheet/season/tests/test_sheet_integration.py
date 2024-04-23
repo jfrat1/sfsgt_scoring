@@ -46,7 +46,7 @@ def test_sheet_read() -> None:
         }
     )
     expected_events_read_data: sheet.SeasonEventsReadData = {
-        'Presidio': event.EventReadData(
+        'Poppy Ridge': event.EventReadData(
             player_scores={
                 'Stanton Turner': event.HoleScores(
                     scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5},
@@ -59,7 +59,7 @@ def test_sheet_read() -> None:
                 ),
             }
         ),
-        'Poppy Ridge': event.EventReadData(
+        'Presidio': event.EventReadData(
             player_scores={
                 'Stanton Turner': event.HoleScores(
                     scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5},

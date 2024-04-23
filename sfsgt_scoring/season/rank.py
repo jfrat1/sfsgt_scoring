@@ -68,6 +68,15 @@ class IRankValue(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def rank(self) -> int: pass
 
+    @abc.abstractmethod
+    def is_win(self) -> bool: pass
+
+    @abc.abstractmethod
+    def is_top_five(self) -> bool: pass
+
+    @abc.abstractmethod
+    def is_top_ten(self) -> bool: pass
+
     def __int__(self) -> int:
         return self.rank()
 
@@ -93,6 +102,15 @@ class RankValue(IRankValue):
 
     def rank(self) -> int:
         return self._rank
+
+    def is_win(self) -> bool:
+        return self._rank == 1
+
+    def is_top_five(self) -> bool:
+        return self._rank in {2, 3, 4, 5}
+
+    def is_top_ten(self) -> bool:
+        return self._rank in {6, 7, 8, 9, 10}
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, RankValue):
@@ -124,6 +142,15 @@ class NoRankValue(IRankValue):
         raise NoRankValueApiCallError(
             "API calls are not allowed on NoRank objects becuase they don't contain any data."
         )
+
+    def is_win(self) -> bool:
+        return False
+
+    def is_top_five(self) -> bool:
+        return False
+
+    def is_top_ten(self) -> bool:
+        return False
 
     def __repr__(self) -> str:
         return "NoRankValue()"

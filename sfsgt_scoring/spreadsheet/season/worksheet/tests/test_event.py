@@ -37,8 +37,8 @@ TEST_WORKSHEET_DATA_PROCESSED = pd.DataFrame(
         [5, 7, 6, 3, 5, 6, 3, 5, 6, 7, 6, 4, 3, 5, 3, 4, 5, 6],
         [4, 6, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 5, 4, 5, 8],
     ],
-    columns=[str(idx) for idx in range(1, 19)],
-    index=pd.Index(data=TEST_PLAYERS, name="Player"),
+    columns=[f"HOLE_{str(idx)}" for idx in range(1, 19)],
+    index=pd.Index(data=TEST_PLAYERS, name="PLAYER"),
 )
 
 
@@ -69,7 +69,7 @@ EXPECTED_TEST_READ_DATA = event.EventReadData(
 
 
 def stub_google_worksheet(data: pd.DataFrame) -> mock.MagicMock:
-    stub_worksheet = mock.MagicMock(spec=event.google.GoogleWorksheet)
+    stub_worksheet = mock.MagicMock(spec=event.google_sheet.GoogleWorksheet)
     stub_worksheet.range_to_df.return_value = data
 
     return stub_worksheet
@@ -268,7 +268,7 @@ def test_generate_read_data_with_empty_scores_for_one_player() -> None:
 
     test_data: pd.DataFrame = TEST_WORKSHEET_DATA_PROCESSED.copy()
     test_data = test_data.astype(object)
-    test_data.loc["Stanton Turner", "9"] = ""
+    test_data.loc["Stanton Turner", "HOLE_9"] = ""
 
     read_data = event_worksheet._generate_read_data(worksheet_data=test_data)
 

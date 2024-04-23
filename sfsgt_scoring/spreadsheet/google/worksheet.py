@@ -1,5 +1,16 @@
+from typing import Iterable, NamedTuple
+
 import gspread
 import pandas as pd
+
+CellValueType = str | float | int
+
+
+class RangeValues(NamedTuple):
+    range: str
+    # Represents a 2-d array of data values to be written into the range. The
+    # inner lists are rows to be written.
+    values: list[list[CellValueType]]
 
 
 class GoogleWorksheet:
@@ -40,3 +51,10 @@ class GoogleWorksheet:
         self.worksheet.update(
             [data.columns.values.tolist()] + data.values.tolist()
         )
+
+    def write_multiple_ranges(self, range_values: Iterable[RangeValues]) -> None:
+        write_data = [
+            {"range": range_value.range, "values": range_value.values}
+            for range_value in range_values
+        ]
+        self.worksheet.batch_update(data=write_data)

@@ -248,10 +248,12 @@ def test_construct(stubbed_dependencies: StubbedDependencies) -> None:
             leaderboard_sheet_name="Leaderboard",
             events={
                 "Standard Event": season_spreadsheet.SeasonSheetEventConfig(
+                    event_num=1,
                     sheet_name="Standard Event Scorecard",
                     scorecard_start_cell="A1",
                 ),
                 "Major Event": season_spreadsheet.SeasonSheetEventConfig(
+                    event_num=2,
                     sheet_name="Major Event Scorecard",
                     scorecard_start_cell="B5",
                 ),

@@ -11,9 +11,9 @@ pytestmark = pytest.mark.integration
 TEST_GOOGLE_SHEET_ID = "1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ"
 
 # Names of real worksheets containing test data.
-TEST_WORKSHEET_ALL_PLAYERS_HAVE_SCORES = "Presidio Scorecard (Real)"
-TEST_WORKSHEET_SOME_PLAYERS_MISSING_SCORES = "Presidio Scorecard (Some Empty)"
-TEST_WORKSHEET_ALL_PLAYERS_MISSING_SCORES = "Presidio Scorecard (All Empty)"
+TEST_WORKSHEET_ALL_PLAYERS_HAVE_SCORES = "Test Scorecard (All players have scores)"
+TEST_WORKSHEET_SOME_PLAYERS_MISSING_SCORES = "Test Scorecard (Some players empty)"
+TEST_WORKSHEET_ALL_PLAYERS_MISSING_SCORES = "Test Scorecard (All players empty)"
 
 # All test worksheets have the same start cell
 SCORECARD_START_CELL = "B8"
@@ -52,6 +52,7 @@ def test_read_real_event_worksheet() -> None:
     )
 
     assert read_data == expected_read_data
+    assert event_ws._sorted_worksheet_player_names == ["Stanton Turner", "John Fratello", "Steve Harasym"]
 
 
 def test_read_real_event_worksheet_some_players_missing_scores() -> None:

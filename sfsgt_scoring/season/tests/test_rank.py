@@ -139,3 +139,40 @@ def test_ranks_list_min() -> None:
     ranks = [rank.RankValue(3), rank.RankValue(1), rank.RankValue(2)]
 
     assert min(ranks) == rank.RankValue(1)
+
+
+def test_rank_value_is_win() -> None:
+    assert rank.RankValue(1).is_win()
+    assert not rank.RankValue(2).is_win()
+    assert not rank.RankValue(3).is_win()
+
+
+def test_rank_value_is_top_five() -> None:
+    assert not rank.RankValue(1).is_top_five()
+    assert rank.RankValue(2).is_top_five()
+    assert rank.RankValue(3).is_top_five()
+    assert rank.RankValue(4).is_top_five()
+    assert rank.RankValue(5).is_top_five()
+    assert not rank.RankValue(6).is_top_five()
+
+
+def test_rank_value_is_top_ten() -> None:
+    assert not rank.RankValue(5).is_top_ten()
+    assert rank.RankValue(6).is_top_ten()
+    assert rank.RankValue(7).is_top_ten()
+    assert rank.RankValue(8).is_top_ten()
+    assert rank.RankValue(9).is_top_ten()
+    assert rank.RankValue(10).is_top_ten()
+    assert not rank.RankValue(11).is_top_ten()
+
+
+def assert_no_rank_value_is_not_win() -> None:
+    assert not rank.NoRankValue().is_win()
+
+
+def assert_no_rank_value_is_not_top_five() -> None:
+    assert not rank.NoRankValue().is_top_five()
+
+
+def assert_no_rank_value_is_not_top_ten() -> None:
+    assert not rank.NoRankValue().is_top_ten()

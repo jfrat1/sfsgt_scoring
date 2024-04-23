@@ -19,8 +19,11 @@ SeasonEventsReadData = dict[str, worksheet.EventReadData]
 
 
 class SeasonSheetWriteData(NamedTuple):
-    # same as above. write data for events and leaderboard
-    pass
+    leaderboard: worksheet.LeaderboardWriteData
+    events: "SeasonEventsWriteData"
+
+
+SeasonEventsWriteData = dict[str, worksheet.EventWriteData]
 
 
 class SeasonWorksheets(NamedTuple):
@@ -50,6 +53,7 @@ class SeasonSheetConfig(NamedTuple):
 
 
 class SeasonSheetEventConfig(NamedTuple):
+    event_num: int
     sheet_name: str
     scorecard_start_cell: str
 
@@ -60,6 +64,10 @@ class SeasonSheetNotConfiguredError(Exception):
 
 class SeasonSheetVerificationError(Exception):
     """Exception to be raised if the structure or data of the season sheet is not valid."""
+
+
+class SeasonSheetWriteError(Exception):
+    """Exception to be raised when an error is encountered while writing."""
 
 
 class SeasonSheet:
@@ -130,6 +138,10 @@ class SeasonSheet:
         return worksheet.LeaderboardWorksheet(
             worksheet=google_worksheet,
             players=player_names,
+            events={
+                event_data.event_num: event_name
+                for event_name, event_data in config.events.items()
+            },
         )
 
     def _create_event_worksheets(
@@ -177,4 +189,14 @@ class SeasonSheet:
         )
 
     def write(self, data: SeasonSheetWriteData) -> None:
-        pass
+        if self.worksheets is None:
+            raise SeasonSheetWriteError(
+                "An unexpected error was encountered while writing to the spreadsheet. Ensure that "
+                "this class instance has been configured before writing."
+            )
+
+        self.worksheets.leaderboard.write(write_data=data.leaderboard)
+
+        for event_name, event_worksheet in self.worksheets.events.items():
+            event_write_data = data.events[event_name]
+            event_worksheet.write(event_write_data)

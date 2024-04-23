@@ -9,7 +9,7 @@ pytestmark = pytest.mark.integration
 # data input for use in these tests.
 TEST_GOOGLE_SHEET_ID = "1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ"
 # Name of the worksheet that has the player data
-TEST_WORKSHEET_NAME = "Player Handicaps"
+TEST_WORKSHEET_NAME = "Handicaps"
 
 
 def real_players_worksheet() -> google.GoogleWorksheet:

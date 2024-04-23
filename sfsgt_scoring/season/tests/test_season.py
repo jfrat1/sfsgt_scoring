@@ -202,6 +202,7 @@ STANTON_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_birdies=0,
     num_eagles=0,
     num_albatrosses=0,
+    num_events_completed=2,
     num_wins=2,
     num_top_fives=0,
     num_top_tens=0,
@@ -214,6 +215,7 @@ JOHN_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_birdies=8,
     num_eagles=2,
     num_albatrosses=0,
+    num_events_completed=2,
     num_wins=2,
     num_top_fives=0,
     num_top_tens=0,
@@ -296,6 +298,10 @@ def test_player_season_ranks() -> None:
             num_albatrosses=0,
             num_birdies=0,
             num_eagles=0,
+            num_events_completed=0,
+            num_wins=0,
+            num_top_fives=0,
+            num_top_tens=0,
         )
 
     cumulative_player_results = {

@@ -1,5 +1,7 @@
 from sfsgt_scoring import course_database, season_config, season
-from sfsgt_scoring.season import event as season_event
+from sfsgt_scoring.season import (
+    event as season_event,
+)
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 
@@ -36,10 +38,11 @@ class SeasonRunner:
 
     def _season_sheet_event_configs(self) -> dict[str, season_spreadsheet.SeasonSheetEventConfig]:
         return {
-            event.event_name: season_spreadsheet.SeasonSheetEventConfig(
-                sheet_name=event.sheet_name,
-                scorecard_start_cell=event.scorecard_sheet_start_cell,
-            ) for event in self.config.event_configs()
+            event_config.event_name: season_spreadsheet.SeasonSheetEventConfig(
+                event_num=event_num,
+                sheet_name=event_config.sheet_name,
+                scorecard_start_cell=event_config.scorecard_sheet_start_cell,
+            ) for event_num, event_config in self.config.event_configs().items()
         }
 
     def _season_sheet_config(
@@ -161,5 +164,95 @@ class SeasonRunner:
                 raise ValueError(f"Unknown config event type: {config_event_type}")
 
     def _write_spreadsheet_data(self, season_results: season.SeasonResults) -> None:
-        import ipdb; ipdb.set_trace()
-        pass
+        write_data = self._generate_spreadsheet_write_data(season_results)
+        self.sheet.write(data=write_data)
+
+    def _generate_spreadsheet_write_data(
+        self,
+        season_results: season.SeasonResults,
+    ) -> season_spreadsheet.SeasonSheetWriteData:
+        leaderboard_write_data = self._generate_spreadsheet_leaderboard_write_data(season_results)
+        events_write_data = self._generate_spreadsheet_events_write_data(season_results)
+
+        return season_spreadsheet.SeasonSheetWriteData(
+            leaderboard=leaderboard_write_data,
+            events=events_write_data,
+        )
+
+    def _generate_spreadsheet_leaderboard_write_data(
+        self,
+        season_results: season.SeasonResults,
+    ) -> season_spreadsheet.worksheet.LeaderboardWriteData:
+        leaderboard_players: list[season_spreadsheet.worksheet.PlayerLeaderboardWriteData] = []
+        for player_name, cumulative_player_data in season_results.cumulative.players.items():
+            player_event_points = {
+                event_name: event_data.players[player_name].event_points
+                for event_name, event_data in season_results.events.items()
+            }
+            leaderboard_player = season_spreadsheet.worksheet.PlayerLeaderboardWriteData(
+                player_name=player_name,
+                season_points=cumulative_player_data.season_points,
+                season_rank=int(cumulative_player_data.season_rank),
+                events_played=cumulative_player_data.num_events_completed,
+                birdies=cumulative_player_data.num_birdies,
+                eagles=cumulative_player_data.num_eagles,
+                wins=cumulative_player_data.num_wins,
+                top_5s=cumulative_player_data.num_top_fives,
+                top_10s=cumulative_player_data.num_top_tens,
+                event_points=player_event_points,
+            )
+            leaderboard_players.append(leaderboard_player)
+
+        return season_spreadsheet.worksheet.LeaderboardWriteData(players=leaderboard_players)
+
+    def _generate_spreadsheet_events_write_data(
+        self,
+        season_results: season.SeasonResults,
+    ) -> season_spreadsheet.SeasonEventsWriteData:
+
+        return {
+            event_name: self._generate_spreadsheet_event_write_data(event_data)
+            for event_name, event_data in season_results.events.items()
+        }
+
+    def _generate_spreadsheet_event_write_data(
+        self,
+        event_results: season_event.EventResult,
+    ) -> season_spreadsheet.worksheet.EventWriteData:
+        event_players_write_data: dict[str, season_spreadsheet.worksheet.PlayerEventWriteData] = {}
+        for player_name, player_result in event_results.players.items():
+            if player_result.is_complete_result():
+                event_players_write_data[player_name] = season_spreadsheet.worksheet.PlayerEventWriteData(
+                    front_9_strokes=player_result.front_9_gross,
+                    back_9_strokes=player_result.back_9_gross,
+                    gross_strokes=player_result.total_gross,
+                    course_handicap=player_result.course_handicap,
+                    net_strokes=player_result.total_net,
+                    gross_rank=int(player_result.gross_score_rank),
+                    net_rank=int(player_result.net_score_rank),
+                    gross_points=player_result.gross_score_points,
+                    net_points=player_result.net_score_points,
+                    event_points=player_result.event_points,
+                    event_rank=int(player_result.event_rank),
+                )
+            else:
+                event_players_write_data[player_name] = season_spreadsheet.worksheet.PlayerEventWriteData(
+                    front_9_strokes="",
+                    back_9_strokes="",
+                    gross_strokes="",
+                    course_handicap="",
+                    net_strokes="",
+                    gross_rank="No Result",
+                    net_rank="No Result",
+                    gross_points=player_result.gross_score_points,
+                    net_points=player_result.net_score_points,
+                    event_points=player_result.event_points,
+                    event_rank="No Result",
+                )
+
+        return season_spreadsheet.worksheet.EventWriteData(
+            players=event_players_write_data,
+            birdies=set(),
+            eagles=set(),
+            hole_scores_over_max=set(),
+        )

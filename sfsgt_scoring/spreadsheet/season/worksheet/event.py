@@ -1,26 +1,55 @@
 import abc
+import enum
 from typing import Any, NamedTuple
 
 import pandas as pd
 from gspread import utils as gspread_utils
 
-from sfsgt_scoring.spreadsheet import google
+from sfsgt_scoring.spreadsheet import google as google_sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
 
-EVENT_WORKSHEET_COLUMNS = [
-    "Player",
-    "1", "2", "3", "4", "5", "6", "7", "8", "9",
-    "Out", "Player Initial",
-    "10", "11", "12", "13", "14", "15", "16", "17", "18",
-    "In", "Total", "Course Handicap", "Net",
-    "Gross Rank", "Net Rank", "Points", "Event Rank",
+# TODO - use this to make some of the code below more clear
+class EventWorksheetColumnOffsets(enum.Enum):
+    PLAYER = 0
+    HOLE_1 = 1
+    HOLE_2 = 2
+    HOLE_3 = 3
+    HOLE_4 = 4
+    HOLE_5 = 5
+    HOLE_6 = 6
+    HOLE_7 = 7
+    HOLE_8 = 8
+    HOLE_9 = 9
+    FRONT_NINE_STROKES = 10
+    PLAYER_INITIAL = 11
+    HOLE_10 = 12
+    HOLE_11 = 13
+    HOLE_12 = 14
+    HOLE_13 = 15
+    HOLE_14 = 16
+    HOLE_15 = 17
+    HOLE_16 = 18
+    HOLE_17 = 19
+    HOLE_18 = 20
+    BACK_NINE_STROKES = 21
+    GROSS_STROKES = 22
+    COURSE_HANDICAP = 23
+    NET_STROKES = 24
+    GROSS_RANK = 25
+    NET_RANK = 26
+    EVENT_POINTS = 27
+    EVENT_RANK = 28
+
+
+EVENT_WORKSHEET_COLUMN_NAMES = [
+    e.name for e in EventWorksheetColumnOffsets
 ]
 
-READ_DATA_FIRST_COLUMN = "Player"
-READ_DATA_LAST_COLUMN = "18"
-READ_DATA_FIRST_COL_INDEX = EVENT_WORKSHEET_COLUMNS.index(READ_DATA_FIRST_COLUMN)
-READ_DATA_LAST_COL_INDEX = EVENT_WORKSHEET_COLUMNS.index(READ_DATA_LAST_COLUMN)
+READ_DATA_FIRST_COLUMN = "PLAYER"
+READ_DATA_LAST_COLUMN = "HOLE_18"
+READ_DATA_FIRST_COL_INDEX = EVENT_WORKSHEET_COLUMN_NAMES.index(READ_DATA_FIRST_COLUMN)
+READ_DATA_LAST_COL_INDEX = EVENT_WORKSHEET_COLUMN_NAMES.index(READ_DATA_LAST_COLUMN)
 
 
 class EventReadData(NamedTuple):
@@ -97,6 +126,7 @@ class PlayerEventWriteData(NamedTuple):
     front_9_strokes: int
     back_9_strokes: int
     gross_strokes: int
+    course_handicap: int
     net_strokes: int
     gross_rank: int
     net_rank: int
@@ -119,16 +149,21 @@ class EventWorksheetVerificationError(Exception):
     """Exception to be raised when an error is detected during verification of the event worksheet."""
 
 
+class EventWorksheetWriteError(Exception):
+    """Exception to be raised when an error is encountered while writing to the worksheet."""
+
+
 class EventWorksheet:
     def __init__(
         self,
-        worksheet: google.GoogleWorksheet,
+        worksheet: google_sheet.GoogleWorksheet,
         players: set[str],
         scorecard_start_cell: str,
     ) -> None:
         self._worksheet = worksheet
         self._players = players
         self._scorecard_start_cell = scorecard_start_cell
+        self._sorted_worksheet_player_names: list[str] = []  # This will be set when reading from the sheet
 
         self._verify_scorecard_start_cell()
 
@@ -151,6 +186,7 @@ class EventWorksheet:
     def _get_worksheet_data(self) -> pd.DataFrame:
         worksheet_data_raw = self._raw_worksheet_data()
         worksheet_data = self._process_raw_worksheet_data(worksheet_data_raw)
+        self._sorted_worksheet_player_names = list(worksheet_data.index)
 
         self._check_worksheet_data(worksheet_data)
         return worksheet_data
@@ -181,10 +217,10 @@ class EventWorksheet:
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
-        column_labels = EVENT_WORKSHEET_COLUMNS[READ_DATA_FIRST_COL_INDEX:READ_DATA_LAST_COL_INDEX+1]
+        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[READ_DATA_FIRST_COL_INDEX:READ_DATA_LAST_COL_INDEX+1]
         worksheet_data.columns = pd.Index(column_labels)
-        worksheet_data.drop(columns=["Out", "Player Initial"], inplace=True)
-        worksheet_data.set_index(keys="Player", inplace=True)
+        worksheet_data.drop(columns=["FRONT_NINE_STROKES", "PLAYER_INITIAL"], inplace=True)
+        worksheet_data.set_index(keys="PLAYER", inplace=True)
 
         return dataframe.numericise_all_values(worksheet_data)
 
@@ -194,7 +230,7 @@ class EventWorksheet:
         self._check_data_values(worksheet_data)
 
     def _check_column_headers(self, worksheet_data: pd.DataFrame) -> None:
-        expected_columns = [str(hole_num) for hole_num in range(1, 19)]
+        expected_columns = [f"HOLE_{str(hole_num)}" for hole_num in range(1, 19)]
         if not list(worksheet_data.columns) == expected_columns:
             raise EventWorksheetVerificationError(
                 f"Worksheet data column labels do not match expectations."
@@ -232,7 +268,6 @@ class EventWorksheet:
             str(player_name): self._generate_hole_scores(scores_ser)
             for (player_name, scores_ser) in worksheet_data_modified.iterrows()
         }
-
         return EventReadData(player_scores=player_scores)
 
     def _generate_hole_scores(self, scores_ser: pd.Series) -> IHoleScores:
@@ -241,7 +276,87 @@ class EventWorksheet:
         else:
             scores_dict_raw = scores_ser.to_dict()
             scores_dict = {
-                int(hole_num): hole_score
+                int(hole_num.replace("HOLE_", "")): hole_score
                 for hole_num, hole_score in scores_dict_raw.items()
             }
             return HoleScores(scores=scores_dict)
+
+    def write(self, write_data: EventWriteData) -> None:
+        if not self._sorted_worksheet_player_names:
+            raise EventWorksheetWriteError(
+                "An unexpected error was encountered while writing. This suggests that the event "
+                "worksheet was not read before being written to. Double check usage of this object "
+                "to ensure that data is read before being written."
+            )
+
+        first_write_range = self._front_nine_and_player_initial_write_range(write_data)
+        second_write_range = self._back_nine_and_event_results_range(write_data)
+        write_ranges = [first_write_range, second_write_range]
+
+        self._worksheet.write_multiple_ranges(write_ranges)
+
+    def _front_nine_and_player_initial_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
+        range_name = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.FRONT_NINE_STROKES,
+            end_col_offset=EventWorksheetColumnOffsets.PLAYER_INITIAL,
+        )
+
+        values: list[list[google_sheet.CellValueType]] = []
+        for player_name in self._sorted_worksheet_player_names:
+            player_data = write_data.players[player_name]
+            player_initials = "".join([name[0] for name in player_name.split(" ")])
+
+            value: list[google_sheet.CellValueType] = [
+                player_data.front_9_strokes,
+                player_initials,
+            ]
+            values.append(value)
+
+        return google_sheet.RangeValues(
+            range=range_name,
+            values=values,
+        )
+
+    def _back_nine_and_event_results_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
+        range_name = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.BACK_NINE_STROKES,
+            end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
+        )
+
+        values: list[list[google_sheet.CellValueType]] = []
+        for player_name in self._sorted_worksheet_player_names:
+            player_data = write_data.players[player_name]
+
+            value: list[google_sheet.CellValueType] = [
+                player_data.back_9_strokes,
+                player_data.gross_strokes,
+                player_data.course_handicap,
+                player_data.net_strokes,
+                player_data.gross_rank,
+                player_data.net_rank,
+                player_data.event_points,
+                player_data.event_rank,
+            ]
+            values.append(value)
+
+        return google_sheet.RangeValues(
+            range=range_name,
+            values=values,
+        )
+
+    def _range_for_columns(
+        self,
+        start_col_offset: EventWorksheetColumnOffsets,
+        end_col_offset: EventWorksheetColumnOffsets,
+    ) -> str:
+        (first_player_row, first_player_col) = gspread_utils.a1_to_rowcol(self._scorecard_start_cell)
+
+        start_row = first_player_row
+        end_row = first_player_row + self._num_players() - 1
+
+        start_col = first_player_col + start_col_offset.value
+        end_col = first_player_col + end_col_offset.value
+
+        range_start = gspread_utils.rowcol_to_a1(row=start_row, col=start_col)
+        range_end = gspread_utils.rowcol_to_a1(row=end_row, col=end_col)
+        return f"{range_start}:{range_end}"

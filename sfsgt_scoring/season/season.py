@@ -66,14 +66,16 @@ class CumulativePlayerResult:
         num_birdies: int,
         num_eagles: int,
         num_albatrosses: int,
-        num_wins: int = 0,
-        num_top_fives: int = 0,
-        num_top_tens: int = 0,
+        num_events_completed: int,
+        num_wins: int,
+        num_top_fives: int,
+        num_top_tens: int,
     ) -> None:
         self._season_points = season_points
         self._num_birdies = num_birdies
         self._num_eagles = num_eagles
         self._num_albatrosses = num_albatrosses
+        self._num_events_completed = num_events_completed
         self._num_wins = num_wins
         self._num_top_fives = num_top_fives
         self._num_top_tens = num_top_tens
@@ -100,6 +102,10 @@ class CumulativePlayerResult:
         return self._num_albatrosses
 
     @property
+    def num_events_completed(self) -> int:
+        return self._num_events_completed
+
+    @property
     def num_wins(self) -> int:
         return self._num_wins
 
@@ -123,10 +129,11 @@ class CumulativePlayerResult:
             self._num_birdies == other._num_birdies and
             self._num_eagles == other._num_eagles and
             self._num_albatrosses == other._num_albatrosses and
-            self._season_rank == other._season_rank and
+            self._num_events_completed == other._num_events_completed and
             self._num_wins == other._num_wins and
             self._num_top_fives == other._num_top_fives and
-            self._num_top_tens == other._num_top_tens
+            self._num_top_tens == other._num_top_tens and
+            self._season_rank == other._season_rank
         )
 
 
@@ -183,6 +190,7 @@ class Season:
         num_birdies = 0
         num_eagles = 0
         num_albatrosses = 0
+        num_events_completed = 0
         num_wins = 0
         num_top_fives = 0
         num_top_tens = 0
@@ -195,14 +203,17 @@ class Season:
             num_eagles += player_event_results.num_eagles
             num_albatrosses += player_event_results.num_albatrosses
 
-            # TODO: add methods to the RankValue (or just here) to show
-            # if something is win, top 5, top 10 (exclusive of each other)
+            num_events_completed += 1 if player_event_results.is_complete_result() else 0
+            num_wins += 1 if player_event_results.event_rank.is_win() else 0
+            num_top_fives += 1 if player_event_results.event_rank.is_top_five() else 0
+            num_top_tens += 1 if player_event_results.event_rank.is_top_ten() else 0
 
         return CumulativePlayerResult(
             season_points=season_points,
             num_birdies=num_birdies,
             num_eagles=num_eagles,
             num_albatrosses=num_albatrosses,
+            num_events_completed=num_events_completed,
             num_wins=num_wins,
             num_top_fives=num_top_fives,
             num_top_tens=num_top_tens,

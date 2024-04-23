@@ -116,6 +116,7 @@ def test_season_inputs_construct() -> None:
 
     assert season_input.player_names == {"Stanton Turner", "John Fratello"}
 
+
 def test_season_inputs_event_missing_player_raises_error() -> None:
     harding_park_event_input_players = HARDING_PARK_EVENT_INPUT.players.copy()
     harding_park_event_input_players.pop("John Fratello", None)

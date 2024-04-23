@@ -9,14 +9,16 @@ from ..worksheet import event, players
 TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
     sheet_id="test_sheet_id",
     leaderboard_sheet_name="Leaderboard",
-    players_sheet_name="Player Handicaps",
+    players_sheet_name="Handicaps",
     events={
         "Presidio": sheet.SeasonSheetEventConfig(
-            sheet_name="Presidio Scorecard",
+            event_num=1,
+            sheet_name="Presidio",
             scorecard_start_cell="B8",
         ),
         "Harding Park": sheet.SeasonSheetEventConfig(
-            sheet_name="Harding Park Scorecard",
+            event_num=2,
+            sheet_name="TPC Harding",
             scorecard_start_cell="B8",
         ),
     }
@@ -34,9 +36,9 @@ TEST_PLAYERS = [
 
 TEST_WORKSHEET_TITLES = [
     "Leaderboard",
-    "Player Handicaps",
-    "Presidio Scorecard",
-    "Harding Park Scorecard",
+    "Handicaps",
+    "Presidio",
+    "TPC Harding",
 ]
 
 TEST_PLAYERS_READ_DATA = players.PlayersReadData(
@@ -150,10 +152,10 @@ def stubs(
 
 def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> None:
     assert stubs.google_sheet.return_value.worksheet.call_args_list == [
-        mock.call(worksheet_name="Player Handicaps"),
+        mock.call(worksheet_name="Handicaps"),
         mock.call(worksheet_name="Leaderboard"),
-        mock.call(worksheet_name="Presidio Scorecard"),
-        mock.call(worksheet_name="Harding Park Scorecard"),
+        mock.call(worksheet_name="Presidio"),
+        mock.call(worksheet_name="TPC Harding"),
     ]
 
     # The same MagicMock object is returned for all calls to the google_sheet.worksheet()
@@ -168,6 +170,10 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
     stubs.leaderboard_worksheet.assert_called_once_with(
         worksheet=shared_worksheet_stub,
         players=set(TEST_PLAYERS),
+        events={
+            1: "Presidio",
+            2: "Harding Park",
+        }
     )
 
     assert stubs.event_worksheet.call_args_list == [

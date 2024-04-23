@@ -1,47 +1,47 @@
 name: SFSGT 2024
 sheet_id: 1qhjZM-opDs_w6xxGDko4vgNa2dgxkeJYA20mly7Aa3M
-players_sheet_name: Player Handicaps
+players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
 events: {
   1: {
+    event_name: Poppy Ridge,
+    sheet_name: Poppy Ridge,
+    course_name: poppy ridge zinfandel/chardonnay construction,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  2: {
     event_name: Presidio,
-    sheet_name: Presidio Scorecard (Real),
+    sheet_name: Presidio,
     course_name: presidio,
     tee: blue,
     type: standard,
     scorecard_sheet_start_cell: B8
   },
-  2: {
-    event_name: Poppy Ridge,
-    sheet_name: Poppy Ridge Scorecard (Real),
-    course_name: poppy ridge zinfandel/merlot,
-    tee: white,
-    type: standard,
-    scorecard_sheet_start_cell: B15
-  },
   3: {
     event_name: Harding Park,
-    sheet_name: Harding Park Scorecard (Real),
+    sheet_name: TPC Harding,
     course_name: harding park,
     tee: blue,
     type: major,
-    scorecard_sheet_start_cell: B15
+    scorecard_sheet_start_cell: B8
   },
   4: {
     event_name: Sharp Park,
-    sheet_name: Sharp Park Scorecard (Real),
+    sheet_name: Sharp Park,
     course_name: sharp park,
     tee: White,
     type: standard,
-    scorecard_sheet_start_cell: B15
+    scorecard_sheet_start_cell: B8
   },
   5: {
     event_name: Baylands,
-    sheet_name: Baylands Scorecard (Real),
+    sheet_name: Baylands,
     course_name: baylands,
     tee: white,
     type: standard,
-    scorecard_sheet_start_cell: B15
+    scorecard_sheet_start_cell: B8
   }
 }
 
