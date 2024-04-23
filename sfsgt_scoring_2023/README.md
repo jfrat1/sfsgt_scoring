@@ -1,5 +1,7 @@
 # SFSGT Scoring Application from 2023
 
+NOTE: This code is old and no longer used in the updated app. It is here for reference only.
+
 This directory is a copy of the source code which was used in
 in 2023 to execute the season scoring app. I copied it here so
 that I could reference it while re-building the project to be
