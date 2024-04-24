@@ -45,11 +45,11 @@ TEST_PLAYERS_READ_DATA = players.PlayersReadData(
     player_handicaps={
         "Stanton Turner": players.HandicapIndexByEvent(
             data={"Presidio": 12.0, "Harding Park": 12.2},
-            events={"Presidio", "Harding Park"},
+            events=["Presidio", "Harding Park"],
         ),
         "John Fratello": players.HandicapIndexByEvent(
             data={"Presidio": 15.8, "Harding Park": 15.4},
-            events={"Presidio", "Harding Park"},
+            events=["Presidio", "Harding Park"],
         ),
     }
 )
@@ -79,7 +79,7 @@ TEST_HARDING_PARK_EVENT_READ_DATA = event.EventReadData(
 
 def configure_google_sheet_stub(stubbed_google_sheet_constructor: mock.MagicMock) -> None:
     stub_google_sheet = stubbed_google_sheet_constructor.return_value
-    stub_google_sheet.worksheet_titles.return_value = set(TEST_WORKSHEET_TITLES)
+    stub_google_sheet.worksheet_titles.return_value = TEST_WORKSHEET_TITLES
 
 
 @pytest.fixture()
@@ -91,7 +91,7 @@ def stub_google_sheet_constructor() -> Generator[mock.MagicMock, None, None]:
 
 def configure_players_worksheet_stub(stubbed_players_worksheet_constructor: mock.MagicMock) -> None:
     stub_players_worksheet = stubbed_players_worksheet_constructor.return_value
-    stub_players_worksheet.player_names.return_value = set(TEST_PLAYERS)
+    stub_players_worksheet.player_names.return_value = TEST_PLAYERS
     stub_players_worksheet.read.return_value = TEST_PLAYERS_READ_DATA
 
 
@@ -164,12 +164,12 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
 
     stubs.players_worksheet.assert_called_once_with(
         worksheet=shared_worksheet_stub,
-        events=set(TEST_EVENTS),
+        events=TEST_EVENTS,
     )
 
     stubs.leaderboard_worksheet.assert_called_once_with(
         worksheet=shared_worksheet_stub,
-        players=set(TEST_PLAYERS),
+        players=TEST_PLAYERS,
         events={
             1: "Presidio",
             2: "Harding Park",
@@ -179,12 +179,12 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
     assert stubs.event_worksheet.call_args_list == [
         mock.call(
             worksheet=shared_worksheet_stub,
-            players=set(TEST_PLAYERS),
+            players=TEST_PLAYERS,
             scorecard_start_cell="B8",
         ),
         mock.call(
             worksheet=shared_worksheet_stub,
-            players=set(TEST_PLAYERS),
+            players=TEST_PLAYERS,
             scorecard_start_cell="B8",
         ),
     ]
@@ -245,7 +245,7 @@ def test_sheet_read_data_get_player_names() -> None:
             "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
         }
     )
-    assert sheet_read_data.player_names() == {"Stanton Turner", "John Fratello"}
+    assert sheet_read_data.player_names() == ["Stanton Turner", "John Fratello"]
 
 
 def test_sheet_read_data_get_event_names() -> None:
@@ -256,7 +256,7 @@ def test_sheet_read_data_get_event_names() -> None:
             "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
         }
     )
-    assert sheet_read_data.event_names() == {"Presidio", "Harding Park"}
+    assert sheet_read_data.event_names() == ["Presidio", "Harding Park"]
 
 
 def test_sheet_read_in_unconfigured_state_raises_error() -> None:

@@ -9,7 +9,7 @@ class SeasonInputConsistencyError(Exception):
 
 
 class SeasonInput:
-    def __init__(self, events: "EventsInput", player_names: set[str]) -> None:
+    def __init__(self, events: "EventsInput", player_names: list[str]) -> None:
         self._events = events
         self._player_names = player_names
 
@@ -28,7 +28,7 @@ class SeasonInput:
         return self._events
 
     @property
-    def player_names(self) -> set[str]:
+    def player_names(self) -> list[str]:
         return self._player_names
 
     def __eq__(self, other: Any) -> bool:

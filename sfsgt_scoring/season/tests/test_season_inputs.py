@@ -103,7 +103,7 @@ def test_season_inputs_construct() -> None:
 
     season_input = season.SeasonInput(
         events=events_input,
-        player_names={"Stanton Turner", "John Fratello"}
+        player_names=["Stanton Turner", "John Fratello"],
     )
 
     assert season_input.events["Harding Park"].course.name == "Harding Park"
@@ -114,7 +114,7 @@ def test_season_inputs_construct() -> None:
     assert season_input.events["Poppy Ridge"].players["John Fratello"].handicap_index == 15.8
     assert season_input.events["Poppy Ridge"].players["John Fratello"].scorecard.strokes_per_hole()[6] == 6
 
-    assert season_input.player_names == {"Stanton Turner", "John Fratello"}
+    assert season_input.player_names == ["Stanton Turner", "John Fratello"]
 
 
 def test_season_inputs_event_missing_player_raises_error() -> None:
@@ -135,5 +135,5 @@ def test_season_inputs_event_missing_player_raises_error() -> None:
     with pytest.raises(season.SeasonInputConsistencyError):
         season.SeasonInput(
             events=events_input,
-            player_names={"Stanton Turner", "John Fratello"},
+            player_names=["Stanton Turner", "John Fratello"],
         )

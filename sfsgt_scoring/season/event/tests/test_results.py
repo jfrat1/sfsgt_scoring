@@ -151,38 +151,38 @@ def test_notable_holes_set_hole() -> None:
     notable_holes.set_hole(hole_num=9, score_type=results.NotableHoleType.ALBATROSS)
     notable_holes.set_hole(hole_num=11, score_type=results.NotableHoleType.OVER_MAX)
 
-    assert notable_holes._birdie_holes == {3, 5}
-    assert notable_holes._eagle_holes == {7}
-    assert notable_holes._albatross_holes == {9}
-    assert notable_holes._over_max_holes == {11}
+    assert notable_holes._birdie_holes == [3, 5]
+    assert notable_holes._eagle_holes == [7]
+    assert notable_holes._albatross_holes == [9]
+    assert notable_holes._over_max_holes == [11]
 
 
 def test_notable_holes_birdie_holes() -> None:
     notable_holes = results.NotableHoles()
-    notable_holes._birdie_holes = {3}
+    notable_holes._birdie_holes = [3]
 
-    assert notable_holes.birdie_holes() == {3}
+    assert notable_holes.birdie_holes() == [3]
 
 
 def test_notable_holes_eagle_holes() -> None:
     notable_holes = results.NotableHoles()
-    notable_holes._eagle_holes = {3}
+    notable_holes._eagle_holes = [3]
 
-    assert notable_holes.eagle_holes() == {3}
+    assert notable_holes.eagle_holes() == [3]
 
 
 def test_notable_holes_albatross_holes() -> None:
     notable_holes = results.NotableHoles()
-    notable_holes._albatross_holes = {3}
+    notable_holes._albatross_holes = [3]
 
-    assert notable_holes.albatross_holes() == {3}
+    assert notable_holes.albatross_holes() == [3]
 
 
 def test_notable_holes_over_max_holes() -> None:
     notable_holes = results.NotableHoles()
-    notable_holes._over_max_holes = {3}
+    notable_holes._over_max_holes = [3]
 
-    assert notable_holes.over_max_holes() == {3}
+    assert notable_holes.over_max_holes() == [3]
 
 
 def test_notable_holes_setting_duplicate_hole_raises_error() -> None:
@@ -196,10 +196,10 @@ def test_notable_holes_setting_duplicate_hole_raises_error() -> None:
 def test_notable_holes_has_hole_num_been_set_true() -> None:
     notable_holes = results.NotableHoles()
 
-    notable_holes._birdie_holes = {1, 6}
-    notable_holes._eagle_holes = {4}
-    notable_holes._albatross_holes = {12}
-    notable_holes._over_max_holes = {16}
+    notable_holes._birdie_holes = [1, 6]
+    notable_holes._eagle_holes = [4]
+    notable_holes._albatross_holes = [12]
+    notable_holes._over_max_holes = [16]
 
     assert notable_holes._has_hole_num_been_set(4)
 
@@ -207,10 +207,10 @@ def test_notable_holes_has_hole_num_been_set_true() -> None:
 def test_notable_holes_has_hole_num_been_set_false() -> None:
     notable_holes = results.NotableHoles()
 
-    notable_holes._birdie_holes = {1, 6}
-    notable_holes._eagle_holes = {4}
-    notable_holes._albatross_holes = {12}
-    notable_holes._over_max_holes = {16}
+    notable_holes._birdie_holes = [1, 6]
+    notable_holes._eagle_holes = [4]
+    notable_holes._albatross_holes = [12]
+    notable_holes._over_max_holes = [16]
 
     assert not notable_holes._has_hole_num_been_set(7)
 
@@ -218,9 +218,9 @@ def test_notable_holes_has_hole_num_been_set_false() -> None:
 def test_notable_holes_all_hole_nums() -> None:
     notable_holes = results.NotableHoles()
 
-    notable_holes._birdie_holes = {1, 6}
-    notable_holes._eagle_holes = {4}
-    notable_holes._albatross_holes = {12}
-    notable_holes._over_max_holes = {16}
+    notable_holes._birdie_holes = [1, 6]
+    notable_holes._eagle_holes = [4]
+    notable_holes._albatross_holes = [12]
+    notable_holes._over_max_holes = [16]
 
-    assert notable_holes._all_hole_nums() == {1, 4, 6, 12, 16}
+    assert notable_holes._all_hole_nums() == [1, 6, 4, 12, 16]

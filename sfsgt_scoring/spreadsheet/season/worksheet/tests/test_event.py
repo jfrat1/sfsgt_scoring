@@ -82,7 +82,7 @@ def create_test_event_worksheet(
 ) -> event.EventWorksheet:
     return event.EventWorksheet(
         worksheet=stub_google_worksheet(data=raw_worksheet_data),
-        players=set(players),
+        players=players,
         scorecard_start_cell=scorecard_start_cell,
     )
 

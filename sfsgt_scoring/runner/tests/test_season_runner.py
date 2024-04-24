@@ -45,11 +45,11 @@ TEST_SEASON_SHEET_READ_DATA = season_spreadsheet.SeasonSheetReadData(
         player_handicaps={
             "Stanton Turner": players_worksheet.HandicapIndexByEvent(
                 data={"Standard Event": 12.0, "Major Event": 12.2},
-                events={"Standard Event", "Major Event"},
+                events=["Standard Event", "Major Event"],
             ),
             "John Fratello": players_worksheet.HandicapIndexByEvent(
                 data={"Standard Event": 16.4, "Major Event": 16.2},
-                events={"Standard Event", "Major Event"},
+                events=["Standard Event", "Major Event"],
             ),
         },
     ),
@@ -185,7 +185,7 @@ TEST_SEASON_INPUT = season.SeasonInput(
             }
         )
     },
-    player_names={"Stanton Turner", "John Fratello"},
+    player_names=["Stanton Turner", "John Fratello"],
 )
 
 

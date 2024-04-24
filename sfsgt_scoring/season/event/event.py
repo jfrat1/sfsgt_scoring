@@ -92,7 +92,7 @@ class CumulativeResults:
             class_type=results.IncompletePlayerEventInividualResult,
         )
 
-        self._verify_grouping_of_results(player_names=set(player_individual_results.keys()))
+        self._verify_grouping_of_results(player_names=list(player_individual_results.keys()))
 
         self._rank_manager = rank.Rank()
         self._points_manager = points.Points(event_type)
@@ -108,10 +108,10 @@ class CumulativeResults:
             if isinstance(result, class_type)
         }
 
-    def _verify_grouping_of_results(self, player_names: set[str]) -> None:
+    def _verify_grouping_of_results(self, player_names: list[str]) -> None:
         grouped_player_names = set(self._complete_results.keys()).union(set(self._incomplete_results.keys()))
 
-        if grouped_player_names != player_names:
+        if grouped_player_names != set(player_names):
             # This should not be reachable, but it's best to prove that theory.
             raise EventCumulativeResultsGroupingError(
                 "Player inividual results could not be grouped into complete and incomlpete results."

@@ -8,8 +8,8 @@ class EventInput(NamedTuple):
     type: "EventType"
     players: dict[str, "EventPlayerInput"]
 
-    def player_names(self) -> set[str]:
-        return set(self.players.keys())
+    def player_names(self) -> list[str]:
+        return list(self.players.keys())
 
 
 class EventType(enum.Enum):
@@ -149,8 +149,8 @@ class Scorecard(IScorecard):
         self._strokes_per_hole = strokes_per_hole
 
     def _verify_keys(self) -> None:
-        expected_keys = {hole for hole in range(1, 19)}
-        actual_keys = set(self._strokes_per_hole.keys())
+        expected_keys = [hole for hole in range(1, 19)]
+        actual_keys = [self._strokes_per_hole.keys()]
         if expected_keys != actual_keys:
             raise EventPlayerDataVerificationError(
                 "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "

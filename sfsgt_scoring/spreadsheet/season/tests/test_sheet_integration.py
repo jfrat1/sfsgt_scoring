@@ -29,7 +29,7 @@ def test_sheet_read() -> None:
 
     sheet_ = sheet.SeasonSheet(config=sheet_config)
 
-    expected_events = {"Presidio", "Poppy Ridge", "Harding Park"}
+    expected_events = ["Poppy Ridge", "Presidio", "Harding Park"]
     expected_players_read_data = players.PlayersReadData(
         player_handicaps={
             "Stanton Turner": players.HandicapIndexByEvent(

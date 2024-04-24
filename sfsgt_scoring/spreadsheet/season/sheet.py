@@ -8,11 +8,11 @@ class SeasonSheetReadData(NamedTuple):
     players: worksheet.PlayersReadData
     events: "SeasonEventsReadData"
 
-    def player_names(self) -> set[str]:
+    def player_names(self) -> list[str]:
         return self.players.player_names()
 
-    def event_names(self) -> set[str]:
-        return set(self.events.keys())
+    def event_names(self) -> list[str]:
+        return list(self.events.keys())
 
 
 SeasonEventsReadData = dict[str, worksheet.EventReadData]
@@ -48,8 +48,8 @@ class SeasonSheetConfig(NamedTuple):
     players_sheet_name: str
     events: dict[str, "SeasonSheetEventConfig"]
 
-    def event_names(self) -> set[str]:
-        return set(self.events.keys())
+    def event_names(self) -> list[str]:
+        return list(self.events.keys())
 
 
 class SeasonSheetEventConfig(NamedTuple):
@@ -132,7 +132,7 @@ class SeasonSheet:
         self,
         config: SeasonSheetConfig,
         google_sheet: google.GoogleSheet,
-        player_names: set[str],
+        player_names: list[str],
     ) -> worksheet.LeaderboardWorksheet:
         google_worksheet = google_sheet.worksheet(worksheet_name=config.leaderboard_sheet_name)
         return worksheet.LeaderboardWorksheet(
@@ -148,7 +148,7 @@ class SeasonSheet:
         self,
         config: SeasonSheetConfig,
         google_sheet: google.GoogleSheet,
-        player_names: set[str],
+        player_names: list[str],
     ) -> "EventWorksheets":
         event_worksheets = {
             event_name: self._create_event_worksheet(
@@ -162,7 +162,7 @@ class SeasonSheet:
         self,
         event_config: SeasonSheetEventConfig,
         google_sheet: google.GoogleSheet,
-        player_names: set[str],
+        player_names: list[str],
     ) -> worksheet.EventWorksheet:
         google_worksheet = google_sheet.worksheet(worksheet_name=event_config.sheet_name)
         return worksheet.EventWorksheet(

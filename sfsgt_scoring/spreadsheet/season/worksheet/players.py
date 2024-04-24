@@ -1,3 +1,4 @@
+import enum
 import functools
 from typing import Any, NamedTuple
 
@@ -7,14 +8,30 @@ from sfsgt_scoring.spreadsheet import google
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
 
-PLAYER_COLUMN_NAME = "Player"
+class EventHeaderNamesStyle(enum.Enum):
+    UPPER_CASE = enum.auto()
+    TITLE_CASE = enum.auto()
+    LOWER_CASE = enum.auto()
+
+
+# The row number where the headers of this table are stored.
+HEADER_ROW_NUMBER = 2
+
+# Header name for the player names column.
+PLAYER_COLUMN_NAME = "GOLFER"
+
+# Expected style for the event names in the spreadsheet.
+EVENT_COLUMN_NAME_STYLE = EventHeaderNamesStyle.UPPER_CASE
+
+# Header names for columns are right of the handicap index values for each event.
+TRAILING_COLUMN_NAMES = ["TRACKING METHOD"]
 
 
 class PlayersReadData(NamedTuple):
     player_handicaps: dict[str, "HandicapIndexByEvent"]
 
-    def player_names(self) -> set[str]:
-        return set(self.player_handicaps.keys())
+    def player_names(self) -> list[str]:
+        return list(self.player_handicaps.keys())
 
 
 class PlayerHandicapsVerificationError(Exception):
@@ -22,13 +39,13 @@ class PlayerHandicapsVerificationError(Exception):
 
 
 class HandicapIndexByEvent(dict[str, float]):
-    def __init__(self, data: dict[str, float], events: set[str]):
+    def __init__(self, data: dict[str, float], events: list[str]):
         super().__init__(data)
         self._verify_keys(events)
 
-    def _verify_keys(self, events: set[str]):
-        keys = set(self.keys())
-        if keys != events:
+    def _verify_keys(self, events: list[str]):
+        keys = sorted(list(self.keys()))
+        if keys != sorted(events):
             raise PlayerHandicapsVerificationError(
                 "Player handicaps keys do not match events list."
                 f"\nExpected: {events} \nFound: {keys}"
@@ -40,7 +57,7 @@ class PlayerWorksheetVerificationError(Exception):
 
 
 class PlayersWorksheet:
-    def __init__(self, worksheet: google.GoogleWorksheet, events: set[str]) -> None:
+    def __init__(self, worksheet: google.GoogleWorksheet, events: list[str]) -> None:
         self._worksheet = worksheet
         self._events = events
 
@@ -48,23 +65,51 @@ class PlayersWorksheet:
         worksheet_data = self._get_worksheet_data()
         return self._generate_read_data(worksheet_data)
 
-    def player_names(self) -> set[str]:
+    def player_names(self) -> list[str]:
         worksheet_data = self._get_worksheet_data()
-        return set(worksheet_data.index)
+        return list(worksheet_data.index)
 
     @functools.lru_cache()
     def _get_worksheet_data(self) -> pd.DataFrame:
-        worksheet_data_raw = self._worksheet.to_df()
-        worksheet_data = self._process_raw_worksheet_data(worksheet_data_raw)
+        worksheet_data_raw = self._raw_worksheet_data()
+        worksheet_data_processed = self._process_raw_worksheet_data(worksheet_data_raw)
+        self._check_worksheet_data(worksheet_data_processed)
 
-        self._check_worksheet_data(worksheet_data)
+        return worksheet_data_processed
 
-        return worksheet_data
+    def _raw_worksheet_data(self) -> pd.DataFrame:
+        return self._worksheet.to_df(
+            header_row=HEADER_ROW_NUMBER,
+            expected_headers=self._expected_header_names(),
+        )
+
+    def _expected_header_names(self) -> list[str]:
+        expected_headers = [PLAYER_COLUMN_NAME]
+        expected_headers.extend(self._expected_event_header_names())
+        expected_headers.extend(TRAILING_COLUMN_NAMES)
+        return expected_headers
+
+    def _expected_event_header_names(self) -> list[str]:
+        return [self._event_column_name(event_name) for event_name in self._events]
+
+    def _event_column_name(self, event_name: str) -> str:
+        match EVENT_COLUMN_NAME_STYLE:
+            case EventHeaderNamesStyle.UPPER_CASE:
+                return event_name.upper()
+            case EventHeaderNamesStyle.TITLE_CASE:
+                return event_name.title()
+            case EventHeaderNamesStyle.LOWER_CASE:
+                return event_name.lower()
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
-        data_with_player_index = self._raise_player_column_to_index(worksheet_data_raw)
-        data_numericised = dataframe.numericise_all_values(data_with_player_index)
-        return data_numericised
+        worksheet_data_processed = worksheet_data_raw.copy()
+
+        worksheet_data_processed = self._raise_player_column_to_index(worksheet_data_processed)
+        worksheet_data_processed = self._drop_unused_columns(worksheet_data_processed)
+        worksheet_data_processed = self._rename_event_columns_to_input_event_names(worksheet_data_processed)
+        worksheet_data_processed = dataframe.numericise_all_values(worksheet_data_processed)
+
+        return worksheet_data_processed
 
     def _raise_player_column_to_index(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
         if PLAYER_COLUMN_NAME not in worksheet_data.columns:
@@ -73,13 +118,39 @@ class PlayersWorksheet:
             )
         return worksheet_data.set_index(keys=PLAYER_COLUMN_NAME, inplace=False)
 
+    def _drop_unused_columns(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
+        worksheet_data_mod = worksheet_data.copy()
+
+        worksheet_data_mod = self._drop_empty_columns(worksheet_data_mod)
+        worksheet_data_mod = self._drop_trailing_columns(worksheet_data_mod)
+
+        return worksheet_data_mod
+
+    def _drop_empty_columns(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
+        if "" in worksheet_data.columns:
+            return worksheet_data.drop(labels=[""], axis="columns")
+
+        return worksheet_data
+
+    def _drop_trailing_columns(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
+        return worksheet_data.drop(columns=TRAILING_COLUMN_NAMES)
+
+    def _rename_event_columns_to_input_event_names(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
+        return worksheet_data.rename(columns=self._event_column_rename_map())
+
+    def _event_column_rename_map(self) -> dict[str, str]:
+        return {
+            self._event_column_name(event): event
+            for event in self._events
+        }
+
     def _check_worksheet_data(self, worksheet_data: pd.DataFrame) -> None:
         self._check_column_headers(worksheet_data)
         self._check_data_values(worksheet_data)
 
     def _check_column_headers(self, worksheet_data: pd.DataFrame) -> None:
-        column_headers = set(worksheet_data.columns)
-        expected_headers = set(self._events)
+        column_headers = list(worksheet_data.columns)
+        expected_headers = list(self._events)
 
         if column_headers != expected_headers:
             raise PlayerWorksheetVerificationError(

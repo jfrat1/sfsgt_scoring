@@ -1,4 +1,4 @@
-from typing import Iterable, NamedTuple
+from typing import Any, Iterable, NamedTuple
 
 import gspread
 import pandas as pd
@@ -17,8 +17,14 @@ class GoogleWorksheet:
     def __init__(self, worksheet: gspread.worksheet.Worksheet) -> None:
         self.worksheet = worksheet
 
-    def to_df(self) -> pd.DataFrame:
-        return pd.DataFrame.from_records(self.worksheet.get_all_records())
+    def to_df(
+        self,
+        header_row: int = 1,
+        expected_headers: Any | None = None,
+    ) -> pd.DataFrame:
+        return pd.DataFrame.from_records(
+            self.worksheet.get_all_records(head=header_row, expected_headers=expected_headers)
+        )
 
     def range_to_df(
         self,

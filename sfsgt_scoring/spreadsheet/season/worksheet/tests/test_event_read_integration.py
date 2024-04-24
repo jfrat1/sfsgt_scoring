@@ -38,7 +38,7 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
 def test_read_real_event_worksheet() -> None:
     event_ws = event.EventWorksheet(
         worksheet=real_event_worksheet(),
-        players={"Stanton Turner", "John Fratello", "Steve Harasym"},
+        players=["Stanton Turner", "John Fratello", "Steve Harasym"],
         scorecard_start_cell=SCORECARD_START_CELL,
     )
     read_data = event_ws.read()
@@ -58,7 +58,7 @@ def test_read_real_event_worksheet() -> None:
 def test_read_real_event_worksheet_some_players_missing_scores() -> None:
     event_ws = event.EventWorksheet(
         worksheet=real_event_worksheet(worksheet_name=TEST_WORKSHEET_SOME_PLAYERS_MISSING_SCORES),
-        players={"Stanton Turner", "John Fratello", "Steve Harasym"},
+        players=["Stanton Turner", "John Fratello", "Steve Harasym"],
         scorecard_start_cell=SCORECARD_START_CELL,
     )
     read_data = event_ws.read()
@@ -77,7 +77,7 @@ def test_read_real_event_worksheet_some_players_missing_scores() -> None:
 def test_read_real_event_worksheet_all_players_missing_scores() -> None:
     event_ws = event.EventWorksheet(
         worksheet=real_event_worksheet(worksheet_name=TEST_WORKSHEET_ALL_PLAYERS_MISSING_SCORES),
-        players={"Stanton Turner", "John Fratello", "Steve Harasym"},
+        players=["Stanton Turner", "John Fratello", "Steve Harasym"],
         scorecard_start_cell=SCORECARD_START_CELL,
     )
     read_data = event_ws.read()

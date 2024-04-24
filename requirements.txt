@@ -2,6 +2,7 @@
 pytest
 pytest-cov
 ipdb
+pdbpp
 pandas
 numpy
 click

@@ -15,17 +15,17 @@ TEST_PLAYER_RANKS_NO_TIES = {
     "Player_10": 9,
 }
 
-TEST_PLAYERS_AT_EACH_RANK_NO_TIES: dict[int, set[str]] = {
-    1: {"Player_8"},
-    2: {"Player_6"},
-    3: {"Player_4"},
-    4: {"Player_9"},
-    5: {"Player_7"},
-    6: {"Player_1"},
-    7: {"Player_3"},
-    8: {"Player_2"},
-    9: {"Player_10"},
-    10: {"Player_5"},
+TEST_PLAYERS_AT_EACH_RANK_NO_TIES: dict[int, list[str]] = {
+    1: ["Player_8"],
+    2: ["Player_6"],
+    3: ["Player_4"],
+    4: ["Player_9"],
+    5: ["Player_7"],
+    6: ["Player_1"],
+    7: ["Player_3"],
+    8: ["Player_2"],
+    9: ["Player_10"],
+    10: ["Player_5"],
 }
 
 TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT = {
@@ -54,17 +54,17 @@ TEST_PLAYER_RANKS_WITH_TIES = {
     "Player_10": 9,
 }
 
-TEST_PLAYERS_AT_EACH_RANK_WITH_TIES: dict[int, set[str]] = {
-    1: {"Player_8"},
-    2: {"Player_6", "Player_4"},
-    3: set(),
-    4: {"Player_9"},
-    5: {"Player_7"},
-    6: {"Player_1"},
-    7: {"Player_3", "Player_2"},
-    8: set(),
-    9: {"Player_10"},
-    10: {"Player_5"},
+TEST_PLAYERS_AT_EACH_RANK_WITH_TIES: dict[int, list[str]] = {
+    1: ["Player_8"],
+    2: ["Player_4", "Player_6"],
+    3: [],
+    4: ["Player_9"],
+    5: ["Player_7"],
+    6: ["Player_1"],
+    7: ["Player_2", "Player_3"],
+    8: [],
+    9: ["Player_10"],
+    10: ["Player_5"],
 }
 
 TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT = {

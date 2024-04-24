@@ -55,7 +55,7 @@ def test_player_adjust_strokes_for_hole_max() -> None:
     assert player_._adjust_scorecard_for_max_hole_strokes() == inputs.Scorecard(
         strokes_per_hole=TEST_PLAYER_HOLE_SCORES_WITH_MAX_STROKES_LIMIT
     )
-    assert player_._notable_holes.over_max_holes() == {12}
+    assert player_._notable_holes.over_max_holes() == [12]
 
 
 def test_player_note_below_par_holes() -> None:

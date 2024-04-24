@@ -46,7 +46,7 @@ class LeaderboardWorksheet:
     def __init__(
         self,
         worksheet: worksheet.GoogleWorksheet,
-        players: set[str],
+        players: list[str],
         events: Events,
     ) -> None:
         self._worksheet = worksheet
@@ -70,20 +70,20 @@ class LeaderboardWorksheet:
 
     def verify_write_data(self, write_data: LeaderboardWriteData) -> None:
         write_data_players: list[str] = write_data.player_names()
-        write_data_players_set = set(write_data_players)
-        if not len(write_data_players) == len(write_data_players_set):
+        write_data_players_deduplicated = list(set(write_data_players))
+        if not len(write_data_players) == len(write_data_players_deduplicated):
             raise LeaderboardWorksheetWriteError(
                 "Duplicate player names found in write data."
             )
 
-        if not write_data_players_set == self._players:
+        if not sorted(write_data_players_deduplicated) == sorted(self._players):
             raise LeaderboardWorksheetWriteError(
                 "Player names in write data do not match expected players."
             )
 
         for player_data in write_data.players:
-            player_events = set(player_data.event_points.keys())
-            if player_events != set(self._sorted_event_names):
+            player_events = list(player_data.event_points.keys())
+            if player_events != self._sorted_event_names:
                 raise LeaderboardWorksheetWriteError(
                     f"Player '{player_data.player_name}' does not have expected event scores.\n"
                     f"Expected: {self._sorted_event_names}\nFound: {player_events}"

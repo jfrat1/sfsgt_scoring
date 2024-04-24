@@ -276,21 +276,21 @@ class NotableHoleDuplicationError(Exception):
 
 class NotableHoles:
     def __init__(self) -> None:
-        self._birdie_holes: set[int] = set()
-        self._eagle_holes: set[int] = set()
-        self._albatross_holes: set[int] = set()
-        self._over_max_holes: set[int] = set()
+        self._birdie_holes: list[int] = []
+        self._eagle_holes: list[int] = []
+        self._albatross_holes: list[int] = []
+        self._over_max_holes: list[int] = []
 
-    def birdie_holes(self) -> set[int]:
+    def birdie_holes(self) -> list[int]:
         return self._birdie_holes
 
-    def eagle_holes(self) -> set[int]:
+    def eagle_holes(self) -> list[int]:
         return self._eagle_holes
 
-    def albatross_holes(self) -> set[int]:
+    def albatross_holes(self) -> list[int]:
         return self._albatross_holes
 
-    def over_max_holes(self) -> set[int]:
+    def over_max_holes(self) -> list[int]:
         return self._over_max_holes
 
     def num_birdies(self) -> int:
@@ -308,13 +308,13 @@ class NotableHoles:
 
         match score_type:
             case NotableHoleType.BIRDIE:
-                self._birdie_holes.add(hole_num)
+                self._birdie_holes.append(hole_num)
             case NotableHoleType.EAGLE:
-                self._eagle_holes.add(hole_num)
+                self._eagle_holes.append(hole_num)
             case NotableHoleType.ALBATROSS:
-                self._albatross_holes.add(hole_num)
+                self._albatross_holes.append(hole_num)
             case NotableHoleType.OVER_MAX:
-                self._over_max_holes.add(hole_num)
+                self._over_max_holes.append(hole_num)
             case _:
                 # This should be unreachable unless a new below par score type is addded.
                 raise ValueError(f"Unknown below par score type: {score_type}")
@@ -322,8 +322,8 @@ class NotableHoles:
     def _has_hole_num_been_set(self, hole_num: int):
         return hole_num in self._all_hole_nums()
 
-    def _all_hole_nums(self) -> set[int]:
-        return self._birdie_holes.union(self._eagle_holes).union(self._albatross_holes).union(self._over_max_holes)
+    def _all_hole_nums(self) -> list[int]:
+        return self._birdie_holes + self._eagle_holes + self._albatross_holes + self._over_max_holes
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, NotableHoles):

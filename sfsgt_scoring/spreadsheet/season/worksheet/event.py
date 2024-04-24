@@ -9,7 +9,6 @@ from sfsgt_scoring.spreadsheet import google as google_sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
 
-# TODO - use this to make some of the code below more clear
 class EventWorksheetColumnOffsets(enum.Enum):
     PLAYER = 0
     HOLE_1 = 1
@@ -87,8 +86,8 @@ class HoleScores(IHoleScores):
         self._verify_values()
 
     def _verify_keys(self) -> None:
-        expected_keys = {hole for hole in range(1, 19)}
-        actual_keys = set(self._scores.keys())
+        expected_keys = [hole for hole in range(1, 19)]
+        actual_keys = list(self._scores.keys())
         if expected_keys != actual_keys:
             raise PlayerHoleScoresVerificationError(
                 "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "
@@ -117,9 +116,9 @@ class HoleScores(IHoleScores):
 
 class EventWriteData(NamedTuple):
     players: dict[str, "PlayerEventWriteData"]
-    birdies: set["PlayerHole"]
-    eagles: set["PlayerHole"]
-    hole_scores_over_max: set["PlayerHole"]
+    birdies: list["PlayerHole"]
+    eagles: list["PlayerHole"]
+    hole_scores_over_max: list["PlayerHole"]
 
 
 class PlayerEventWriteData(NamedTuple):
@@ -157,7 +156,7 @@ class EventWorksheet:
     def __init__(
         self,
         worksheet: google_sheet.GoogleWorksheet,
-        players: set[str],
+        players: list[str],
         scorecard_start_cell: str,
     ) -> None:
         self._worksheet = worksheet
@@ -238,8 +237,8 @@ class EventWorksheet:
             )
 
     def _check_index_labels(self, worksheet_data: pd.DataFrame) -> None:
-        expected_index = self._players
-        index = set(worksheet_data.index)
+        expected_index = sorted(self._players)
+        index = sorted(list(worksheet_data.index))
         if not index == expected_index:
             raise EventWorksheetVerificationError(
                 f"Worksheet data row labels do not match expectations."

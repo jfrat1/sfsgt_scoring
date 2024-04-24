@@ -107,25 +107,25 @@ class Points():
     def _allowed_ranks(self) -> tuple[int, ...]:
         return tuple(rank for rank in self._points_by_rank.keys())
 
-    def _players_at_each_rank(self, player_ranks: dict[str, int]) -> dict[int, set[str]]:
+    def _players_at_each_rank(self, player_ranks: dict[str, int]) -> dict[int, list[str]]:
         """Pivot the player ranks dictionary into one that has ranks as keys and sets of player names at each rank as values."""
         min_player_rank = min(player_ranks.values())
         max_player_rank = max(player_ranks.values())
 
-        players_at_each_rank: dict[int, set[str]] = {}
+        players_at_each_rank: dict[int, list[str]] = {}
         for rank in range(min_player_rank, max_player_rank + 1):
             players_at_each_rank[rank] = self._find_players_at_rank(rank, player_ranks)
 
         return players_at_each_rank
 
-    def _find_players_at_rank(self, rank: int, player_ranks: dict[str, int]) -> set[str]:
-        return {
+    def _find_players_at_rank(self, rank: int, player_ranks: dict[str, int]) -> list[str]:
+        return [
             player_name
             for player_name, player_rank in player_ranks.items()
             if player_rank == rank
-        }
+        ]
 
-    def _player_points(self, players_at_each_rank: dict[int, set[str]]) -> dict[str, float]:
+    def _player_points(self, players_at_each_rank: dict[int, list[str]]) -> dict[str, float]:
         player_points: dict[str, float] = {}
         for rank, players in players_at_each_rank.items():
             num_players = len(players)

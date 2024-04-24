@@ -13,11 +13,11 @@ TEST_GOOGLE_SHEET_ID = "1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ"
 # Names of real worksheets to write test data into
 TEST_LEADERBOARD_SHEET = "Leaderboard Test Write"
 
-PLAYERS = {
+PLAYERS = [
     "Stanton Turner",
     "John Fratello",
     "Steve Harasym",
-}
+]
 
 EVENTS = {
     1: "Poppy Ridge",

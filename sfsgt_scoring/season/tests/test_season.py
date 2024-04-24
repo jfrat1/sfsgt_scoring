@@ -97,7 +97,7 @@ SEASON_INPUT = season.SeasonInput(
             }
         )
     },
-    player_names={"Stanton Turner", "John Fratello"},
+    player_names=["Stanton Turner", "John Fratello"],
 )
 
 STANTON_NOTABLE_HOLES = event_results.NotableHoles()
@@ -241,7 +241,7 @@ def test_season_construct() -> None:
 
     assert season_._input == SEASON_INPUT
 
-    assert set(season_._events.keys()) == {"Standard Event", "Major Event"}
+    assert list(season_._events.keys()) == ["Standard Event", "Major Event"]
 
 
 def test_season_results() -> None:

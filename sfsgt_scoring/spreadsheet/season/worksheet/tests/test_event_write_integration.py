@@ -60,9 +60,9 @@ WRITE_DATA = event.EventWriteData(
         "John Fratello": JOHN_WRITE_DATA,
         "Steve Harasym": STEVE_WRITE_DATA,
     },
-    birdies=set(),
-    eagles=set(),
-    hole_scores_over_max=set(),
+    birdies=[],
+    eagles=[],
+    hole_scores_over_max=[],
 )
 
 
@@ -81,7 +81,7 @@ def real_event_worksheet(worksheet_name: str = TEST_WORKSHEET_NAME) -> google_sh
 def event_worksheet_class_instance(worksheet: google_sheet.GoogleWorksheet) -> event.EventWorksheet:
     event_worksheet = event.EventWorksheet(
         worksheet=worksheet,
-        players=set(PLAYER_NAMES),
+        players=PLAYER_NAMES,
         scorecard_start_cell=SCORECARD_START_CELL,
     )
     event_worksheet._sorted_worksheet_player_names = PLAYER_NAMES.copy()

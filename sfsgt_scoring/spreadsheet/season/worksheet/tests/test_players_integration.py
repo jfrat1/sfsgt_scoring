@@ -11,6 +11,7 @@ TEST_GOOGLE_SHEET_ID = "1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ"
 # Name of the worksheet that has the player data
 TEST_WORKSHEET_NAME = "Handicaps"
 
+EVENT_NAMES = ["Poppy Ridge", "Presidio", "Harding Park"]
 
 def real_players_worksheet() -> google.GoogleWorksheet:
     google_sheet = google.GoogleSheet(sheet_id=TEST_GOOGLE_SHEET_ID)
@@ -20,23 +21,23 @@ def real_players_worksheet() -> google.GoogleWorksheet:
 def test_read_real_players_worksheet() -> None:
     player_ws = players.PlayersWorksheet(
         worksheet=real_players_worksheet(),
-        events={"Presidio", "Poppy Ridge", "Harding Park"},
+        events=EVENT_NAMES,
     )
 
     read_data = player_ws.read()
     expected_read_data = players.PlayersReadData(
         player_handicaps={
             "Stanton Turner": players.HandicapIndexByEvent(
-                data={"Presidio": 14, "Poppy Ridge": 14, "Harding Park": 13.5},
-                events={"Presidio", "Poppy Ridge", "Harding Park"},
+                data={"Poppy Ridge": 14, "Presidio": 14, "Harding Park": 13.5},
+                events=EVENT_NAMES,
             ),
             "John Fratello": players.HandicapIndexByEvent(
-                data={"Presidio": 16, "Poppy Ridge": 16, "Harding Park": 16},
-                events={"Presidio", "Poppy Ridge", "Harding Park"},
+                data={"Poppy Ridge": 16, "Presidio": 16,  "Harding Park": 16},
+                events=EVENT_NAMES,
             ),
             "Steve Harasym": players.HandicapIndexByEvent(
-                data={"Presidio": 8, "Poppy Ridge": 8, "Harding Park": 8.5},
-                events={"Presidio", "Poppy Ridge", "Harding Park"},
+                data={"Poppy Ridge": 8, "Presidio": 8, "Harding Park": 8.5},
+                events=EVENT_NAMES,
             ),
         }
     )

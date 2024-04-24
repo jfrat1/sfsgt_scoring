@@ -86,7 +86,7 @@ class SeasonRunner:
     def _event_input(
         self,
         event_name: str,
-        player_names: set[str],
+        player_names: list[str],
         spreadsheet_data: season_spreadsheet.SeasonSheetReadData,
     ) -> season_event.EventInput:
         event_config = self.config.get_event_config(event_name)
@@ -122,7 +122,7 @@ class SeasonRunner:
     def _event_players_input(
         self,
         event_name: str,
-        player_names: set[str],
+        player_names: list[str],
         spreadsheet_data: season_spreadsheet.SeasonSheetReadData,
     ) -> dict[str, season_event.EventPlayerInput]:
         event_players: dict[str, season_event.EventPlayerInput] = {}
@@ -236,23 +236,27 @@ class SeasonRunner:
                     event_rank=int(player_result.event_rank),
                 )
             else:
+                # TODO: I'm not a fan of the season runner needing to know something special about
+                # what to write into event sheet when a player has an incomplete score.
+                # Consider better ways to abstract this behavior into a no-result for the individual
+                # results.
                 event_players_write_data[player_name] = season_spreadsheet.worksheet.PlayerEventWriteData(
-                    front_9_strokes="",
-                    back_9_strokes="",
-                    gross_strokes="",
-                    course_handicap="",
-                    net_strokes="",
-                    gross_rank="No Result",
-                    net_rank="No Result",
+                    front_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                    back_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                    gross_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                    course_handicap="",  # type: ignore # Will be fixed with better abstraction at this level.
+                    net_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                    gross_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
+                    net_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
                     gross_points=player_result.gross_score_points,
                     net_points=player_result.net_score_points,
                     event_points=player_result.event_points,
-                    event_rank="No Result",
+                    event_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
                 )
 
         return season_spreadsheet.worksheet.EventWriteData(
             players=event_players_write_data,
-            birdies=set(),
-            eagles=set(),
-            hole_scores_over_max=set(),
+            birdies=[],
+            eagles=[],
+            hole_scores_over_max=[],
         )

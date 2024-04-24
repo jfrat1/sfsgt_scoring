@@ -37,6 +37,6 @@ class GoogleSheet():
     def sheet_metadata(self) -> Any:
         return self.sheet.fetch_sheet_metadata()
 
-    def worksheet_titles(self) -> set[str]:
+    def worksheet_titles(self) -> list[str]:
         sheets_metadata = self.sheet_metadata()["sheets"]
-        return {sheet_meta["properties"]["title"] for sheet_meta in sheets_metadata}
+        return [sheet_meta["properties"]["title"] for sheet_meta in sheets_metadata]

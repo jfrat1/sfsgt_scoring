@@ -153,7 +153,7 @@ def test_event_names() -> None:
     with temp_season_config_file() as config_file:
         season_config = config.load_season_config_file(config_file)
 
-        assert season_config.event_names() == {"Presidio", "Poppy Ridge", "Harding Park"}
+        assert season_config.event_names() == ["Poppy Ridge", "Presidio", "Harding Park"]
 
 
 def test_get_event_config() -> None:

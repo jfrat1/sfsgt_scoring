@@ -56,8 +56,8 @@ class SeasonConfig(pydantic.BaseModel):
     leaderboard_sheet_name: str
     events: dict[int, "EventConfig"]
 
-    def event_names(self) -> set[str]:
-        return {event.event_name for event in self.events.values()}
+    def event_names(self) -> list[str]:
+        return [event.event_name for event in self.events.values()]
 
     def event_configs(self) -> dict[int, "EventConfig"]:
         return self.events
