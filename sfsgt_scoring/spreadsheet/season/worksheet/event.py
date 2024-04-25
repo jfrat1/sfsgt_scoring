@@ -288,26 +288,24 @@ class EventWorksheet:
                 "to ensure that data is read before being written."
             )
 
-        first_write_range = self._front_nine_and_player_initial_write_range(write_data)
+        first_write_range = self._front_nine_write_range(write_data)
         second_write_range = self._back_nine_and_event_results_range(write_data)
         write_ranges = [first_write_range, second_write_range]
 
         self._worksheet.write_multiple_ranges(write_ranges)
 
-    def _front_nine_and_player_initial_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
+    def _front_nine_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.FRONT_NINE_STROKES,
-            end_col_offset=EventWorksheetColumnOffsets.PLAYER_INITIAL,
+            end_col_offset=EventWorksheetColumnOffsets.FRONT_NINE_STROKES,
         )
 
         values: list[list[google_sheet.CellValueType]] = []
         for player_name in self._sorted_worksheet_player_names:
             player_data = write_data.players[player_name]
-            player_initials = "".join([name[0] for name in player_name.split(" ")])
 
             value: list[google_sheet.CellValueType] = [
                 player_data.front_9_strokes,
-                player_initials,
             ]
             values.append(value)
 

@@ -350,11 +350,11 @@ def test_front_nine_write_range() -> None:
     ]
 
     expected_range = google_sheet.RangeValues(
-        range="L6:M8",
+        range="L6:L8",
         values=[
-            [44, "ST"],
-            [46, "JF"],
-            [43, "SH"],
+            [44],
+            [46],
+            [43],
         ],
     )
 
