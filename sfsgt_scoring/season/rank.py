@@ -107,10 +107,10 @@ class RankValue(IRankValue):
         return self._rank == 1
 
     def is_top_five(self) -> bool:
-        return self._rank in {2, 3, 4, 5}
+        return self._rank <= 5
 
     def is_top_ten(self) -> bool:
-        return self._rank in {6, 7, 8, 9, 10}
+        return self._rank <= 10
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, RankValue):

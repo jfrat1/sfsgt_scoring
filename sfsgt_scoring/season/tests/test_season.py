@@ -205,8 +205,8 @@ STANTON_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_events_completed=2,
     num_net_strokes_wins=0,
     num_wins=2,
-    num_top_fives=0,
-    num_top_tens=0,
+    num_top_fives=2,
+    num_top_tens=2,
 )
 STANTON_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(STANTON_CUMULATIVE_RESULTS_UNRANKED)
 STANTON_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
@@ -219,8 +219,8 @@ JOHN_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_events_completed=2,
     num_net_strokes_wins=2,
     num_wins=2,
-    num_top_fives=0,
-    num_top_tens=0,
+    num_top_fives=2,
+    num_top_tens=2,
 )
 JOHN_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(JOHN_CUMULATIVE_RESULTS_UNRANKED)
 JOHN_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
