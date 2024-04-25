@@ -247,12 +247,12 @@ class SeasonRunner:
                     gross_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
                     course_handicap="",  # type: ignore # Will be fixed with better abstraction at this level.
                     net_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    gross_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
-                    net_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
+                    gross_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
+                    net_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
                     gross_points=player_result.gross_score_points,
                     net_points=player_result.net_score_points,
                     event_points=player_result.event_points,
-                    event_rank="No Result",  # type: ignore # Will be fixed with better abstraction at this level.
+                    event_rank=int(player_result.event_rank),
                 )
 
         return season_spreadsheet.worksheet.EventWriteData(
