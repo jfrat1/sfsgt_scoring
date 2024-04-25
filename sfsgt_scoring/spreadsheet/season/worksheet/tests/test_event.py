@@ -6,6 +6,7 @@ import pytest
 from pandas import testing as pd_testing
 
 from sfsgt_scoring.spreadsheet.season.worksheet import event
+from sfsgt_scoring.spreadsheet import google as google_sheet
 
 
 TEST_PLAYERS = [
@@ -39,6 +40,53 @@ TEST_WORKSHEET_DATA_PROCESSED = pd.DataFrame(
     ],
     columns=[f"HOLE_{str(idx)}" for idx in range(1, 19)],
     index=pd.Index(data=TEST_PLAYERS, name="PLAYER"),
+)
+
+WORKSHEET_WRITE_DATA = event.EventWriteData(
+    players={
+        "Stanton Turner": event.PlayerEventWriteData(
+            front_9_strokes=44,
+            back_9_strokes=50,
+            gross_strokes=94,
+            course_handicap=14,
+            net_strokes=80,
+            gross_rank=2,
+            net_rank=2,
+            gross_points=45,
+            net_points=45,
+            event_points=90,
+            event_rank=2,
+        ),
+        "John Fratello": event.PlayerEventWriteData(
+            front_9_strokes=46,
+            back_9_strokes=43,
+            gross_strokes=89,
+            course_handicap=16,
+            net_strokes=73,
+            gross_rank=1,
+            net_rank=1,
+            gross_points=50,
+            net_points=50,
+            event_points=100,
+            event_rank=1,
+        ),
+        "Steve Harasym": event.PlayerEventWriteData(
+            front_9_strokes=43,
+            back_9_strokes=52,
+            gross_strokes=95,
+            course_handicap=7,
+            net_strokes=88,
+            gross_rank=3,
+            net_rank=3,
+            gross_points=37.5,
+            net_points=37.5,
+            event_points=75,
+            event_rank=3,
+        ),
+    },
+    birdies=[],
+    eagles=[],
+    hole_scores_over_max=[],
 )
 
 
@@ -293,3 +341,47 @@ def test_generate_read_data_with_empty_scores_for_all_players() -> None:
     expected_read_data.player_scores["Steve Harasym"] = event.IncompleteScore()
 
     assert read_data == expected_read_data
+
+
+def test_front_nine_write_range() -> None:
+    event_worksheet = create_test_event_worksheet()
+    event_worksheet._sorted_worksheet_player_names = [
+        "Stanton Turner", "John Fratello", "Steve Harasym"
+    ]
+
+    expected_range = google_sheet.RangeValues(
+        range="L6:M8",
+        values=[
+            [44, "ST"],
+            [46, "JF"],
+            [43, "SH"],
+        ],
+    )
+
+    assert event_worksheet._front_nine_write_range(WORKSHEET_WRITE_DATA) == expected_range
+
+
+def test_range_for_columns_nominal() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    start_col = event.EventWorksheetColumnOffsets.FRONT_NINE_STROKES
+    end_col = event.EventWorksheetColumnOffsets.PLAYER_INITIAL
+    expected_range = "L6:M8"
+
+    assert event_worksheet._range_for_columns(
+        start_col_offset=start_col,
+        end_col_offset=end_col,
+    ) == expected_range
+
+
+def test_range_for_columns_single_colum() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    start_col = event.EventWorksheetColumnOffsets.FRONT_NINE_STROKES
+    end_col = event.EventWorksheetColumnOffsets.FRONT_NINE_STROKES
+    expected_range = "L6:L8"
+
+    assert event_worksheet._range_for_columns(
+        start_col_offset=start_col,
+        end_col_offset=end_col,
+    ) == expected_range
