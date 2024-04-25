@@ -6,6 +6,7 @@ import pandas as pd
 from gspread import utils as gspread_utils
 
 from sfsgt_scoring.spreadsheet import google as google_sheet
+from sfsgt_scoring.spreadsheet import sheet_utils
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
 
@@ -174,9 +175,7 @@ class EventWorksheet:
             )
 
     def _is_cell_a1_notation(self, cell_name: str) -> bool:
-        match = gspread_utils.CELL_ADDR_RE.match(string=cell_name)
-        is_a1_notation = match is not None
-        return is_a1_notation
+        return sheet_utils.is_cell_a1_notation(cell_name)
 
     def read(self) -> EventReadData:
         worksheet_data = self._get_worksheet_data()
@@ -293,6 +292,7 @@ class EventWorksheet:
         write_ranges = [first_write_range, second_write_range]
 
         self._worksheet.write_multiple_ranges(write_ranges)
+        self._sort_scorecard_by_player_event_rank()
 
     def _front_nine_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
@@ -346,14 +346,33 @@ class EventWorksheet:
         start_col_offset: EventWorksheetColumnOffsets,
         end_col_offset: EventWorksheetColumnOffsets,
     ) -> str:
-        (first_player_row, first_player_col) = gspread_utils.a1_to_rowcol(self._scorecard_start_cell)
+        (first_player_row, _) = self._first_player_row_col()
 
         start_row = first_player_row
         end_row = first_player_row + self._num_players() - 1
 
-        start_col = first_player_col + start_col_offset.value
-        end_col = first_player_col + end_col_offset.value
+        start_col = self._column_letter_for_offset(start_col_offset)
+        end_col = self._column_letter_for_offset(end_col_offset)
 
-        range_start = gspread_utils.rowcol_to_a1(row=start_row, col=start_col)
-        range_end = gspread_utils.rowcol_to_a1(row=end_row, col=end_col)
-        return f"{range_start}:{range_end}"
+        return f"{start_col}{start_row}:{end_col}{end_row}"
+
+    def _first_player_row_col(self) -> tuple[int, int]:
+        return gspread_utils.a1_to_rowcol(self._scorecard_start_cell)
+
+    def _column_letter_for_offset(self, col_offset: EventWorksheetColumnOffsets) -> str:
+        (_, first_player_col) = self._first_player_row_col()
+        col_idx = first_player_col + col_offset.value
+        return sheet_utils.column_letter_for_idx(col_idx)
+
+    def _sort_scorecard_by_player_event_rank(self) -> None:
+        sort_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.PLAYER,
+            end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
+        )
+
+        sort_spec = google_sheet.SortSpec(
+            column=self._column_letter_for_offset(EventWorksheetColumnOffsets.EVENT_RANK),
+            order=google_sheet.SortOrder.ASCENDING,
+        )
+
+        self._worksheet.sort_range(specs=[sort_spec], range_name=sort_range)

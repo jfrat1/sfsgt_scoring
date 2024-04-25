@@ -3,4 +3,6 @@ from sfsgt_scoring.spreadsheet.google.worksheet import (   # noqa: F401 - Exposi
     GoogleWorksheet,
     CellValueType,
     RangeValues,
+    SortOrder,
+    SortSpec,
 )
