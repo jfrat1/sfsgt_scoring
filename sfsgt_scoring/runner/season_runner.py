@@ -196,6 +196,7 @@ class SeasonRunner:
                 events_played=cumulative_player_data.num_events_completed,
                 birdies=cumulative_player_data.num_birdies,
                 eagles=cumulative_player_data.num_eagles,
+                net_strokes_wins=cumulative_player_data.num_net_strokes_wins,
                 wins=cumulative_player_data.num_wins,
                 top_5s=cumulative_player_data.num_top_fives,
                 top_10s=cumulative_player_data.num_top_tens,

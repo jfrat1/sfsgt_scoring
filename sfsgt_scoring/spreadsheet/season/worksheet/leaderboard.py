@@ -22,6 +22,7 @@ class PlayerLeaderboardWriteData(NamedTuple):
     events_played: int
     birdies: int
     eagles: int
+    net_strokes_wins: int
     wins: int
     top_5s: int
     top_10s: int
