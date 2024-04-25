@@ -67,6 +67,7 @@ class CumulativePlayerResult:
         num_eagles: int,
         num_albatrosses: int,
         num_events_completed: int,
+        num_net_strokes_wins: int,
         num_wins: int,
         num_top_fives: int,
         num_top_tens: int,
@@ -76,6 +77,7 @@ class CumulativePlayerResult:
         self._num_eagles = num_eagles
         self._num_albatrosses = num_albatrosses
         self._num_events_completed = num_events_completed
+        self._num_net_strokes_wins = num_net_strokes_wins
         self._num_wins = num_wins
         self._num_top_fives = num_top_fives
         self._num_top_tens = num_top_tens
@@ -106,6 +108,10 @@ class CumulativePlayerResult:
         return self._num_events_completed
 
     @property
+    def num_net_strokes_wins(self) -> int:
+        return self._num_net_strokes_wins
+
+    @property
     def num_wins(self) -> int:
         return self._num_wins
 
@@ -130,11 +136,20 @@ class CumulativePlayerResult:
             self._num_eagles == other._num_eagles and
             self._num_albatrosses == other._num_albatrosses and
             self._num_events_completed == other._num_events_completed and
+            self._num_net_strokes_wins == other._num_net_strokes_wins and
             self._num_wins == other._num_wins and
             self._num_top_fives == other._num_top_fives and
             self._num_top_tens == other._num_top_tens and
             self._season_rank == other._season_rank
         )
+
+    def __repr__(self) -> str:
+        attributes = self.__dict__
+        # Attribute names need to have their prefix underscore removed.
+        attributes_string = ", ".join(
+            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
+        )
+        return f"{self.__class__.__name__}({attributes_string})"
 
 
 class Season:
@@ -191,6 +206,7 @@ class Season:
         num_eagles = 0
         num_albatrosses = 0
         num_events_completed = 0
+        num_net_strokes_wins = 0
         num_wins = 0
         num_top_fives = 0
         num_top_tens = 0
@@ -204,6 +220,7 @@ class Season:
             num_albatrosses += player_event_results.num_albatrosses
 
             num_events_completed += 1 if player_event_results.is_complete_result() else 0
+            num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
             num_wins += 1 if player_event_results.event_rank.is_win() else 0
             num_top_fives += 1 if player_event_results.event_rank.is_top_five() else 0
             num_top_tens += 1 if player_event_results.event_rank.is_top_ten() else 0
@@ -214,6 +231,7 @@ class Season:
             num_eagles=num_eagles,
             num_albatrosses=num_albatrosses,
             num_events_completed=num_events_completed,
+            num_net_strokes_wins=num_net_strokes_wins,
             num_wins=num_wins,
             num_top_fives=num_top_fives,
             num_top_tens=num_top_tens,

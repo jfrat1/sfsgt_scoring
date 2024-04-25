@@ -90,6 +90,14 @@ class PlayerEventResult:
             self._cumulative_result == other._cumulative_result
         )
 
+    def __repr__(self) -> str:
+        attributes = self.__dict__
+        # Attribute names need to have their prefix underscore removed.
+        attributes_string = ", ".join(
+            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
+        )
+        return f"{self.__class__.__name__}({attributes_string})"
+
 
 class IPlayerEventIndividualResult(abc.ABC):
     @property
@@ -193,6 +201,9 @@ class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
         # Use 'is' because this class implements the singleton pattern
         return self is other
 
+    def __repr__(self) -> str:
+        return "IncompletePlayerEventInividualResult()"
+
 
 class PlayerEventIndividualResult(IPlayerEventIndividualResult):
     def __init__(
@@ -259,6 +270,14 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
             self._total_net == other.total_net and
             self._notable_holes == other.notable_holes
         )
+
+    def __repr__(self) -> str:
+        attributes = self.__dict__
+        # Attribute names need to have their prefix underscore removed.
+        attributes_string = ", ".join(
+            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
+        )
+        return f"{self.__class__.__name__}({attributes_string})"
 
 
 class PlayerEventCumulativeResult(NamedTuple):
@@ -335,6 +354,14 @@ class NotableHoles:
             self._albatross_holes == other.albatross_holes() and
             self._over_max_holes == other.over_max_holes()
         )
+
+    def __repr__(self) -> str:
+        attributes = self.__dict__
+        # Attribute names need to have their prefix underscore removed.
+        attributes_string = ", ".join(
+            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
+        )
+        return f"{self.__class__.__name__}({attributes_string})"
 
 
 class NotableHoleType(enum.Enum):
