@@ -9,6 +9,9 @@ repo is the result of that effort.
 
 - .vscode/settings.json
   - VSCode setting specific to this project.
+- ad_hoc_events
+  - Code to calculate handicaps and scoring for special events that are not
+    part of the SFSGT season.
 - docs
   - This is a bit of a pipe dream for a personal project, but here's
     to hoping that I actually write some things down as I go along.
