@@ -362,7 +362,7 @@ class EventWorksheet:
     def _column_letter_for_offset(self, col_offset: EventWorksheetColumnOffsets) -> str:
         (_, first_player_col) = self._first_player_row_col()
         col_idx = first_player_col + col_offset.value
-        return sheet_utils.column_letter_for_idx(col_idx)
+        return sheet_utils.column_idx_to_letter(col_idx)
 
     def _sort_scorecard_by_player_event_rank(self) -> None:
         sort_range = self._range_for_columns(

@@ -101,6 +101,27 @@ def test_player_points_from_ranks_with_ties_standard_event() -> None:
     assert points_.player_points_from_ranks(TEST_PLAYER_RANKS_WITH_TIES) == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
 
 
+def test_player_points_from_ranks_empty_ranks_returns_empty_dict() -> None:
+    points_ = points.Points(inputs.EventType.STANDARD)
+
+    empty_dict: dict[str, int] = {}
+    assert points_.player_points_from_ranks(player_ranks=empty_dict) == empty_dict
+
+
+def test_are_player_ranks_empty_true() -> None:
+    points_ = points.Points(inputs.EventType.STANDARD)
+
+    empty_dict: dict[str, int] = {}
+    assert points_._are_player_ranks_empty(empty_dict)
+
+
+def test_are_player_rans_empty_false() -> None:
+    points_ = points.Points(inputs.EventType.STANDARD)
+
+    not_empty_dict: dict[str, int] = {"foo": 1}
+    assert not points_._are_player_ranks_empty(not_empty_dict)
+
+
 def test_verify_player_ranks_ok() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
     points_._verify_player_ranks(TEST_PLAYER_RANKS_NO_TIES)

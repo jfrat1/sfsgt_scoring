@@ -93,6 +93,17 @@ def test_rank_descending_with_ties() -> None:
     ) == TEST_PLAYER_RANKS_DESCENDING_WITH_TIES
 
 
+def test_player_ranks_from_values_empty_values_returns_empty() -> None:
+    rank_ = rank.Rank()
+
+    empty_dict: dict[str, int] = {}
+
+    assert rank_.player_ranks_from_values(
+        player_values=empty_dict,
+        rank_order=rank.RankOrder.DESCENDING,
+    ) == empty_dict
+
+
 def test_rank_value_construct_non_int_raises_error() -> None:
     with pytest.raises(rank.RankValueNotIntegerError):
         rank.RankValue("4")  # type: ignore

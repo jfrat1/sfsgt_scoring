@@ -29,9 +29,13 @@ def is_range_a1_notation(range_name: str) -> bool:
     return is_a1_notation
 
 
-def column_letter_for_idx(col_idx: int) -> str:
+def column_idx_to_letter(col_idx: int) -> str:
     dummy_row_idx = 1
     cell_name = gspread_utils.rowcol_to_a1(row=dummy_row_idx, col=col_idx)
 
     column_str = cell_name.replace(str(dummy_row_idx), "")
     return column_str
+
+
+def column_letter_to_idx(col_letter: str) -> int:
+    return gspread_utils.column_letter_to_index(col_letter)

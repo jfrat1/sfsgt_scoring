@@ -119,7 +119,8 @@ class CumulativeResults:
 
     def cumulative_results(self) -> dict[str, results.PlayerEventCumulativeResult]:
         cumulative_complete_results = self._cumulative_results_from_complete_individual_results()
-        highest_event_rank = max(result.event_rank for result in cumulative_complete_results.values())
+        highest_event_rank = self._highest_complete_results_rank(cumulative_complete_results)
+
         cumulative_incomplete_results = self._cumulative_results_from_incomplete_individual_results(
             highest_event_rank_from_complete_results=highest_event_rank,
         )
@@ -166,13 +167,25 @@ class CumulativeResults:
 
         return result
 
+    def _highest_complete_results_rank(
+        self,
+        cumulative_complete_results: dict[str, results.PlayerEventCumulativeResult]
+    ) -> rank.IRankValue:
+        is_results_dict_empty = len(cumulative_complete_results) == 0
+        if is_results_dict_empty:
+            return rank.NoRankValue()
+
+        return max(result.event_rank for result in cumulative_complete_results.values())
+
     def _cumulative_results_from_incomplete_individual_results(
         self,
         highest_event_rank_from_complete_results: rank.IRankValue,
     ) -> dict[str, results.PlayerEventCumulativeResult]:
         incomplete_results = self._incomplete_results
 
-        event_rank_for_incomplete_results = highest_event_rank_from_complete_results + 1
+        event_rank_for_all_incomplete_results = self._event_rank_for_all_incomplete_results(
+            highest_event_rank_from_complete_results
+        )
 
         return {
             name: results.PlayerEventCumulativeResult(
@@ -181,7 +194,17 @@ class CumulativeResults:
                 event_points=0.0,
                 gross_score_rank=rank.NoRankValue(),
                 net_score_rank=rank.NoRankValue(),
-                event_rank=event_rank_for_incomplete_results,
+                event_rank=event_rank_for_all_incomplete_results,
             )
             for name in incomplete_results.keys()
         }
+
+    def _event_rank_for_all_incomplete_results(
+        self,
+        highest_event_rank_from_complete_results: rank.IRankValue,
+    ) -> rank.RankValue:
+        if isinstance(highest_event_rank_from_complete_results, rank.NoRankValue):
+            return rank.RankValue(1)
+
+        else:
+            return highest_event_rank_from_complete_results + 1

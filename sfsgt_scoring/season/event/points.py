@@ -87,12 +87,18 @@ class Points():
                 )
 
     def player_points_from_ranks(self, player_ranks: dict[str, int]) -> dict[str, float]:
+        if self._are_player_ranks_empty(player_ranks):
+            return {}
+
         self._verify_player_ranks(player_ranks)
         players_at_each_rank = self._players_at_each_rank(player_ranks)
 
         # TODO: Consider adding verification of the points awarded to prove that we've
         # distributed them correctly for the ranks that are present
         return self._player_points(players_at_each_rank)
+
+    def _are_player_ranks_empty(self, player_ranks: dict[str, int]) -> bool:
+        return len(player_ranks) == 0
 
     def _verify_player_ranks(self, player_ranks: dict[str, int]):
         allowed_ranks = self._allowed_ranks()

@@ -33,9 +33,11 @@ STANTON_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
     birdies=2,
     eagles=0,
     net_strokes_wins=0,
-    wins=2,
-    top_5s=1,
-    top_10s=0,
+    net_strokes_top_fives=2,
+    net_strokes_top_tens=2,
+    event_wins=2,
+    event_top_fives=1,
+    event_top_tens=0,
     event_points={
         "Poppy Ridge": 100,
         "Presidio": 100,
@@ -51,9 +53,11 @@ JOHN_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
     birdies=1,
     eagles=1,
     net_strokes_wins=2,
-    wins=0,
-    top_5s=2,
-    top_10s=1,
+    net_strokes_top_fives=2,
+    net_strokes_top_tens=2,
+    event_wins=0,
+    event_top_fives=2,
+    event_top_tens=1,
     event_points={
         "Poppy Ridge": 50,
         "Presidio": 50,
@@ -69,9 +73,11 @@ STEVE_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
     birdies=4,
     eagles=0,
     net_strokes_wins=0,
-    wins=1,
-    top_5s=2,
-    top_10s=0,
+    net_strokes_top_fives=2,
+    net_strokes_top_tens=2,
+    event_wins=1,
+    event_top_fives=2,
+    event_top_tens=0,
     event_points={
         "Poppy Ridge": 100,
         "Presidio": 50,
@@ -88,13 +94,13 @@ WRITE_DATA = leaderboard.LeaderboardWriteData(
 )
 
 
-def real_event_worksheet(worksheet_name: str = TEST_LEADERBOARD_SHEET) -> google_sheet.GoogleWorksheet:
+def real_leaderboard_worksheet(worksheet_name: str = TEST_LEADERBOARD_SHEET) -> google_sheet.GoogleWorksheet:
     google_sheet_ = google_sheet.GoogleSheet(sheet_id=TEST_GOOGLE_SHEET_ID)
     return google_sheet_.worksheet(worksheet_name=worksheet_name)
 
 
 def test_construct_leaderboard_worksheet() -> None:
-    worksheet = real_event_worksheet()
+    worksheet = real_leaderboard_worksheet()
 
     leaderboard_ = leaderboard.LeaderboardWorksheet(
         worksheet=worksheet,
@@ -114,7 +120,7 @@ def test_write_data_sorted_by_rank() -> None:
 
 
 def test_leaderboard_last_player_row() -> None:
-    worksheet = real_event_worksheet()
+    worksheet = real_leaderboard_worksheet()
 
     leaderboard_ = leaderboard.LeaderboardWorksheet(
         worksheet=worksheet,
@@ -122,11 +128,11 @@ def test_leaderboard_last_player_row() -> None:
         events=EVENTS,
     )
 
-    assert leaderboard_._last_player_row() == 5
+    assert leaderboard_._last_player_row() == 6
 
 
 def test_leaderboard_write() -> None:
-    worksheet = real_event_worksheet()
+    worksheet = real_leaderboard_worksheet()
 
     leaderboard_ = leaderboard.LeaderboardWorksheet(
         worksheet=worksheet,

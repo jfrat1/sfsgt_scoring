@@ -197,9 +197,11 @@ class SeasonRunner:
                 birdies=cumulative_player_data.num_birdies,
                 eagles=cumulative_player_data.num_eagles,
                 net_strokes_wins=cumulative_player_data.num_net_strokes_wins,
-                wins=cumulative_player_data.num_wins,
-                top_5s=cumulative_player_data.num_top_fives,
-                top_10s=cumulative_player_data.num_top_tens,
+                net_strokes_top_fives=cumulative_player_data.num_net_strokes_top_fives,
+                net_strokes_top_tens=cumulative_player_data.num_net_strokes_top_tens,
+                event_wins=cumulative_player_data.num_event_wins,
+                event_top_fives=cumulative_player_data.num_event_top_fives,
+                event_top_tens=cumulative_player_data.num_event_top_tens,
                 event_points=player_event_points,
             )
             leaderboard_players.append(leaderboard_player)
