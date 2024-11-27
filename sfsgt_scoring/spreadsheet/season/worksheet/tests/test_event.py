@@ -5,9 +5,8 @@ import pandas as pd
 import pytest
 from pandas import testing as pd_testing
 
-from sfsgt_scoring.spreadsheet.season.worksheet import event
 from sfsgt_scoring.spreadsheet import google as google_sheet
-
+from sfsgt_scoring.spreadsheet.season.worksheet import event
 
 TEST_PLAYERS = [
     "Stanton Turner",
@@ -20,13 +19,13 @@ TEST_SCORECARD_START_CELL = "B6"
 TEST_WORKSHEET_DATA_RAW = pd.DataFrame(
     data=[
         [
-            "Stanton Turner", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5",  # noqa(E501)
+            "Stanton Turner", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5",  # noqa: E501
         ],
         [
-            "John Fratello", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6",  # noqa(E501)
+            "John Fratello", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6",  # noqa: E501
         ],
         [
-            "Steve Harasym", "4", "6", "4", "5", "5", "5", "4", "5", "5", "", "", "5", "5", "5", "4", "4", "5", "4", "5", "8",  # noqa(E501)
+            "Steve Harasym", "4", "6", "4", "5", "5", "5", "4", "5", "5", "", "", "5", "5", "5", "4", "4", "5", "4", "5", "8",  # noqa: E501
         ],
     ],
 )
@@ -103,10 +102,7 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
     assert len(hole_scores) == 18
 
     hole_numbers = range(1, 19)
-    data = {
-        hole_num: hole_score
-        for (hole_num, hole_score) in zip(hole_numbers, hole_scores)
-    }
+    data = {hole_num: hole_score for (hole_num, hole_score) in zip(hole_numbers, hole_scores)}
     return event.HoleScores(data)
 
 
@@ -182,7 +178,9 @@ def test_player_hole_scores_constructor_string_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            scores={str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore # noqa: E501
+            scores={
+                str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)
+            }  # type: ignore # noqa: E501
         )
 
 
@@ -231,9 +229,7 @@ def test_get_worksheet_data() -> None:
 def test_raw_worksheet_data() -> None:
     event_worksheet = create_test_event_worksheet()
     worksheet_data_raw = event_worksheet._raw_worksheet_data()
-    pd_testing.assert_frame_equal(
-        left=worksheet_data_raw, right=TEST_WORKSHEET_DATA_RAW
-    )
+    pd_testing.assert_frame_equal(left=worksheet_data_raw, right=TEST_WORKSHEET_DATA_RAW)
 
 
 def test_read_range() -> None:
@@ -267,9 +263,13 @@ def test_read_range_col_offset() -> None:
 
 def test_process_raw_worksheet_data() -> None:
     event_worksheet = create_test_event_worksheet()
-    worksheet_data_processed = event_worksheet._process_raw_worksheet_data(worksheet_data_raw=TEST_WORKSHEET_DATA_RAW)
+    worksheet_data_processed = event_worksheet._process_raw_worksheet_data(
+        worksheet_data_raw=TEST_WORKSHEET_DATA_RAW
+    )
 
-    pd_testing.assert_frame_equal(left=worksheet_data_processed, right=TEST_WORKSHEET_DATA_PROCESSED)
+    pd_testing.assert_frame_equal(
+        left=worksheet_data_processed, right=TEST_WORKSHEET_DATA_PROCESSED
+    )
 
 
 def test_check_worksheet_data_nominal() -> None:
@@ -362,7 +362,9 @@ def test_write_before_sorted_worksheet_player_names_is_set_raises_error() -> Non
 def test_write() -> None:
     event_worksheet = create_test_event_worksheet()
     event_worksheet._sorted_worksheet_player_names = [
-        "Stanton Turner", "John Fratello", "Steve Harasym"
+        "Stanton Turner",
+        "John Fratello",
+        "Steve Harasym",
     ]
 
     event_worksheet.write(write_data=TEST_WORKSHEET_WRITE_DATA)
@@ -382,7 +384,7 @@ def test_write() -> None:
                 [50, 94, 14, 80, 2, 2, 90, 2],
                 [43, 89, 16, 73, 1, 1, 100, 1],
                 [52, 95, 7, 88, 3, 3, 75, 3],
-            ]
+            ],
         ),
     ]
 
@@ -396,14 +398,17 @@ def test_write() -> None:
     google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
     google_worksheet_mock.write_multiple_ranges.assert_called_once_with(expected_write_ranges)
     google_worksheet_mock.sort_range.assert_called_once_with(
-        specs=[expected_sort_spec], range_name=expected_sort_range,
+        specs=[expected_sort_spec],
+        range_name=expected_sort_range,
     )
 
 
 def test_front_nine_write_range() -> None:
     event_worksheet = create_test_event_worksheet()
     event_worksheet._sorted_worksheet_player_names = [
-        "Stanton Turner", "John Fratello", "Steve Harasym"
+        "Stanton Turner",
+        "John Fratello",
+        "Steve Harasym",
     ]
 
     expected_range = google_sheet.RangeValues(
@@ -421,7 +426,9 @@ def test_front_nine_write_range() -> None:
 def test_back_nine_and_event_reults_write_range() -> None:
     event_worksheet = create_test_event_worksheet()
     event_worksheet._sorted_worksheet_player_names = [
-        "Stanton Turner", "John Fratello", "Steve Harasym"
+        "Stanton Turner",
+        "John Fratello",
+        "Steve Harasym",
     ]
 
     expected_range = google_sheet.RangeValues(
@@ -430,10 +437,12 @@ def test_back_nine_and_event_reults_write_range() -> None:
             [50, 94, 14, 80, 2, 2, 90, 2],
             [43, 89, 16, 73, 1, 1, 100, 1],
             [52, 95, 7, 88, 3, 3, 75, 3],
-        ]
+        ],
     )
 
-    actual_range = event_worksheet._back_nine_and_event_results_write_range(TEST_WORKSHEET_WRITE_DATA)
+    actual_range = event_worksheet._back_nine_and_event_results_write_range(
+        TEST_WORKSHEET_WRITE_DATA
+    )
     assert actual_range == expected_range
 
 
@@ -444,10 +453,13 @@ def test_range_for_columns_nominal() -> None:
     end_col = event.EventWorksheetColumnOffsets.PLAYER_INITIAL
     expected_range = "L6:M8"
 
-    assert event_worksheet._range_for_columns(
-        start_col_offset=start_col,
-        end_col_offset=end_col,
-    ) == expected_range
+    assert (
+        event_worksheet._range_for_columns(
+            start_col_offset=start_col,
+            end_col_offset=end_col,
+        )
+        == expected_range
+    )
 
 
 def test_range_for_columns_single_colum() -> None:
@@ -457,10 +469,13 @@ def test_range_for_columns_single_colum() -> None:
     end_col = event.EventWorksheetColumnOffsets.FRONT_NINE_STROKES
     expected_range = "L6:L8"
 
-    assert event_worksheet._range_for_columns(
-        start_col_offset=start_col,
-        end_col_offset=end_col,
-    ) == expected_range
+    assert (
+        event_worksheet._range_for_columns(
+            start_col_offset=start_col,
+            end_col_offset=end_col,
+        )
+        == expected_range
+    )
 
 
 def test_sort_scorecard_by_player_event_rank() -> None:
@@ -478,7 +493,8 @@ def test_sort_scorecard_by_player_event_rank() -> None:
     google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
 
     google_worksheet_mock.sort_range.assert_called_once_with(
-        specs=[expected_sort_spec], range_name=expected_sort_range,
+        specs=[expected_sort_spec],
+        range_name=expected_sort_range,
     )
 
 
@@ -488,7 +504,8 @@ def test_set_hole_cells_to_standard_backrgound() -> None:
     event_worksheet._set_hole_cells_to_standard_background()
 
     expected_cell_format = google_sheet.CellFormat(
-        # This test value is sensitive to changes in the source configured standard background color.
+        # This test value is sensitive to changes in the source configured
+        # standard background color.
         backgroundColor=google_sheet.ColorRgb(
             red=252,
             green=245,
@@ -518,7 +535,8 @@ def test_set_birdie_hole_cells_background() -> None:
     )
 
     expected_cell_format = google_sheet.CellFormat(
-        # This test value is sensitive to changes in the source configured standard background color.
+        # This test value is sensitive to changes in the source configured
+        # standard background color.
         backgroundColor=google_sheet.ColorRgb(
             red=217,
             green=234,
@@ -550,7 +568,8 @@ def test_set_eagle_hole_cells_background() -> None:
     )
 
     expected_cell_format = google_sheet.CellFormat(
-        # This test value is sensitive to changes in the source configured standard background color.
+        # This test value is sensitive to changes in the source configured
+        # standard background color.
         backgroundColor=google_sheet.ColorRgb(
             red=255,
             green=187,
@@ -573,7 +592,9 @@ def test_player_name_row_map() -> None:
     # Extract mocked google worksheet from event_worksheet class
     google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
     google_worksheet_mock.column_range_values.return_value = [
-        "John Fratello", "Stanton Turner", "Steve Harasym"
+        "John Fratello",
+        "Stanton Turner",
+        "Steve Harasym",
     ]
 
     player_names_map = event_worksheet._player_name_row_map()

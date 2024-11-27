@@ -3,12 +3,14 @@ from unittest import mock
 
 import pytest
 
-from sfsgt_scoring import course_database, season_config, season
+from sfsgt_scoring import course_database, season, season_config
 from sfsgt_scoring.season import event as season_event
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 from sfsgt_scoring.spreadsheet.season.worksheet import (
-    players as players_worksheet,
     event as event_worksheet,
+)
+from sfsgt_scoring.spreadsheet.season.worksheet import (
+    players as players_worksheet,
 )
 
 # System under test
@@ -40,7 +42,7 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
             type=season_config.config.EventType.MAJOR,
             scorecard_sheet_start_cell="B5",
         ),
-    }
+    },
 )
 
 
@@ -61,22 +63,79 @@ TEST_SEASON_SHEET_READ_DATA = season_spreadsheet.SeasonSheetReadData(
         "Standard Event": event_worksheet.EventReadData(
             player_scores={
                 "Stanton Turner": event_worksheet.HoleScores(
-                    scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+                    scores={
+                        1: 5,
+                        2: 4,
+                        3: 5,
+                        4: 6,
+                        5: 5,
+                        6: 6,
+                        7: 4,
+                        8: 4,
+                        9: 5,
+                        10: 6,
+                        11: 6,
+                        12: 5,
+                        13: 4,
+                        14: 4,
+                        15: 4,
+                        16: 4,
+                        17: 4,
+                        18: 5,
+                    }  # noqa: E501
                 ),
                 "John Fratello": event_worksheet.HoleScores(
-                    scores={1: 5, 2: 7, 3: 6, 4: 3, 5: 5, 6: 6, 7: 3, 8: 5, 9: 6, 10: 7, 11: 6, 12: 4, 13: 3, 14: 5, 15: 3, 16: 4, 17: 5, 18: 6}  # noqa: E501
+                    scores={
+                        1: 5,
+                        2: 7,
+                        3: 6,
+                        4: 3,
+                        5: 5,
+                        6: 6,
+                        7: 3,
+                        8: 5,
+                        9: 6,
+                        10: 7,
+                        11: 6,
+                        12: 4,
+                        13: 3,
+                        14: 5,
+                        15: 3,
+                        16: 4,
+                        17: 5,
+                        18: 6,
+                    }  # noqa: E501
                 ),
             }
         ),
         "Major Event": event_worksheet.EventReadData(
             player_scores={
                 "Stanton Turner": event_worksheet.HoleScores(
-                    scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+                    scores={
+                        1: 5,
+                        2: 4,
+                        3: 5,
+                        4: 6,
+                        5: 5,
+                        6: 6,
+                        7: 4,
+                        8: 4,
+                        9: 5,
+                        10: 6,
+                        11: 6,
+                        12: 5,
+                        13: 4,
+                        14: 4,
+                        15: 4,
+                        16: 4,
+                        17: 4,
+                        18: 5,
+                    }  # noqa: E501
                 ),
                 "John Fratello": event_worksheet.IncompleteScore(),
             }
         ),
-    }
+    },
 )
 
 
@@ -153,16 +212,54 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 "Stanton Turner": season_event.EventPlayerInput(
                     handicap_index=12.0,
                     scorecard=season_event.Scorecard(
-                        strokes_per_hole={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5},  # noqa: E501
+                        strokes_per_hole={
+                            1: 5,
+                            2: 4,
+                            3: 5,
+                            4: 6,
+                            5: 5,
+                            6: 6,
+                            7: 4,
+                            8: 4,
+                            9: 5,
+                            10: 6,
+                            11: 6,
+                            12: 5,
+                            13: 4,
+                            14: 4,
+                            15: 4,
+                            16: 4,
+                            17: 4,
+                            18: 5,
+                        },  # noqa: E501
                     ),
                 ),
                 "John Fratello": season_event.EventPlayerInput(
                     handicap_index=16.4,
                     scorecard=season_event.Scorecard(
-                        strokes_per_hole={1: 5, 2: 7, 3: 6, 4: 3, 5: 5, 6: 6, 7: 3, 8: 5, 9: 6, 10: 7, 11: 6, 12: 4, 13: 3, 14: 5, 15: 3, 16: 4, 17: 5, 18: 6},  # noqa: E501
+                        strokes_per_hole={
+                            1: 5,
+                            2: 7,
+                            3: 6,
+                            4: 3,
+                            5: 5,
+                            6: 6,
+                            7: 3,
+                            8: 5,
+                            9: 6,
+                            10: 7,
+                            11: 6,
+                            12: 4,
+                            13: 3,
+                            14: 5,
+                            15: 3,
+                            16: 4,
+                            17: 5,
+                            18: 6,
+                        },  # noqa: E501
                     ),
                 ),
-            }
+            },
         ),
         "Major Event": season_event.EventInput(
             course=season_event.CourseInput(
@@ -179,15 +276,34 @@ TEST_SEASON_INPUT = season.SeasonInput(
                 "Stanton Turner": season_event.EventPlayerInput(
                     handicap_index=12.2,
                     scorecard=season_event.Scorecard(
-                        strokes_per_hole={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5},  # noqa: E501
+                        strokes_per_hole={
+                            1: 5,
+                            2: 4,
+                            3: 5,
+                            4: 6,
+                            5: 5,
+                            6: 6,
+                            7: 4,
+                            8: 4,
+                            9: 5,
+                            10: 6,
+                            11: 6,
+                            12: 5,
+                            13: 4,
+                            14: 4,
+                            15: 4,
+                            16: 4,
+                            17: 4,
+                            18: 5,
+                        },  # noqa: E501
                     ),
                 ),
                 "John Fratello": season_event.EventPlayerInput(
                     handicap_index=16.2,
                     scorecard=season_event.IncompleteScorecard(),
                 ),
-            }
-        )
+            },
+        ),
     },
     player_names=["Stanton Turner", "John Fratello"],
 )

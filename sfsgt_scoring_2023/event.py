@@ -1,35 +1,35 @@
 import dataclasses
 import enum
+from typing import Dict
+
 import numpy as np
 import pandas as pd
-from typing import Dict, List
 
-from sfsgt_scoring_2023 import course
-from sfsgt_scoring_2023 import handicap
-from sfsgt_scoring_2023 import player
+from sfsgt_scoring_2023 import course, handicap, player
 
 
 class PlayerScoreHoleScoresException(Exception):
     """Exception to be raised by a PlayerScore when the hole scores series is malformed."""
 
+
 class EventCombinedPointsException(Exception):
     """Exception to be raised by an Event  when the combined points data is malformed."""
+
 
 class EventNoScoresSetException(Exception):
     """Exception to be raised by an Event if scores haven't been set before getting results."""
 
+
 class EventPlayerScorecard:
     """Scorecard for a player in an event."""
+
     def __init__(self, hole_scores: Dict[int, int]) -> None:
         expected_holes = list(range(1, 19))
 
         if len(hole_scores) != 18 or list(hole_scores.keys()) != expected_holes:
             raise ValueError("Hole scores must have integer hole numbers 1-18 as keys.")
 
-        if not all(
-            isinstance(score, int) or (score is None)
-            for score in hole_scores.values()
-        ):
+        if not all(isinstance(score, int) or (score is None) for score in hole_scores.values()):
             raise ValueError("Hole scores must all be integer values or None.")
 
         self.hole_scores = hole_scores
@@ -78,9 +78,9 @@ class EventPlayerScorecard:
         return None
 
 
-
 class EventScorecard:
     """Scorecards for all players in an event."""
+
     def __init__(self, player_scorecards: Dict[str, EventPlayerScorecard]) -> None:
         if not all(
             isinstance(scorecard, EventPlayerScorecard) for scorecard in player_scorecards.values()
@@ -89,9 +89,11 @@ class EventScorecard:
 
         self.player_scorecards = player_scorecards
 
+
 @dataclasses.dataclass(eq=True, frozen=True, kw_only=True)
 class PlayerEventResult:
     """Event results for an individual player."""
+
     # Individual player data:
     # course_handicap: number of strokes a player is given against the course
     # strokes_out: gross score on holes 1-9
@@ -124,6 +126,7 @@ class PlayerEventResult:
 
 class EventResult:
     """Results for all players in an event."""
+
     def __init__(self, player_results: Dict[str, PlayerEventResult]) -> None:
         if not all(isinstance(result, PlayerEventResult) for result in player_results.values()):
             raise ValueError("All player result value must be PlayerEventResult type.")
@@ -153,11 +156,9 @@ class EventResult:
 
 
 class PlayerScore:
-    """Defines a score for an individual player in an event.
-    """
-    def __init__(
-        self, course_handicap: int, hole_scores: pd.Series
-    ) -> None:
+    """Defines a score for an individual player in an event."""
+
+    def __init__(self, course_handicap: int, hole_scores: pd.Series) -> None:
         """Construct an instance of PlayerScore based on a player's course handicap and hole scores.
 
         Attributes:
@@ -207,9 +208,8 @@ class PlayerScore:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, PlayerScore):
-            return (
-                self.course_handicap == other.course_handicap and
-                all(self.hole_scores == other.hole_scores)
+            return self.course_handicap == other.course_handicap and all(
+                self.hole_scores == other.hole_scores
             )
 
         return NotImplemented
@@ -260,8 +260,8 @@ class EventScoringConfig:
         """Equal comparison method for this class."""
         if isinstance(other, EventScoringConfig):
             return (
-                self.points_by_rank == other.points_by_rank and
-                self.points_combo_method == other.points_combo_method
+                self.points_by_rank == other.points_by_rank
+                and self.points_combo_method == other.points_combo_method
             )
         else:
             return NotImplemented
@@ -316,7 +316,7 @@ class Event:
                 handicap_index=self.players.get_player(player_name).handicap,
                 par=self.course.par,
                 rating=self.course.rating,
-                slope=self.course.slope
+                slope=self.course.slope,
             )
 
             player_event_data[player_name] = {
@@ -350,7 +350,9 @@ class Event:
         combined_points_ser.name = "event_points"
         results_df = results_df.join(combined_points_ser)
 
-        results_df["event_rank"] = results_df["event_points"].rank(method="min", ascending=False).astype(int)
+        results_df["event_rank"] = (
+            results_df["event_points"].rank(method="min", ascending=False).astype(int)
+        )
 
         return EventResult(
             player_results={

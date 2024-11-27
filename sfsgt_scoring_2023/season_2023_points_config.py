@@ -52,6 +52,5 @@ NORMAL_EVENT_POINTS_BY_RANK = {
 }
 
 MAJOR_EVENT_POINTS_BY_RANK = {
-    rank: points * 2.0
-    for rank, points in NORMAL_EVENT_POINTS_BY_RANK.items()
+    rank: points * 2.0 for rank, points in NORMAL_EVENT_POINTS_BY_RANK.items()
 }

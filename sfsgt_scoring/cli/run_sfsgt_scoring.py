@@ -3,12 +3,13 @@
 This should be used as the main entry point for executing season scoring
 in a production context.
 """
+
 import click
 
 from sfsgt_scoring import (
     course_database,
-    season_config,
     runner,
+    season_config,
 )
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 

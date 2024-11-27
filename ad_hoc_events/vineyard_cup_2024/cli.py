@@ -1,31 +1,30 @@
 import click
 
 from ad_hoc_events.vineyard_cup_2024.config import (
-    TeamPairs,
-    TeamIndividuals,
-    PlayerPair,
-    STANTON_TURNER,
-    JOHN_FRATELLO,
     CULLAN_JACKSON,
     DAVID_ALVAREZ,
-    STEVE_HARASYM,
     DREW_BARRETT,
     ERIK_PETRICH,
-    OTTO_THORNTON_SILVER,
     JOE_WIGNALL,
+    JOHN_FRATELLO,
+    OTTO_THORNTON_SILVER,
     SCOTT_YOUNG,
-    ZACH_AVILA,
+    STANTON_TURNER,
+    STEVE_HARASYM,
     THOMAS_KAUTH,
     TKS_BOY,
+    TKS_OTHER_BOY,
     WILL_DANIELS,
     WILLS_BOY,
-    TKS_OTHER_BOY,
-    DREW_COLLINSHAW,
+    ZACH_AVILA,
+    PlayerPair,
+    TeamIndividuals,
+    TeamPairs,
 )
 from ad_hoc_events.vineyard_cup_2024.event import (
     best_ball_18_hole_matches,
-    scramble_9_hole_matches,
     individual_9_hole_matches,
+    scramble_9_hole_matches,
 )
 
 CHARDONNAY_HOLE_HANDICAP_RANKS = {

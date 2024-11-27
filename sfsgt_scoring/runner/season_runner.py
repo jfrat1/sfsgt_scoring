@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from sfsgt_scoring import course_database, season_config, season
+from sfsgt_scoring import course_database, season, season_config
 from sfsgt_scoring.season import (
     event as season_event,
 )
@@ -14,7 +14,7 @@ class FinaleHandicap(NamedTuple):
     season_handicap: float
     finale_handicap: float
     # TODO: This really needs to not be hard-coded to Corica
-    corica_finale_course_handicap: float
+    corica_finale_course_handicap: int
 
 
 class FinaleHandicaps(dict[str, FinaleHandicap]):
@@ -50,7 +50,9 @@ class FinaleHandicapCalculator:
     def _season_handicaps(self) -> dict[str, float]:
         season_handicaps: dict[str, float] = {}
         for player in self._player_names:
-            season_handicaps[player] = self._season_results.cumulative.players[player].season_handicap
+            season_handicaps[player] = self._season_results.cumulative.players[
+                player
+            ].season_handicap
 
         return season_handicaps
 
@@ -91,7 +93,9 @@ class FinaleHandicapCalculator:
         target_finale_handicap = (ghin_handicap + season_handicap) / 2
 
         # Limit that to bounds around the GHIN handicap
-        ghin_bounded_finale_handicap = min(max(target_finale_handicap, min_finale_handicap), max_finale_handicap)
+        ghin_bounded_finale_handicap = min(
+            max(target_finale_handicap, min_finale_handicap), max_finale_handicap
+        )
 
         # Cap that to a max overall handicap
         capped_finale_handicap = min(ghin_bounded_finale_handicap, MAX_FINALE_HANDICAP)
@@ -103,7 +107,7 @@ class FinaleHandicapCalculator:
             ghin_handicap=ghin_handicap,
             season_handicap=season_handicap,
             finale_handicap=finale_handicap,
-            corica_finale_course_handicap=self.course_handicap(finale_handicap)
+            corica_finale_course_handicap=self.course_handicap(finale_handicap),
         )
 
     def course_handicap(self, handicap_index: float) -> int:
@@ -111,9 +115,7 @@ class FinaleHandicapCalculator:
         rating = 70.4
         strokes_for_par = 72
 
-        course_handicap_raw = (
-            handicap_index * (slope / 113) + (rating - strokes_for_par)
-        )
+        course_handicap_raw = handicap_index * (slope / 113) + (rating - strokes_for_par)
         course_handicap = round(course_handicap_raw, 0)
 
         return int(course_handicap)
@@ -156,7 +158,8 @@ class SeasonRunner:
                 event_num=event_num,
                 sheet_name=event_config.sheet_name,
                 scorecard_start_cell=event_config.scorecard_sheet_start_cell,
-            ) for event_num, event_config in self.config.event_configs().items()
+            )
+            for event_num, event_config in self.config.event_configs().items()
         }
 
     def _season_sheet_config(
@@ -181,16 +184,22 @@ class SeasonRunner:
             season_results=season_results,
         ).finale_handicaps()
 
-        self._write_spreadsheet_data(season_results=season_results, finale_handicaps=finale_handicaps)
+        self._write_spreadsheet_data(
+            season_results=season_results, finale_handicaps=finale_handicaps
+        )
 
     def _read_spreadsheet_data(self) -> season_spreadsheet.SeasonSheetReadData:
         return self.sheet.read()
 
-    def _create_season(self, spreadsheet_data: season_spreadsheet.SeasonSheetReadData) -> season.Season:
+    def _create_season(
+        self, spreadsheet_data: season_spreadsheet.SeasonSheetReadData
+    ) -> season.Season:
         season_input = self._season_input(spreadsheet_data=spreadsheet_data)
         return season.Season(input=season_input)
 
-    def _season_input(self, spreadsheet_data: season_spreadsheet.SeasonSheetReadData) -> season.SeasonInput:
+    def _season_input(
+        self, spreadsheet_data: season_spreadsheet.SeasonSheetReadData
+    ) -> season.SeasonInput:
         player_names = spreadsheet_data.player_names()
         event_names = spreadsheet_data.event_names()
 
@@ -199,7 +208,8 @@ class SeasonRunner:
                 event_name=event,
                 player_names=player_names,
                 spreadsheet_data=spreadsheet_data,
-            ) for event in event_names
+            )
+            for event in event_names
         }
 
         return season.SeasonInput(events=events, player_names=player_names)
@@ -233,9 +243,7 @@ class SeasonRunner:
         return season_event.CourseInput(
             name=event_config.course_name,
             tee=season_event.CourseTeeData(
-                name=tee_name,
-                rating=tee_info.rating,
-                slope=tee_info.slope
+                name=tee_name, rating=tee_info.rating, slope=tee_info.slope
             ),
             hole_pars=season_event.CourseHolePars(course_info.hole_pars),
         )
@@ -268,11 +276,11 @@ class SeasonRunner:
         if isinstance(hole_scores_sheet_data, season_spreadsheet.worksheet.IncompleteScore):
             return season.event.IncompleteScorecard()
         else:
-            return season.event.Scorecard(
-                strokes_per_hole=hole_scores_sheet_data.scores()
-            )
+            return season.event.Scorecard(strokes_per_hole=hole_scores_sheet_data.scores())
 
-    def _config_to_season_event_type(self, config_event_type: season_config.EventType) -> season.EventType:
+    def _config_to_season_event_type(
+        self, config_event_type: season_config.EventType
+    ) -> season.EventType:
         match config_event_type:
             case season_config.EventType.STANDARD:
                 return season.EventType.STANDARD
@@ -290,8 +298,7 @@ class SeasonRunner:
         finale_handicaps: FinaleHandicaps,
     ) -> None:
         write_data = self._generate_spreadsheet_write_data(
-            season_results=season_results,
-            finale_handicaps=finale_handicaps
+            season_results=season_results, finale_handicaps=finale_handicaps
         )
         self.sheet.write(data=write_data)
 
@@ -302,7 +309,9 @@ class SeasonRunner:
     ) -> season_spreadsheet.SeasonSheetWriteData:
         leaderboard_write_data = self._generate_spreadsheet_leaderboard_write_data(season_results)
         events_write_data = self._generate_spreadsheet_events_write_data(season_results)
-        finale_handicaps_write_data = self._generate_spreadsheet_finale_handicaps_write_data(finale_handicaps)
+        finale_handicaps_write_data = self._generate_spreadsheet_finale_handicaps_write_data(
+            finale_handicaps
+        )
 
         return season_spreadsheet.SeasonSheetWriteData(
             leaderboard=leaderboard_write_data,
@@ -343,7 +352,6 @@ class SeasonRunner:
         self,
         season_results: season.SeasonResults,
     ) -> season_spreadsheet.SeasonEventsWriteData:
-
         return {
             event_name: self._generate_spreadsheet_event_write_data(event_data)
             for event_name, event_data in season_results.events.items()
@@ -356,36 +364,40 @@ class SeasonRunner:
         event_players_write_data: dict[str, season_spreadsheet.worksheet.PlayerEventWriteData] = {}
         for player_name, player_result in event_results.players.items():
             if player_result.is_complete_result():
-                event_players_write_data[player_name] = season_spreadsheet.worksheet.PlayerEventWriteData(
-                    front_9_strokes=player_result.front_9_gross,
-                    back_9_strokes=player_result.back_9_gross,
-                    gross_strokes=player_result.total_gross,
-                    course_handicap=player_result.course_handicap,
-                    net_strokes=player_result.total_net,
-                    gross_rank=int(player_result.gross_score_rank),
-                    net_rank=int(player_result.net_score_rank),
-                    gross_points=player_result.gross_score_points,
-                    net_points=player_result.net_score_points,
-                    event_points=player_result.event_points,
-                    event_rank=int(player_result.event_rank),
+                event_players_write_data[player_name] = (
+                    season_spreadsheet.worksheet.PlayerEventWriteData(
+                        front_9_strokes=player_result.front_9_gross,
+                        back_9_strokes=player_result.back_9_gross,
+                        gross_strokes=player_result.total_gross,
+                        course_handicap=player_result.course_handicap,
+                        net_strokes=player_result.total_net,
+                        gross_rank=int(player_result.gross_score_rank),
+                        net_rank=int(player_result.net_score_rank),
+                        gross_points=player_result.gross_score_points,
+                        net_points=player_result.net_score_points,
+                        event_points=player_result.event_points,
+                        event_rank=int(player_result.event_rank),
+                    )
                 )
             else:
                 # TODO: I'm not a fan of the season runner needing to know something special about
                 # what to write into event sheet when a player has an incomplete score.
                 # Consider better ways to abstract this behavior into a no-result for the individual
                 # results.
-                event_players_write_data[player_name] = season_spreadsheet.worksheet.PlayerEventWriteData(
-                    front_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    back_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    gross_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    course_handicap="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    net_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
-                    gross_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
-                    net_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
-                    gross_points=player_result.gross_score_points,
-                    net_points=player_result.net_score_points,
-                    event_points=player_result.event_points,
-                    event_rank=int(player_result.event_rank),
+                event_players_write_data[player_name] = (
+                    season_spreadsheet.worksheet.PlayerEventWriteData(
+                        front_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                        back_9_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                        gross_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                        course_handicap="",  # type: ignore # Will be fixed with better abstraction at this level.
+                        net_strokes="",  # type: ignore # Will be fixed with better abstraction at this level.
+                        gross_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
+                        net_rank="N/A",  # type: ignore # Will be fixed with better abstraction at this level.
+                        gross_points=player_result.gross_score_points,
+                        net_points=player_result.net_score_points,
+                        event_points=player_result.event_points,
+                        event_rank=int(player_result.event_rank),
+                    )
                 )
 
         return season_spreadsheet.worksheet.EventWriteData(

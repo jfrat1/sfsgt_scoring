@@ -63,7 +63,6 @@ coyote_moon_course_handicaps_back_9 = {
 }
 
 
-
 print("Individual course handicaps, coyote 18")
 print(json.dumps(coyote_moon_course_handicaps_18, indent=2))
 print("Individual course handicaps, coyote front 9")
@@ -72,15 +71,16 @@ print("Individual course handicaps, coyote back 9")
 print(json.dumps(coyote_moon_course_handicaps_back_9, indent=2))
 
 
-
 # Scramble
 # 35% low/15% high
 # Erik + Mully vs. Steve + Gropp
 # Tim + Stanton vs. Moon + Jfrat
 
+
 @dataclasses.dataclass()
 class Team:
     players: List[str]
+
 
 @dataclasses.dataclass()
 class Match:
@@ -89,8 +89,7 @@ class Match:
 
     def team_match_handicap(self, team_players) -> float:
         course_handicaps_9_hole = {
-            player: coyote_moon_course_handicaps_front_9[player]
-            for player in team_players
+            player: coyote_moon_course_handicaps_front_9[player] for player in team_players
         }
 
         lower_handicap = min(course_handicaps_9_hole.values())
@@ -105,10 +104,14 @@ class Match:
         print(f"Match: {self.team_erik.players} vs. {self.team_steve.players}")
         if team_erik_match_handicap > team_steve_match_handicap:
             strokes_given = team_erik_match_handicap - team_steve_match_handicap
-            print(f"{self.team_steve.players} give {self.team_erik.players} {strokes_given} strokes")
+            print(
+                f"{self.team_steve.players} give {self.team_erik.players} {strokes_given} strokes"
+            )
         elif team_steve_match_handicap > team_erik_match_handicap:
             strokes_given = team_steve_match_handicap - team_erik_match_handicap
-            print(f"{self.team_erik.players} give {self.team_steve.players} {strokes_given} strokes")
+            print(
+                f"{self.team_erik.players} give {self.team_steve.players} {strokes_given} strokes"
+            )
         else:
             print("Heads up")
 
@@ -138,13 +141,11 @@ class Match:
 
 
 match_1 = Match(
-    team_erik=Team(players=["erik", "mulligan"]),
-    team_steve=Team(players=["steve", "gropp"])
+    team_erik=Team(players=["erik", "mulligan"]), team_steve=Team(players=["steve", "gropp"])
 )
 
 match_2 = Match(
-    team_erik=Team(players=["tim", "stanton"]),
-    team_steve=Team(players=["moon", "jfrat"])
+    team_erik=Team(players=["tim", "stanton"]), team_steve=Team(players=["moon", "jfrat"])
 )
 
 match_1.print_team_match_strokes_given()

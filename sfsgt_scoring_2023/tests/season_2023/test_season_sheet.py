@@ -19,6 +19,7 @@ def test_constructor() -> None:
 
     assert season_.sheet_controller is mock_sheet_controller
 
+
 def test_read_players_sheet() -> None:
     mock_sheet_controller = mock.MagicMock(spec=season_sheet.sheets.SheetController)
     mock_sheet_controller.worksheet_to_df.return_value = pd.DataFrame(
@@ -61,7 +62,7 @@ def test_read_players_sheet_player_column_values_not_strings() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Players' sheet. Values in the 'Player' column"
+        match="Malformed 'Players' sheet. Values in the 'Player' column",
     ):
         season_.read_players_sheet()
 
@@ -77,9 +78,10 @@ def test_read_players_sheet_handicap_column_values_not_numeric() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Players' sheet. Values in the 'Handicap' column"
+        match="Malformed 'Players' sheet. Values in the 'Handicap' column",
     ):
         season_.read_players_sheet()
+
 
 def test_read_player_handicaps_sheet() -> None:
     mock_sheet_controller = mock.MagicMock(spec=season_sheet.sheets.SheetController)
@@ -97,12 +99,10 @@ def test_read_player_handicaps_sheet() -> None:
     assert isinstance(season_players, season.SeasonPlayerGroup)
     assert len(season_players.player_list) == 2
     assert season_players.player_list[0] == season.SeasonPlayer(
-        name="Geoff",
-        handicap_by_event={"Presidio": 12, "Harding Park": 12.5}
+        name="Geoff", handicap_by_event={"Presidio": 12, "Harding Park": 12.5}
     )
     assert season_players.player_list[1] == season.SeasonPlayer(
-        name="Bolt",
-        handicap_by_event={"Presidio": 6, "Harding Park": 5}
+        name="Bolt", handicap_by_event={"Presidio": 6, "Harding Park": 5}
     )
 
 
@@ -117,11 +117,9 @@ def test_read_player_handicaps_sheet_not_enough_columns() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Player Handicaps' sheet. There must be 2 or more columns."
+        match="Malformed 'Player Handicaps' sheet. There must be 2 or more columns.",
     ):
-        season_.read_player_handicaps_sheet(
-            expected_events=["Presidio", "Harding Park"]
-        )
+        season_.read_player_handicaps_sheet(expected_events=["Presidio", "Harding Park"])
 
 
 def test_read_player_handicaps_sheet_first_column_not_player() -> None:
@@ -135,11 +133,9 @@ def test_read_player_handicaps_sheet_first_column_not_player() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Player Handicaps' sheet. The first column header should be 'Player'"
+        match="Malformed 'Player Handicaps' sheet. The first column header should be 'Player'",
     ):
-        season_.read_player_handicaps_sheet(
-            expected_events=["Presidio", "Harding Park"]
-        )
+        season_.read_player_handicaps_sheet(expected_events=["Presidio", "Harding Park"])
 
 
 def test_read_player_handicaps_sheet_event_columns_dont_match() -> None:
@@ -153,11 +149,9 @@ def test_read_player_handicaps_sheet_event_columns_dont_match() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Player Handicaps' sheet. Expected events"
+        match="Malformed 'Player Handicaps' sheet. Expected events",
     ):
-        season_.read_player_handicaps_sheet(
-            expected_events=["Presidio", "Harding Park"]
-        )
+        season_.read_player_handicaps_sheet(expected_events=["Presidio", "Harding Park"])
 
 
 def test_read_player_handicaps_sheet_player_values_not_string() -> None:
@@ -171,11 +165,9 @@ def test_read_player_handicaps_sheet_player_values_not_string() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Player Handicaps' sheet. Values in the 'Player' column"
+        match="Malformed 'Player Handicaps' sheet. Values in the 'Player' column",
     ):
-        season_.read_player_handicaps_sheet(
-            expected_events=["Presidio", "Harding Park"]
-        )
+        season_.read_player_handicaps_sheet(expected_events=["Presidio", "Harding Park"])
 
 
 def test_read_player_handicaps_sheet_handicap_values_not_numeric() -> None:
@@ -189,11 +181,9 @@ def test_read_player_handicaps_sheet_handicap_values_not_numeric() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Player Handicaps' sheet. Values in the 'Presidio' column"
+        match="Malformed 'Player Handicaps' sheet. Values in the 'Presidio' column",
     ):
-        season_.read_player_handicaps_sheet(
-            expected_events=["Presidio", "Harding Park"]
-        )
+        season_.read_player_handicaps_sheet(expected_events=["Presidio", "Harding Park"])
 
 
 def test_read_courses_sheet() -> None:
@@ -232,8 +222,7 @@ def test_read_courses_sheet_wrong_headers() -> None:
     season_ = season_sheet.SeasonSheet(sheet_controller=mock_sheet_controller)
 
     with pytest.raises(
-        season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. Expected columns"
+        season_sheet.SeasonSheetException, match="Malformed 'Courses' sheet. Expected columns"
     ):
         season_.read_courses_sheet()
 
@@ -252,7 +241,7 @@ def test_read_courses_sheet_wrong_course_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Course' column values should all be <class 'str'>."
+        match="Malformed 'Courses' sheet. The 'Course' column values should all be <class 'str'>.",
     ):
         season_.read_courses_sheet()
 
@@ -271,7 +260,7 @@ def test_read_courses_sheet_wrong_par_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Par' column values should all be <class 'int'>."
+        match="Malformed 'Courses' sheet. The 'Par' column values should all be <class 'int'>.",
     ):
         season_.read_courses_sheet()
 
@@ -290,7 +279,7 @@ def test_read_courses_sheet_wrong_rating_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Rating' column values should all be <class 'float'>."
+        match="Malformed 'Courses' sheet. The 'Rating' column values should all be <class 'float'>.",  # noqa: E501
     ):
         season_.read_courses_sheet()
 
@@ -309,7 +298,7 @@ def test_read_courses_sheet_wrong_slope_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Slope' column values should all be <class 'int'>."
+        match="Malformed 'Courses' sheet. The 'Slope' column values should all be <class 'int'>.",
     ):
         season_.read_courses_sheet()
 
@@ -328,7 +317,7 @@ def test_read_courses_sheet_wrong_tee_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Tee' column values should all be <class 'str'>."
+        match="Malformed 'Courses' sheet. The 'Tee' column values should all be <class 'str'>.",
     ):
         season_.read_courses_sheet()
 
@@ -347,7 +336,7 @@ def test_read_courses_sheet_wrong_distance_value_type() -> None:
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Courses' sheet. The 'Distance' column values should all be <class 'int'>."
+        match="Malformed 'Courses' sheet. The 'Distance' column values should all be <class 'int'>.",  # noqa: E501
     ):
         season_.read_courses_sheet()
 
@@ -362,10 +351,12 @@ def test_read_event_scorecard() -> None:
             ["Bolt"] + [5] * 9 + [36, ""] + [5] * 9 + [36, 72],
         ],
         columns=(
-            ["Player"] +
-            [str(x) for x in range(1, 10)] + ["Out", ""] +
-            [str(x) for x in range(10, 19)] + ["In", "Total"]
-        )
+            ["Player"]
+            + [str(x) for x in range(1, 10)]
+            + ["Out", ""]
+            + [str(x) for x in range(10, 19)]
+            + ["In", "Total"]
+        ),
     )
 
     season_ = season_sheet.SeasonSheet(sheet_controller=mock_sheet_controller)
@@ -392,17 +383,19 @@ def test_read_event_scorecard_missing_total_column() -> None:
             ["Bolt"] + [4] * 9 + [36, ""] + [4] * 9 + [36],
         ],
         columns=(
-            ["Player"] +
-            [str(x) for x in range(1, 10)] + ["Out", ""] +
-            [str(x) for x in range(10, 19)] + ["In"]
-        )
+            ["Player"]
+            + [str(x) for x in range(1, 10)]
+            + ["Out", ""]
+            + [str(x) for x in range(10, 19)]
+            + ["In"]
+        ),
     )
 
     season_ = season_sheet.SeasonSheet(sheet_controller=mock_sheet_controller)
 
     with pytest.raises(
         season_sheet.SeasonSheetException,
-        match="Malformed 'Presidio Scorecard' sheet. Column headers do not match expectations."
+        match="Malformed 'Presidio Scorecard' sheet. Column headers do not match expectations.",
     ):
         season_.read_event_scorecard_sheet(
             worksheet_name="Presidio Scorecard", expected_players=["Geoff", "Bolt"]
@@ -418,10 +411,12 @@ def test_read_event_scorecard_missing_par_row() -> None:
             ["Bolt"] + [4] * 9 + [36, ""] + [4] * 9 + [36, 72],
         ],
         columns=(
-            ["Player"] +
-            [str(x) for x in range(1, 10)] + ["Out", ""] +
-            [str(x) for x in range(10, 19)] + ["In", "Total"]
-        )
+            ["Player"]
+            + [str(x) for x in range(1, 10)]
+            + ["Out", ""]
+            + [str(x) for x in range(10, 19)]
+            + ["In", "Total"]
+        ),
     )
 
     season_ = season_sheet.SeasonSheet(sheet_controller=mock_sheet_controller)
@@ -431,7 +426,7 @@ def test_read_event_scorecard_missing_par_row() -> None:
         match=(
             "Malformed 'Presidio Scorecard' sheet. The sheet must have a 'Par' and 'Max' "
             "row header."
-        )
+        ),
     ):
         season_.read_event_scorecard_sheet(
             worksheet_name="Presidio Scorecard", expected_players=["Geoff", "Bolt"]
@@ -448,10 +443,12 @@ def test_read_event_scorecard_missing_players() -> None:
             ["Bolt"] + [4] * 9 + [36, ""] + [4] * 9 + [36, 72],
         ],
         columns=(
-            ["Player"] +
-            [str(x) for x in range(1, 10)] + ["Out", ""] +
-            [str(x) for x in range(10, 19)] + ["In", "Total"]
-        )
+            ["Player"]
+            + [str(x) for x in range(1, 10)]
+            + ["Out", ""]
+            + [str(x) for x in range(10, 19)]
+            + ["In", "Total"]
+        ),
     )
 
     season_ = season_sheet.SeasonSheet(sheet_controller=mock_sheet_controller)
@@ -461,7 +458,7 @@ def test_read_event_scorecard_missing_players() -> None:
         match=(
             "Malformed 'Presidio Scorecard' sheet. Player names do not match the expected "
             "players list."
-        )
+        ),
     ):
         season_.read_event_scorecard_sheet(
             worksheet_name="Presidio Scorecard", expected_players=["Geoff", "Bolt", "Someone Else"]

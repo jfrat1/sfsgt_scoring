@@ -1,7 +1,6 @@
 import pytest
 
 from ... import rank
-
 from .. import results
 
 
@@ -22,7 +21,7 @@ def test_player_event_result_is_complete_result_false() -> None:
             gross_score_rank=rank.RankValue(3),
             net_score_rank=rank.RankValue(5),
             event_rank=rank.RankValue(4),
-        )
+        ),
     )
 
     assert not result_.is_complete_result()
@@ -37,6 +36,7 @@ def test_player_event_result_is_complete_result_true() -> None:
             total_gross=88,
             total_net=72,
             notable_holes=results.NotableHoles(),
+            score_differential=16,
         ),
         cumulative_result=results.PlayerEventCumulativeResult(
             gross_score_points=100.0,
@@ -45,7 +45,7 @@ def test_player_event_result_is_complete_result_true() -> None:
             gross_score_rank=rank.RankValue(3),
             net_score_rank=rank.RankValue(5),
             event_rank=rank.RankValue(4),
-        )
+        ),
     )
 
     assert result_.is_complete_result()
@@ -63,6 +63,7 @@ def test_player_event_result_complete_result_property_getters() -> None:
             total_gross=88,
             total_net=72,
             notable_holes=notable_holes,
+            score_differential=16,
         ),
         cumulative_result=results.PlayerEventCumulativeResult(
             gross_score_points=100.0,
@@ -71,7 +72,7 @@ def test_player_event_result_complete_result_property_getters() -> None:
             gross_score_rank=rank.RankValue(3),
             net_score_rank=rank.RankValue(5),
             event_rank=rank.RankValue(4),
-        )
+        ),
     )
 
     assert result_.course_handicap == 16
@@ -121,6 +122,7 @@ def test_individual_player_event_result_property_getters() -> None:
         total_gross=88,
         total_net=72,
         notable_holes=notable_holes,
+        score_differential=16,
     )
 
     assert result_.course_handicap == 16

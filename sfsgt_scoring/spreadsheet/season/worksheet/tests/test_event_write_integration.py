@@ -1,6 +1,6 @@
 from sfsgt_scoring.spreadsheet import google as google_sheet
-from .. import event
 
+from .. import event
 
 # This google sheet is a copy of the 2024 sheet with a small amount of fake
 # data input for use in these tests.
@@ -91,7 +91,7 @@ def event_worksheet_class_instance(worksheet: google_sheet.GoogleWorksheet) -> e
 
 def test_event_construct() -> None:
     worksheet = real_event_worksheet()
-    event_sheet = event_worksheet_class_instance(worksheet)
+    event_worksheet_class_instance(worksheet)
 
 
 def test_event_write() -> None:

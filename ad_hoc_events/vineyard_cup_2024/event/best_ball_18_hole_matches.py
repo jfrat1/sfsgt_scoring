@@ -1,7 +1,8 @@
 from typing import NamedTuple
 
-from .. import config, handicap
 from sfsgt_scoring import course_database
+
+from .. import config, handicap
 
 
 class _Matchup(NamedTuple):
@@ -15,7 +16,9 @@ class _Matchup(NamedTuple):
         team_1_playing_handicaps = self.team_playing_handicaps(self.team_1_pair)
         team_2_playing_handicaps = self.team_playing_handicaps(self.team_2_pair)
 
-        lowest_handicap = self.lowest_playing_handicap(team_1_playing_handicaps, team_2_playing_handicaps)
+        lowest_handicap = self.lowest_playing_handicap(
+            team_1_playing_handicaps, team_2_playing_handicaps
+        )
         team_1_handicaps_normalized = self.normalize_team_playing_handicaps(
             team_playing_handicaps=team_1_playing_handicaps,
             lowest_playing_handicap=lowest_handicap,
@@ -89,8 +92,24 @@ class BestBall18HoleMatches(NamedTuple):
         handicap_calc: handicap.HandicapCalculator,
     ) -> tuple[_Matchup, _Matchup, _Matchup, _Matchup]:
         return (
-            _Matchup(team_1_pair=self.team_1.pair_1, team_2_pair=self.team_2.pair_1, handicap_calc=handicap_calc),
-            _Matchup(team_1_pair=self.team_1.pair_2, team_2_pair=self.team_2.pair_2, handicap_calc=handicap_calc),
-            _Matchup(team_1_pair=self.team_1.pair_3, team_2_pair=self.team_2.pair_3, handicap_calc=handicap_calc),
-            _Matchup(team_1_pair=self.team_1.pair_4, team_2_pair=self.team_2.pair_4, handicap_calc=handicap_calc),
+            _Matchup(
+                team_1_pair=self.team_1.pair_1,
+                team_2_pair=self.team_2.pair_1,
+                handicap_calc=handicap_calc,
+            ),
+            _Matchup(
+                team_1_pair=self.team_1.pair_2,
+                team_2_pair=self.team_2.pair_2,
+                handicap_calc=handicap_calc,
+            ),
+            _Matchup(
+                team_1_pair=self.team_1.pair_3,
+                team_2_pair=self.team_2.pair_3,
+                handicap_calc=handicap_calc,
+            ),
+            _Matchup(
+                team_1_pair=self.team_1.pair_4,
+                team_2_pair=self.team_2.pair_4,
+                handicap_calc=handicap_calc,
+            ),
         )

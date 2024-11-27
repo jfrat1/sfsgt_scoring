@@ -19,12 +19,10 @@ WORKSHEET_DATA_RAW = pd.DataFrame(
     data=[["", "Geoff", 12.5, 12.0, "NCGA"], ["", "Bolt", 4, 4.3, "Grint"]],
     columns=["", "GOLFER", "EVENT A", "EVENT B", "TRACKING METHOD"],
 )
-WORKSHEET_DATA_PROCESSED = WORKSHEET_DATA_RAW.set_index(
-    keys="GOLFER"
-).drop(
-    columns=["", "TRACKING METHOD"]
-).rename(
-    columns={"EVENT A": "Event A", "EVENT B": "Event B"}
+WORKSHEET_DATA_PROCESSED = (
+    WORKSHEET_DATA_RAW.set_index(keys="GOLFER")
+    .drop(columns=["", "TRACKING METHOD"])
+    .rename(columns={"EVENT A": "Event A", "EVENT B": "Event B"})
 )
 
 EXPECTED_WORKSHEET_READ_DATA = players.PlayersReadData(
@@ -78,8 +76,8 @@ def test_read_with_string_numerics_in_raw_worksheet_data() -> None:
 
     # Change data type to be generic object then convert all values to strings.
     test_data = test_data.astype(object)
-    for (index, row) in test_data.iterrows():
-        for (column, value) in row.items():
+    for index, row in test_data.iterrows():
+        for column, value in row.items():
             test_data.loc[str(index), str(column)] = str(value)
 
     players_worksheet = players.PlayersWorksheet(

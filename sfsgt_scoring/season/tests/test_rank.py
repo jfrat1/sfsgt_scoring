@@ -63,34 +63,46 @@ def test_rank_order_is_ascending() -> None:
 
 def test_rank_ascending_no_ties() -> None:
     rank_ = rank.Rank()
-    assert rank_.player_ranks_from_values(
-        player_values=TEST_PLAYER_VALUES_NO_TIES,
-        rank_order=rank.RankOrder.ASCENDING,
-    ) == TEST_PLAYER_RANKS_ASCENDING_NO_TIES
+    assert (
+        rank_.player_ranks_from_values(
+            player_values=TEST_PLAYER_VALUES_NO_TIES,
+            rank_order=rank.RankOrder.ASCENDING,
+        )
+        == TEST_PLAYER_RANKS_ASCENDING_NO_TIES
+    )
 
 
 def test_rank_descending_no_ties() -> None:
     rank_ = rank.Rank()
-    assert rank_.player_ranks_from_values(
-        player_values=TEST_PLAYER_VALUES_NO_TIES,
-        rank_order=rank.RankOrder.DESCENDING,
-    ) == TEST_PLAYER_RANKS_DESCENDING_NO_TIES
+    assert (
+        rank_.player_ranks_from_values(
+            player_values=TEST_PLAYER_VALUES_NO_TIES,
+            rank_order=rank.RankOrder.DESCENDING,
+        )
+        == TEST_PLAYER_RANKS_DESCENDING_NO_TIES
+    )
 
 
 def test_rank_ascending_with_ties() -> None:
     rank_ = rank.Rank()
-    assert rank_.player_ranks_from_values(
-        player_values=TEST_PLAYER_VALUES_WITH_TIES,
-        rank_order=rank.RankOrder.ASCENDING,
-    ) == TEST_PLAYER_RANKS_ASCENDING_WITH_TIES
+    assert (
+        rank_.player_ranks_from_values(
+            player_values=TEST_PLAYER_VALUES_WITH_TIES,
+            rank_order=rank.RankOrder.ASCENDING,
+        )
+        == TEST_PLAYER_RANKS_ASCENDING_WITH_TIES
+    )
 
 
 def test_rank_descending_with_ties() -> None:
     rank_ = rank.Rank()
-    assert rank_.player_ranks_from_values(
-        player_values=TEST_PLAYER_VALUES_WITH_TIES,
-        rank_order=rank.RankOrder.DESCENDING,
-    ) == TEST_PLAYER_RANKS_DESCENDING_WITH_TIES
+    assert (
+        rank_.player_ranks_from_values(
+            player_values=TEST_PLAYER_VALUES_WITH_TIES,
+            rank_order=rank.RankOrder.DESCENDING,
+        )
+        == TEST_PLAYER_RANKS_DESCENDING_WITH_TIES
+    )
 
 
 def test_player_ranks_from_values_empty_values_returns_empty() -> None:
@@ -98,10 +110,13 @@ def test_player_ranks_from_values_empty_values_returns_empty() -> None:
 
     empty_dict: dict[str, int] = {}
 
-    assert rank_.player_ranks_from_values(
-        player_values=empty_dict,
-        rank_order=rank.RankOrder.DESCENDING,
-    ) == empty_dict
+    assert (
+        rank_.player_ranks_from_values(
+            player_values=empty_dict,
+            rank_order=rank.RankOrder.DESCENDING,
+        )
+        == empty_dict
+    )
 
 
 def test_rank_value_construct_non_int_raises_error() -> None:

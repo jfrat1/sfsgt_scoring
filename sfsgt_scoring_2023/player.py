@@ -1,11 +1,13 @@
 import dataclasses
 from typing import Generator, List
 
+
 # When both eq and frozen are True, it makes Player hashable so we can use it as
 # keys in a dictionary
 @dataclasses.dataclass(eq=True, frozen=True)
-class Player():
+class Player:
     """A single player with a name and handicap index."""
+
     name: str
     handicap: float
 
@@ -19,9 +21,7 @@ class PlayerGroup:
 
     def get_player(self, player_name: str) -> Player:
         """Get a single player from the group by name."""
-        candidate_players = [
-            player for player in self.player_list if player.name == player_name
-        ]
+        candidate_players = [player for player in self.player_list if player.name == player_name]
         num_candidates = len(candidate_players)
         if num_candidates == 0:
             raise KeyError(f"Couldn't find any players named {player_name}")

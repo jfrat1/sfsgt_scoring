@@ -1,6 +1,5 @@
 from typing import NamedTuple
 
-from sfsgt_scoring.spreadsheet import sheet_utils
 from sfsgt_scoring.spreadsheet.google import worksheet
 
 

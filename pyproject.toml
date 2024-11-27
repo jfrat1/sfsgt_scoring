@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 100
+exclude = ["sfsgt_scoring_2023"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+exclude = ["sfsgt_scoring_2023"]

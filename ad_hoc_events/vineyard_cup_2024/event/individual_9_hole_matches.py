@@ -20,7 +20,9 @@ class _Matchup(NamedTuple):
             handicap_allowance=self.HANDICAP_ALLOWANCE,
         )
 
-        print(f"{self.player_1.name}: {player_1_playing_handicap} vs. {self.player_2.name}: {player_2_playing_handicap}")
+        print(
+            f"{self.player_1.name}: {player_1_playing_handicap} vs. {self.player_2.name}: {player_2_playing_handicap}"  # noqa: E501
+        )
 
         if player_1_playing_handicap == player_2_playing_handicap:
             print("- Heads Up")
@@ -29,13 +31,19 @@ class _Matchup(NamedTuple):
 
             is_player_1_lower_handicap = player_1_playing_handicap < player_2_playing_handicap
 
-            lower_handicap_player = self.player_1.name if is_player_1_lower_handicap else self.player_2.name
-            higher_handicap_player = self.player_2.name if is_player_1_lower_handicap else self.player_1.name
+            lower_handicap_player = (
+                self.player_1.name if is_player_1_lower_handicap else self.player_2.name
+            )
+            higher_handicap_player = (
+                self.player_2.name if is_player_1_lower_handicap else self.player_1.name
+            )
 
-            print(f"- {higher_handicap_player} receives {stroke_differential} strokes from {lower_handicap_player}.")
+            print(
+                f"- {higher_handicap_player} receives {stroke_differential} strokes from {lower_handicap_player}."  # noqa: E501
+            )
 
     def player_9_hole_handicap_index(self, player: config.Player) -> float:
-        return round(player.handicap_index/2, 1)
+        return round(player.handicap_index / 2, 1)
 
 
 class Individual9HoleMatches(NamedTuple):

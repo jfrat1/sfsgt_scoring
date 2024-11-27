@@ -1,4 +1,5 @@
 import copy
+
 import pytest
 
 from sfsgt_scoring.spreadsheet import google as google_sheet
@@ -42,7 +43,7 @@ STANTON_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
         "Poppy Ridge": 100,
         "Presidio": 100,
         "Harding Park": 50,
-    }
+    },
 )
 
 JOHN_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
@@ -62,7 +63,7 @@ JOHN_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
         "Poppy Ridge": 50,
         "Presidio": 50,
         "Harding Park": 100,
-    }
+    },
 )
 
 STEVE_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
@@ -82,7 +83,7 @@ STEVE_WRITE_DATA = leaderboard.PlayerLeaderboardWriteData(
         "Poppy Ridge": 100,
         "Presidio": 50,
         "Harding Park": 200,
-    }
+    },
 )
 
 WRITE_DATA = leaderboard.LeaderboardWriteData(
@@ -94,7 +95,9 @@ WRITE_DATA = leaderboard.LeaderboardWriteData(
 )
 
 
-def real_leaderboard_worksheet(worksheet_name: str = TEST_LEADERBOARD_SHEET) -> google_sheet.GoogleWorksheet:
+def real_leaderboard_worksheet(
+    worksheet_name: str = TEST_LEADERBOARD_SHEET,
+) -> google_sheet.GoogleWorksheet:
     google_sheet_ = google_sheet.GoogleSheet(sheet_id=TEST_GOOGLE_SHEET_ID)
     return google_sheet_.worksheet(worksheet_name=worksheet_name)
 
@@ -102,7 +105,7 @@ def real_leaderboard_worksheet(worksheet_name: str = TEST_LEADERBOARD_SHEET) -> 
 def test_construct_leaderboard_worksheet() -> None:
     worksheet = real_leaderboard_worksheet()
 
-    leaderboard_ = leaderboard.LeaderboardWorksheet(
+    leaderboard.LeaderboardWorksheet(
         worksheet=worksheet,
         players=PLAYERS,
         events=EVENTS,

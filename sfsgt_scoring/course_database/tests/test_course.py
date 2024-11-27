@@ -40,7 +40,9 @@ DEFAULT_COURSE_DATA_YAML = """
 
 
 @contextlib.contextmanager
-def temp_course_yaml_file(yaml_data: str = DEFAULT_COURSE_DATA_YAML) -> Generator[pathlib.Path, None, None]:
+def temp_course_yaml_file(
+    yaml_data: str = DEFAULT_COURSE_DATA_YAML,
+) -> Generator[pathlib.Path, None, None]:
     with tempfile.NamedTemporaryFile(suffix=".yaml", mode="r+") as temp_file:
         temp_file_path = pathlib.Path(temp_file.name)
         temp_file_path.write_text(yaml_data)

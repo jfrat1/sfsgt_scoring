@@ -1,6 +1,5 @@
 from . import inputs
 
-
 STANDARD_EVENT_POINTS_BY_RANK = {
     1: 50.0,
     2: 45.0,
@@ -55,8 +54,7 @@ STANDARD_EVENT_POINTS_BY_RANK = {
 }
 
 MAJOR_EVENT_POINTS_BY_RANK = {
-    rank: points * 2
-    for rank, points in STANDARD_EVENT_POINTS_BY_RANK.items()
+    rank: points * 2 for rank, points in STANDARD_EVENT_POINTS_BY_RANK.items()
 }
 
 
@@ -65,10 +63,10 @@ class UnknownEventTypeError(Exception):
 
 
 class InvalidPlayerRanksError(Exception):
-    """Exception to be raised when a player rank is provided which is no in the allowed range of ranks."""
+    """Exception to be raised when a disallowed player rank is detected."""
 
 
-class Points():
+class Points:
     def __init__(self, event_type: inputs.EventType) -> None:
         self._points_by_rank = self._get_points_by_rank(event_type)
 
@@ -82,9 +80,7 @@ class Points():
 
             case _:
                 # Should not be reachable unless new event types are introduced.
-                raise UnknownEventTypeError(
-                    f"Event type {event_type} is not recognized."
-                )
+                raise UnknownEventTypeError(f"Event type {event_type} is not recognized.")
 
     def player_points_from_ranks(self, player_ranks: dict[str, int]) -> dict[str, float]:
         if self._are_player_ranks_empty(player_ranks):
@@ -114,7 +110,7 @@ class Points():
         return tuple(rank for rank in self._points_by_rank.keys())
 
     def _players_at_each_rank(self, player_ranks: dict[str, int]) -> dict[int, list[str]]:
-        """Pivot the player ranks dictionary into one that has ranks as keys and sets of player names at each rank as values."""
+        """Pivot the player ranks dictionary into one that has ranks as keys and sets of player names at each rank as values."""   # noqa: E501
         min_player_rank = min(player_ranks.values())
         max_player_rank = max(player_ranks.values())
 
@@ -126,9 +122,7 @@ class Points():
 
     def _find_players_at_rank(self, rank: int, player_ranks: dict[str, int]) -> list[str]:
         return [
-            player_name
-            for player_name, player_rank in player_ranks.items()
-            if player_rank == rank
+            player_name for player_name, player_rank in player_ranks.items() if player_rank == rank
         ]
 
     def _player_points(self, players_at_each_rank: dict[int, list[str]]) -> dict[str, float]:

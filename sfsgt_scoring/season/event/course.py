@@ -5,7 +5,7 @@ class CourseHoleRequestError(Exception):
     """Exception to be raised when an invalid hole request is made."""
 
 
-class Course():
+class Course:
     def __init__(self, input: inputs.CourseInput) -> None:
         self._slope = input.tee.slope
         self._rating = input.tee.rating
@@ -13,8 +13,8 @@ class Course():
         self._strokes_for_par = input.hole_pars.total_par()
 
     def player_course_handicap(self, player_handicap_index: float) -> int:
-        course_handicap_raw = (
-            player_handicap_index * (self._slope / 113) + (self._rating - self._strokes_for_par)
+        course_handicap_raw = player_handicap_index * (self._slope / 113) + (
+            self._rating - self._strokes_for_par
         )
         course_handicap = round(course_handicap_raw, 0)
 

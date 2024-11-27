@@ -1,13 +1,7 @@
 from typing import List
 from unittest import mock
 
-import pandas as pd
-import pytest
-
-from sfsgt_scoring_2023 import season
-from sfsgt_scoring_2023 import season_sheet
-from sfsgt_scoring_2023 import player
-from sfsgt_scoring_2023 import course
+from sfsgt_scoring_2023 import course, player, season, season_sheet
 
 
 def make_mock_player_group(player_names: List[str] | None = None) -> mock.MagicMock:
@@ -17,12 +11,14 @@ def make_mock_player_group(player_names: List[str] | None = None) -> mock.MagicM
 
     return mock_obj
 
+
 def make_mock_season_player_group(player_names: List[str] | None = None) -> mock.MagicMock:
     mock_obj = mock.MagicMock(spec=season.SeasonPlayerGroup)
     if player_names:
         mock_obj.player_names.return_value = player_names
 
     return mock_obj
+
 
 def make_mock_course_group(course_names: List[str] | None = None) -> course.CourseGroup:
     mock_obj = mock.MagicMock(spec=course.CourseGroup)
@@ -46,12 +42,8 @@ def make_mock_season_sheet(
 
 def test_constructor() -> None:
     player_names = ["Bolt", "Geoff"]
-    mock_player_group = make_mock_player_group(
-        player_names=player_names
-    )
-    mock_course_group = make_mock_course_group(
-        course_names=["Presidio"]
-    )
+    mock_player_group = make_mock_player_group(player_names=player_names)
+    mock_course_group = make_mock_course_group(course_names=["Presidio"])
     mock_season_player_group = make_mock_season_player_group(
         player_names=player_names,
     )
@@ -66,7 +58,7 @@ def test_constructor() -> None:
             course_name="Presidio",
             scorecard_sheet_name="Presidio Scorecard",
             results_sheet_name="Presidio Results",
-            points_by_rank={1: 50.0, 2: 25.0}
+            points_by_rank={1: 50.0, 2: 25.0},
         )
     ]
     season_ = season.Season(
@@ -84,4 +76,3 @@ def test_constructor() -> None:
     assert set(season_.season_points.index) == set(player_names)
     assert set(season_.season_points.columns) == {"Presidio"}
     assert all(season_.season_points.values == 0)
-

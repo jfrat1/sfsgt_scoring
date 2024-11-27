@@ -1,4 +1,3 @@
-
 from typing import Any, NamedTuple
 
 from . import event, rank
@@ -149,16 +148,16 @@ class CumulativePlayerResult:
             return NotImplemented
 
         return (
-            self._season_points == other._season_points and
-            self._num_birdies == other._num_birdies and
-            self._num_eagles == other._num_eagles and
-            self._num_albatrosses == other._num_albatrosses and
-            self._num_events_completed == other._num_events_completed and
-            self._num_net_strokes_wins == other._num_net_strokes_wins and
-            self._num_event_wins == other._num_event_wins and
-            self._num_event_top_fives == other._num_event_top_fives and
-            self._num_event_top_tens == other._num_event_top_tens and
-            self._season_rank == other._season_rank
+            self._season_points == other._season_points
+            and self._num_birdies == other._num_birdies
+            and self._num_eagles == other._num_eagles
+            and self._num_albatrosses == other._num_albatrosses
+            and self._num_events_completed == other._num_events_completed
+            and self._num_net_strokes_wins == other._num_net_strokes_wins
+            and self._num_event_wins == other._num_event_wins
+            and self._num_event_top_fives == other._num_event_top_fives
+            and self._num_event_top_tens == other._num_event_top_tens
+            and self._season_rank == other._season_rank
         )
 
     def __repr__(self) -> str:
@@ -194,10 +193,7 @@ class Season:
         )
 
     def _event_results(self) -> EventResults:
-        return {
-            event_name: event_.result()
-            for event_name, event_ in self._events.items()
-        }
+        return {event_name: event_.result() for event_name, event_ in self._events.items()}
 
     def _cumulative_results(self, event_results: EventResults) -> CumulativeResults:
         cumulative_player_results = self._unranked_cumulative_results(event_results)
@@ -218,7 +214,9 @@ class Season:
 
         return cumulative_player_results
 
-    def _player_cumulative_results(self, event_results: EventResults, player_name: str) -> CumulativePlayerResult:
+    def _player_cumulative_results(
+        self, event_results: EventResults, player_name: str
+    ) -> CumulativePlayerResult:
         season_points = 0.0
         num_birdies = 0
         num_eagles = 0
@@ -246,7 +244,9 @@ class Season:
                 score_differentials.append(player_event_results.score_differential)
 
             num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
-            num_net_strokes_top_fives += 1 if player_event_results.net_score_rank.is_top_five() else 0
+            num_net_strokes_top_fives += (
+                1 if player_event_results.net_score_rank.is_top_five() else 0
+            )
             num_net_strokes_top_tens += 1 if player_event_results.net_score_rank.is_top_ten() else 0
 
             num_event_wins += 1 if player_event_results.event_rank.is_win() else 0

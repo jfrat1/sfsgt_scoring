@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+check = "sh scripts/check.sh"
+
+[packages]
+pandas = "*"
+numpy = "*"
+click = "*"
+pydantic = "*"
+pydantic-yaml = "*"
+google-api-python-client = "*"
+google-api-python-client-stubs = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+oauth2client = "*"
+gspread = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+ipdb = "*"
+pdbpp = "*"
+mypy = "*"
+pandas-stubs = "*"
+types-openpyxl = "*"
+ruff = "*"
+
+[requires]
+python_version = "3.12"

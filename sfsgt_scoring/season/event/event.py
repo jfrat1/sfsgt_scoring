@@ -1,7 +1,6 @@
 from typing import TypeVar
 
 from .. import rank
-
 from . import course, inputs, player, points, results
 
 
@@ -71,7 +70,7 @@ class Event:
 
 
 class EventCumulativeResultsGroupingError(Exception):
-    """Exception to be raised when an error is encountered while grouping inidividual player results."""
+    """Exception raised when an error is encountered while grouping inidividual player results."""
 
 
 T = TypeVar("T")
@@ -109,12 +108,15 @@ class CumulativeResults:
         }
 
     def _verify_grouping_of_results(self, player_names: list[str]) -> None:
-        grouped_player_names = set(self._complete_results.keys()).union(set(self._incomplete_results.keys()))
+        grouped_player_names = set(self._complete_results.keys()).union(
+            set(self._incomplete_results.keys())
+        )
 
         if grouped_player_names != set(player_names):
             # This should not be reachable, but it's best to prove that theory.
             raise EventCumulativeResultsGroupingError(
-                "Player inividual results could not be grouped into complete and incomlpete results."
+                "Player inividual results could not be grouped into complete and "
+                "incomlpete results."
             )
 
     def cumulative_results(self) -> dict[str, results.PlayerEventCumulativeResult]:
@@ -127,17 +129,23 @@ class CumulativeResults:
 
         return cumulative_complete_results | cumulative_incomplete_results
 
-    def _cumulative_results_from_complete_individual_results(self) -> dict[str, results.PlayerEventCumulativeResult]:
+    def _cumulative_results_from_complete_individual_results(
+        self,
+    ) -> dict[str, results.PlayerEventCumulativeResult]:
         complete_results = self._complete_results
         player_names = complete_results.keys()
 
         # TODO: this whole thing feels messy to me
         gross_score_ranks = self._rank_manager.player_ranks_from_values(
-            player_values={name: result.total_gross for name, result in self._complete_results.items()},
+            player_values={
+                name: result.total_gross for name, result in self._complete_results.items()
+            },
             rank_order=rank.RankOrder.ASCENDING,
         )
         net_score_ranks = self._rank_manager.player_ranks_from_values(
-            player_values={name: result.total_net for name, result in self._complete_results.items()},
+            player_values={
+                name: result.total_net for name, result in self._complete_results.items()
+            },
             rank_order=rank.RankOrder.ASCENDING,
         )
         gross_score_points = self._points_manager.player_points_from_ranks(
@@ -168,8 +176,7 @@ class CumulativeResults:
         return result
 
     def _highest_complete_results_rank(
-        self,
-        cumulative_complete_results: dict[str, results.PlayerEventCumulativeResult]
+        self, cumulative_complete_results: dict[str, results.PlayerEventCumulativeResult]
     ) -> rank.IRankValue:
         is_results_dict_empty = len(cumulative_complete_results) == 0
         if is_results_dict_empty:

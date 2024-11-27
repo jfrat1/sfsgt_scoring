@@ -1,6 +1,7 @@
 import numbers
-import pandas as pd
 from typing import Any, Dict, List
+
+import pandas as pd
 
 from sfsgt_scoring_2023 import (
     course,
@@ -14,6 +15,7 @@ from sfsgt_scoring_2023 import (
     season,
     sheets,
 )
+
 
 class SeasonSheetException(Exception):
     """Exception related to interactions with a season sheet."""
@@ -59,7 +61,7 @@ class SeasonSheet:
             player_list=[
                 player.Player(
                     name=series.Player,
-                    handicap=series.Handicap or 0  # empty handicaps are set to 0
+                    handicap=series.Handicap or 0,  # empty handicaps are set to 0
                 )
                 for _, series in df.iterrows()
             ]
@@ -96,7 +98,8 @@ class SeasonSheet:
 
         if not are_series_values_string_type(df["Player"]):
             raise SeasonSheetException(
-                "Malformed 'Player Handicaps' sheet. Values in the 'Player' column should be strings."
+                "Malformed 'Player Handicaps' sheet. Values in the 'Player' column should be "
+                "strings."
             )
 
         for event_name in expected_events:
@@ -107,13 +110,14 @@ class SeasonSheet:
                 )
 
         # Raise the 'Player' column to the index to ease iteration
-        df.set_index('Player', inplace=True)
+        df.set_index("Player", inplace=True)
         return season.SeasonPlayerGroup(
             player_list=[
                 season.SeasonPlayer(
                     name=str(idx),
                     handicap_by_event=series.to_dict(),
-                ) for idx, series in df.iterrows()
+                )
+                for idx, series in df.iterrows()
             ]
         )
 
@@ -177,8 +181,8 @@ class SeasonSheet:
         df = self.sheet_controller.worksheet_to_df(worksheet_name)
 
         expected_column_headers = set(
-            ["Player", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Out", ""] +
-            ["10", "11", "12", "13", "14", "15", "16", "17", "18", "In", "Total"]
+            ["Player", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Out", ""]
+            + ["10", "11", "12", "13", "14", "15", "16", "17", "18", "In", "Total"]
         )
 
         if set(df.columns) != expected_column_headers:
@@ -218,10 +222,20 @@ class SeasonSheet:
             )
 
         final_column_labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] + [
-            "10", "11", "12", "13", "14", "15", "16", "17", "18"
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
         ]
-        if (len(final_column_labels) != len(df.columns) or any(df.columns != final_column_labels)):
-            raise ValueError(f"Final column labels for sheet {worksheet_name} do not match expectations.")
+        if len(final_column_labels) != len(df.columns) or any(df.columns != final_column_labels):
+            raise ValueError(
+                f"Final column labels for sheet {worksheet_name} do not match expectations."
+            )
 
         # Convert columns to dict
         df.columns = df.columns.astype(dtype=int)
@@ -230,8 +244,8 @@ class SeasonSheet:
         for player_name, hole_scores in df.iterrows():
             # Replace empty scores with None values to better identify them later
             hole_scores.replace("", None, inplace=True)
-            player_scorecards[player_name] = (
-                event.EventPlayerScorecard(hole_scores=hole_scores.to_dict())
+            player_scorecards[player_name] = event.EventPlayerScorecard(
+                hole_scores=hole_scores.to_dict()
             )
 
         return event.EventScorecard(player_scorecards=player_scorecards)
@@ -247,14 +261,17 @@ class SeasonSheet:
         )
 
     def write_course_handicaps(self, course_handicaps_df: pd.DataFrame) -> None:
-        self.sheet_controller.write_df_to_worksheet(worksheet_name="Course Handicaps", data=course_handicaps_df)
+        self.sheet_controller.write_df_to_worksheet(
+            worksheet_name="Course Handicaps", data=course_handicaps_df
+        )
 
     def write_event_results(self, worksheet_name: str, results_df: pd.DataFrame) -> None:
         results_df = results_df.copy()
         # Raise the index into a 'Player' column for writing to the sheet
         results_df.reset_index(names=["Player"], inplace=True)
         results_df = dataframe_utils.fill_na_dtype_safe(
-            df=results_df, fill_value="No Score",
+            df=results_df,
+            fill_value="No Score",
         )
 
         def round_numerics(val: Any) -> Any:
@@ -287,4 +304,3 @@ def are_series_values_string_type(ser: pd.Series) -> bool:
 
 def are_series_values_int_or_float_type(ser: pd.Series) -> bool:
     return ser.apply(lambda x: isinstance(x, int) or isinstance(x, float)).all()
-

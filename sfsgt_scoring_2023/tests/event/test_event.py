@@ -1,10 +1,7 @@
 import pandas as pd
 import pytest
 
-from sfsgt_scoring_2023 import event
-from sfsgt_scoring_2023 import player
-from sfsgt_scoring_2023 import course
-
+from sfsgt_scoring_2023 import course, event, player
 
 PLAYER_GROUP_BOLT_GEOFF = player.PlayerGroup(
     player_list=[
@@ -15,7 +12,7 @@ PLAYER_GROUP_BOLT_GEOFF = player.PlayerGroup(
         player.Player(
             name="Geoff",
             handicap=15.5,
-        )
+        ),
     ]
 )
 
@@ -69,9 +66,7 @@ def test_points_ser_no_tie() -> None:
         scoring_config=SCORING_CONFIG_2_PLAYERS_SUM_METHOD,
     )
 
-    points_ser = test_event._points_ser(
-        ranks_ser=pd.Series(data=[1, 2], index=["Bolt", "Geoff"])
-    )
+    points_ser = test_event._points_ser(ranks_ser=pd.Series(data=[1, 2], index=["Bolt", "Geoff"]))
     assert set(points_ser.index) == {"Bolt", "Geoff"}
     assert points_ser["Bolt"] == 50.0
     assert points_ser["Geoff"] == 45.0
@@ -84,9 +79,7 @@ def test_points_ser_with_tie() -> None:
         scoring_config=SCORING_CONFIG_2_PLAYERS_SUM_METHOD,
     )
 
-    points_ser = test_event._points_ser(
-        ranks_ser=pd.Series(data=[1, 1], index=["Bolt", "Geoff"])
-    )
+    points_ser = test_event._points_ser(ranks_ser=pd.Series(data=[1, 1], index=["Bolt", "Geoff"]))
     assert set(points_ser.index) == {"Bolt", "Geoff"}
     assert points_ser["Bolt"] == 47.5
     assert points_ser["Geoff"] == 47.5
@@ -155,9 +148,7 @@ def test_points_ser_all_ranks_nan() -> None:
     )
 
     # Using an empty dict as data makes all values NaN
-    points_ser = test_event._points_ser(
-        ranks_ser=pd.Series(data={}, index=["Bolt", "Geoff"])
-    )
+    points_ser = test_event._points_ser(ranks_ser=pd.Series(data={}, index=["Bolt", "Geoff"]))
 
     assert set(points_ser.index) == {"Bolt", "Geoff"}
     assert points_ser["Bolt"] == 0.0
@@ -189,17 +180,14 @@ def test_combined_points_ser_incorrect_columns() -> None:
     )
 
     points_df = pd.DataFrame(
-        data=[
-            [50.0, 47.5],
-            [45.0, 30.0]
-        ],
+        data=[[50.0, 47.5], [45.0, 30.0]],
         columns=["gross_points", "wrong_header"],
         index=["Bolt", "Geoff"],
     )
 
     with pytest.raises(
         event.EventCombinedPointsException,
-        match="Expected points_df to have column labels 'gross_points' and 'net_points'"
+        match="Expected points_df to have column labels 'gross_points' and 'net_points'",
     ):
         test_event._combined_points_ser(points_df=points_df)
 
@@ -212,10 +200,7 @@ def test_combined_points_sum_method() -> None:
     )
 
     points_df = pd.DataFrame(
-        data=[
-            [50.0, 47.5],
-            [45.0, 30.0]
-        ],
+        data=[[50.0, 47.5], [45.0, 30.0]],
         columns=["gross_points", "net_points"],
         index=["Bolt", "Geoff"],
     )
@@ -238,10 +223,7 @@ def test_combined_points_average_method() -> None:
     )
 
     points_df = pd.DataFrame(
-        data=[
-            [50.0, 47.5],
-            [45.0, 30.0]
-        ],
+        data=[[50.0, 47.5], [45.0, 30.0]],
         columns=["gross_points", "net_points"],
         index=["Bolt", "Geoff"],
     )
@@ -264,10 +246,7 @@ def test_combined_points_blend_method() -> None:
     )
 
     points_df = pd.DataFrame(
-        data=[
-            [50.0, 47.5],
-            [45.0, 30.0]
-        ],
+        data=[[50.0, 47.5], [45.0, 30.0]],
         columns=["gross_points", "net_points"],
         index=["Bolt", "Geoff"],
     )
@@ -277,4 +256,3 @@ def test_combined_points_blend_method() -> None:
     assert set(combined_points_ser.index) == {"Bolt", "Geoff"}
     assert combined_points_ser["Bolt"] == pytest.approx((0.4 * 50) + (0.6 * 47.5), abs=0.0001)
     assert combined_points_ser["Geoff"] == pytest.approx((0.4 * 45) + (0.6 * 30), abs=0.0001)
-

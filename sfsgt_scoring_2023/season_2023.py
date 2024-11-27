@@ -4,18 +4,21 @@ This module implements processing for the 2023 SFSGT season. It imports
 data from a specifically-formatted google sheet and writes results
 to the same sheet.
 """
-import pandas as pd
+
 from typing import Dict
+
+import pandas as pd
 
 from sfsgt_scoring_2023 import (
     course,
     dataframe_utils,
     handicap,
-    season_2023_points_config,
     season,
+    season_2023_points_config,
     season_sheet,
     sheets,
 )
+
 
 def verify_courses_played_2023(season_: season.Season) -> None:
     """Verify that players haven't played too many courses.
@@ -105,7 +108,6 @@ def final_finale_adjusted_handicaps(
     season_round_handicaps: Dict[str, float],
     overridden_handicaps: Dict[str, float],
 ) -> pd.DataFrame:
-
     final_adjusted_handicaps: Dict[str, Dict[str, float]] = {}
     for player_name, ncga_hc in current_ncga_handicaps.items():
         season_hc = season_round_handicaps[player_name]
@@ -117,7 +119,9 @@ def final_finale_adjusted_handicaps(
 
         overridden_handicap = overridden_handicaps.get(player_name, "No override")
         if isinstance(overridden_handicap, str):
-            finale_handicap = max(min(average_season_and_ncga_hc, max_finale_handicap), min_finale_handicap)
+            finale_handicap = max(
+                min(average_season_and_ncga_hc, max_finale_handicap), min_finale_handicap
+            )
 
         else:
             finale_handicap = overridden_handicap
@@ -276,7 +280,9 @@ def main() -> None:
         "ADAM COHEN": 17,
     }
 
-    season_round_handicaps = finale_handicaps.set_index("Players").loc[:, "Finale Handicap"].to_dict()
+    season_round_handicaps = (
+        finale_handicaps.set_index("Players").loc[:, "Finale Handicap"].to_dict()
+    )
 
     overridden_finale_handicaps = {
         "JARED GROPP": 23.5,
@@ -310,6 +316,7 @@ def main() -> None:
         workshet_name="Finale North 9 Course Handicaps",
         worksheet_data_df=corica_north_9_course_handicaps.reset_index(names=["player"]),
     )
+
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,7 @@ TEST_WORKSHEET_NAME = "Handicaps"
 
 EVENT_NAMES = ["Poppy Ridge", "Presidio", "Harding Park"]
 
+
 def real_players_worksheet() -> google.GoogleWorksheet:
     google_sheet = google.GoogleSheet(sheet_id=TEST_GOOGLE_SHEET_ID)
     return google_sheet.worksheet(worksheet_name=TEST_WORKSHEET_NAME)
@@ -32,7 +33,7 @@ def test_read_real_players_worksheet() -> None:
                 events=EVENT_NAMES,
             ),
             "John Fratello": players.HandicapIndexByEvent(
-                data={"Poppy Ridge": 16, "Presidio": 16,  "Harding Park": 16},
+                data={"Poppy Ridge": 16, "Presidio": 16, "Harding Park": 16},
                 events=EVENT_NAMES,
             ),
             "Steve Harasym": players.HandicapIndexByEvent(

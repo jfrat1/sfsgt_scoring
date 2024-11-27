@@ -14,13 +14,7 @@ def test_numericise_all_values_nominal() -> None:
 
     numericised_df = dataframe.numericise_all_values(input_df)
     pd_testing.assert_frame_equal(
-        left=numericised_df,
-        right=pd.DataFrame(
-            data=[
-                [23, 34, 56],
-                [1.6, 14.8, 22.7]
-            ]
-        )
+        left=numericised_df, right=pd.DataFrame(data=[[23, 34, 56], [1.6, 14.8, 22.7]])
     )
 
 
@@ -34,13 +28,7 @@ def test_numericise_all_values_doesnt_modify_non_numeric_strings() -> None:
 
     numericised_df = dataframe.numericise_all_values(input_df)
     pd_testing.assert_frame_equal(
-        left=numericised_df,
-        right=pd.DataFrame(
-            data=[
-                [23, 34, "foo"],
-                [1.6, "bar", 22.7]
-            ]
-        )
+        left=numericised_df, right=pd.DataFrame(data=[[23, 34, "foo"], [1.6, "bar", 22.7]])
     )
 
 
@@ -54,13 +42,7 @@ def test_numericise_all_values_doesnt_modify_empty_strings() -> None:
 
     numericised_df = dataframe.numericise_all_values(input_df)
     pd_testing.assert_frame_equal(
-        left=numericised_df,
-        right=pd.DataFrame(
-            data=[
-                [23, 34, ""],
-                [1.6, "", 22.7]
-            ]
-        )
+        left=numericised_df, right=pd.DataFrame(data=[[23, 34, ""], [1.6, "", 22.7]])
     )
 
 
@@ -80,7 +62,7 @@ def test_numericise_all_values_doesnt_modify_numeric_values() -> None:
                 [23, 34, 56],
                 [1.6, 14.8, 22.7],
             ]
-        )
+        ),
     )
 
 
@@ -103,12 +85,7 @@ def test_replace_empty_string_with_none() -> None:
 
 
 def test_replace_empty_string_with_none_integer_values() -> None:
-    input_df = pd.DataFrame(
-        data=[
-            [2, 4, 6],
-            [3, "", 9]
-        ]
-    )
+    input_df = pd.DataFrame(data=[[2, 4, 6], [3, "", 9]])
 
     modified_df = dataframe.replace_empty_strings_with_none(input_df)
     expected_df = pd.DataFrame(

@@ -7,7 +7,6 @@ from gspread import utils as gspread_utils
 
 from sfsgt_scoring.spreadsheet import sheet_utils
 
-
 CellValueType = str | float | int
 CellValues = list[list[CellValueType]]
 
@@ -58,11 +57,7 @@ class ColorRgb:
         if not isinstance(other, ColorRgb):
             return NotImplemented
 
-        return (
-            self.red == other.red and
-            self.green == other.green and
-            self.blue == other.blue
-        )
+        return self.red == other.red and self.green == other.green and self.blue == other.blue
 
 
 class CellFormat(NamedTuple):
@@ -85,8 +80,7 @@ class RangeFormat(NamedTuple):
 
     def as_google_api_cell_format(self) -> gspread.worksheet.CellFormat:
         return gspread.worksheet.CellFormat(
-            range=self.range,
-            format=self.format.as_google_api_dict()
+            range=self.range, format=self.format.as_google_api_dict()
         )
 
 
@@ -101,7 +95,8 @@ class SortOrder(enum.Enum):
             case SortOrder.DESCENDING:
                 return "des"
             case _:
-                # This should not be reachable unless a new enum variant is added without adding to this match.
+                # This should not be reachable unless a new enum variant is added without
+                # adding it to this match statement.
                 raise ValueError(f"Unknown {self.__class__.__name__} enum variant.")
 
 
@@ -132,21 +127,14 @@ class GoogleWorksheet:
     ) -> list[list[str]]:
         return self.worksheet.get_values(range_name=range, maintain_size=True)
 
-    def column_range_values(
-        self,
-        column: str,
-        first_row: int,
-        last_row: int
-    ) -> list[str]:
+    def column_range_values(self, column: str, first_row: int, last_row: int) -> list[str]:
         range = f"{column}{first_row}:{column}{last_row}"
         range_values = self.range_values(range=range)
 
         # range_values is a list of lists where the inner lists hold
         # row values with a length of 1. Flatten the inner lists to
         # produce a 1-D array.
-        return [
-            row[0] for row in range_values
-        ]
+        return [row[0] for row in range_values]
 
     def range_to_df(
         self,
@@ -172,13 +160,12 @@ class GoogleWorksheet:
         """
         if data.isnull().values.any():
             raise ValueError(
-                "Data cannot have null values. They will be rejected by the google spreadsheet API. "
-                "Consider filling null values in data with the `fillna` method of pd.DataFrame."
+                "Data cannot have null values. They will be rejected by the google spreadsheet"
+                "API. Consider filling null values in data with the `fillna` method "
+                "of pd.DataFrame."
             )
 
-        self.worksheet.update(
-            [data.columns.values.tolist()] + data.values.tolist()
-        )
+        self.worksheet.update([data.columns.values.tolist()] + data.values.tolist())
 
     def write_range(self, range_value: RangeValues) -> None:
         self.worksheet.update(
@@ -200,14 +187,10 @@ class GoogleWorksheet:
                 f"Found: {range_name}."
             )
 
-        gspread_specs = [
-            (spec.column_idx(), spec.order.gspread_sort_order()) for spec in specs
-        ]
+        gspread_specs = [(spec.column_idx(), spec.order.gspread_sort_order()) for spec in specs]
 
         self.worksheet.sort(*gspread_specs, range=range_name)
 
     def format_multiple_ranges(self, range_formats: Iterable[RangeFormat]) -> None:
-        formats = [
-            format.as_google_api_cell_format() for format in range_formats
-        ]
+        formats = [format.as_google_api_cell_format() for format in range_formats]
         self.worksheet.batch_format(formats=formats)

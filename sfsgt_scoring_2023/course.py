@@ -1,15 +1,18 @@
 import dataclasses
 from typing import List
 
+
 @dataclasses.dataclass(eq=True, frozen=True)
-class Course():
+class Course:
     """Defines a single course with a course name, tee name, and data specific to the tee."""
+
     course_name: str
     tee_name: str
     par: int
     rating: float
     slope: int
     distance: int
+
 
 class CourseGroup:
     """Defins a group of courses."""

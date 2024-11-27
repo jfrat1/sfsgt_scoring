@@ -1,5 +1,6 @@
 from gspread import utils as gspread_utils
 
+
 def is_cell_a1_notation(cell_name: str) -> bool:
     """Returns true if a string matches a cell's A1 notation.
 
@@ -38,4 +39,3 @@ def column_idx_to_letter(col_idx: int) -> str:
 
 def column_letter_to_idx(col_letter: str) -> int:
     return gspread_utils.column_letter_to_index(col_letter)
-

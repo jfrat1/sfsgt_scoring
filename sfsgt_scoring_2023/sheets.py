@@ -2,14 +2,13 @@
 # https://www.makeuseof.com/tag/read-write-google-sheets-python/
 import functools
 import pathlib
-import pandas as pd
-from typing import List
 
-from oauth2client.service_account import ServiceAccountCredentials
 import gspread
+import pandas as pd
+from oauth2client.service_account import ServiceAccountCredentials
 
 
-class SheetController():
+class SheetController:
     """Google sheets interaction controller.
 
     Uses a SFSGT service account. Credentials are stored in a file locally.
@@ -17,13 +16,13 @@ class SheetController():
 
     def __init__(self, sheet_name: str) -> None:
         scopes = [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive'
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
         ]
 
         credentials = ServiceAccountCredentials.from_json_keyfile_name(
             pathlib.Path(__file__).parent.parent / "google_cloud_creds" / "sfsgt-credentials.json",
-            scopes=scopes
+            scopes=scopes,
         )
         gspread_client = gspread.authorize(credentials)
 
@@ -65,10 +64,9 @@ class SheetController():
 
         if data.isnull().values.any():
             raise ValueError(
-                "Data cannot have null values. They will be rejected by the google spreadsheet API. "
-                "Consider filling null values in data with the `fillna` method of pd.DataFrame."
+                "Data cannot have null values. They will be rejected by the google spreadsheet "
+                "API. Consider filling null values in data with the `fillna` method of"
+                "pd.DataFrame."
             )
 
-        worksheet.update(
-            [data.columns.values.tolist()] + data.values.tolist()
-        )
+        worksheet.update([data.columns.values.tolist()] + data.values.tolist())

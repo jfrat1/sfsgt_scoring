@@ -5,11 +5,11 @@
     ],
     // These settings require the Black Formatter extension
     "black-formatter.args": [
-        "--line_length=120"
+        "--line_length=100"
     ],
     // These settings require the Flake8 extension
     "flake8.args": [
-        "--max-line-length=120"
+        "--max-line-length=100"
     ],
     "editor.formatOnSave": true,
     "python.testing.pytestArgs": [

@@ -63,19 +63,24 @@ class NoRankValueApiCallError(Exception):
 
 class IRankValue(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def as_str(self) -> str: pass
+    def as_str(self) -> str:
+        pass
 
     @abc.abstractmethod
-    def rank(self) -> int: pass
+    def rank(self) -> int:
+        pass
 
     @abc.abstractmethod
-    def is_win(self) -> bool: pass
+    def is_win(self) -> bool:
+        pass
 
     @abc.abstractmethod
-    def is_top_five(self) -> bool: pass
+    def is_top_five(self) -> bool:
+        pass
 
     @abc.abstractmethod
-    def is_top_ten(self) -> bool: pass
+    def is_top_ten(self) -> bool:
+        pass
 
     def __int__(self) -> int:
         return self.rank()
@@ -126,7 +131,7 @@ class NoRankValue(IRankValue):
     def __new__(cls):
         # Implement the singleton pattern for this class because there may be many
         # instances of it and they are stateless/identical.
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(NoRankValue, cls).__new__(cls)
         return cls.instance
 

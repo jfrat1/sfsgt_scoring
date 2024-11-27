@@ -2,6 +2,7 @@ from typing import Any
 
 import pandas as pd
 
+
 def fill_na_dtype_safe(df: pd.DataFrame | pd.Series, fill_value: Any) -> pd.DataFrame | pd.Series:
     """Fill NA values in a dataframe in a way that is safe to column dtypes.
 
@@ -12,7 +13,7 @@ def fill_na_dtype_safe(df: pd.DataFrame | pd.Series, fill_value: Any) -> pd.Data
     """
     for col in df:
         if df[col].isna().any():
-            df[col] = df[col].astype('object')
+            df[col] = df[col].astype("object")
             df[col].fillna(value=fill_value, inplace=True)
 
     return df

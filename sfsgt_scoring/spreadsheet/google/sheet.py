@@ -2,15 +2,19 @@ import functools
 import pathlib
 from typing import Any
 
-from oauth2client import service_account
 import gspread
+from oauth2client import service_account
 
 from sfsgt_scoring.spreadsheet.google import worksheet
 
-CREDENTIALS_FILE = pathlib.Path(__file__).parent.parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
+CREDENTIALS_FILE = (
+    pathlib.Path(__file__).parent.parent.parent.parent
+    / "google_cloud_creds"
+    / "sfsgt-credentials.json"
+)
 
 
-class GoogleSheet():
+class GoogleSheet:
     """Google sheets interaction controller.
 
     Uses a SFSGT service account. Credentials are stored in a file locally.
@@ -18,12 +22,11 @@ class GoogleSheet():
 
     def __init__(self, sheet_id: str) -> None:
         scopes = [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive'
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
         ]
         credentials = service_account.ServiceAccountCredentials.from_json_keyfile_name(
-            filename=CREDENTIALS_FILE,
-            scopes=scopes
+            filename=CREDENTIALS_FILE, scopes=scopes
         )
         gspread_client = gspread.authorize(credentials)
 

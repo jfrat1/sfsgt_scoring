@@ -90,8 +90,8 @@ class PlayerEventResult:
             return NotImplemented
 
         return (
-            self._individual_result == other._individual_result and
-            self._cumulative_result == other._cumulative_result
+            self._individual_result == other._individual_result
+            and self._cumulative_result == other._cumulative_result
         )
 
     def __repr__(self) -> str:
@@ -106,54 +106,64 @@ class PlayerEventResult:
 class IPlayerEventIndividualResult(abc.ABC):
     @property
     @abc.abstractmethod
-    def course_handicap(self) -> int: pass
+    def course_handicap(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def front_9_gross(self) -> int: pass
+    def front_9_gross(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def back_9_gross(self) -> int: pass
+    def back_9_gross(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def total_gross(self) -> int: pass
+    def total_gross(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def total_net(self) -> int: pass
+    def total_net(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def notable_holes(self) -> "NotableHoles": pass
+    def notable_holes(self) -> "NotableHoles":
+        pass
 
     @property
     @abc.abstractmethod
-    def num_birdies(self) -> int: pass
+    def num_birdies(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def num_eagles(self) -> int: pass
+    def num_eagles(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def num_albatrosses(self) -> int: pass
+    def num_albatrosses(self) -> int:
+        pass
 
     @property
     @abc.abstractmethod
-    def score_differential(self) -> float: pass
+    def score_differential(self) -> float:
+        pass
 
 
 class IncompletePlayerEventIndividualResultApiCallError(Exception):
-    """Exception to be raised when a client makes an API call on an incomplete player event individual result."""
+    """Exception raised when a call is made on an incomplete player event individual result."""
 
 
 class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
     def __new__(cls):
         # Implement the singleton pattern for this class because there may be many
         # instances of it and they are stateless/identical.
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(IncompletePlayerEventInividualResult, cls).__new__(cls)
 
         return cls.instance
@@ -163,7 +173,8 @@ class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
 
     def _disallowed_api_call_error(self) -> None:
         raise IncompletePlayerEventIndividualResultApiCallError(
-            "API calls cannot be made to an incomplete player event because it does not contain any data."
+            "API calls cannot be made to an incomplete player event because it does not "
+            "contain any data."
         )
 
     @property
@@ -281,13 +292,13 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
             return NotImplemented
 
         return (
-            self._course_handicap == other._course_handicap and
-            self._front_9_gross == other.front_9_gross and
-            self._back_9_gross == other.back_9_gross and
-            self._total_gross == other.total_gross and
-            self._total_net == other.total_net and
-            self._notable_holes == other.notable_holes and
-            self._score_differential == other._score_differential
+            self._course_handicap == other._course_handicap
+            and self._front_9_gross == other.front_9_gross
+            and self._back_9_gross == other.back_9_gross
+            and self._total_gross == other.total_gross
+            and self._total_net == other.total_net
+            and self._notable_holes == other.notable_holes
+            and self._score_differential == other._score_differential
         )
 
     def __repr__(self) -> str:
@@ -342,7 +353,9 @@ class NotableHoles:
 
     def set_hole(self, hole_num: int, score_type: "NotableHoleType"):
         if self._has_hole_num_been_set(hole_num):
-            raise NotableHoleDuplicationError(f"A notable hole score has alredy been set for hole {hole_num}")
+            raise NotableHoleDuplicationError(
+                f"A notable hole score has alredy been set for hole {hole_num}"
+            )
 
         match score_type:
             case NotableHoleType.BIRDIE:
@@ -368,10 +381,10 @@ class NotableHoles:
             return NotImplemented
 
         return (
-            self._birdie_holes == other.birdie_holes() and
-            self._eagle_holes == other.eagle_holes() and
-            self._albatross_holes == other.albatross_holes() and
-            self._over_max_holes == other.over_max_holes()
+            self._birdie_holes == other.birdie_holes()
+            and self._eagle_holes == other.eagle_holes()
+            and self._albatross_holes == other.albatross_holes()
+            and self._over_max_holes == other.over_max_holes()
         )
 
     def __repr__(self) -> str:

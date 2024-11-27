@@ -3,7 +3,6 @@ from typing import NamedTuple
 
 from . import course
 
-
 DEFAULT_COURSE_DATABASE_PATH = pathlib.Path(__file__).parent / "data"
 
 
@@ -41,9 +40,12 @@ class CourseDatabase(NamedTuple):
         num_candidates = len(candidate_courses)
 
         if num_candidates == 0:
-            raise GetCourseError(f"Could not find any courses with the name {course_name} in database.")
+            raise GetCourseError(
+                f"Could not find any courses with the name {course_name} in database."
+            )
         if num_candidates > 1:
-            raise GetCourseError(f"Found more than 1 course with the name {course_name} in database.")
+            raise GetCourseError(
+                f"Found more than 1 course with the name {course_name} in database."
+            )
 
         return candidate_courses[0]
-

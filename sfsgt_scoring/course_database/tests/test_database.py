@@ -1,6 +1,6 @@
 import contextlib
-import tempfile
 import pathlib
+import tempfile
 from typing import Generator
 
 import pytest
@@ -71,12 +71,14 @@ PRESIDIO_COURSE_DATA_YAML = """
 
 TEST_COURSE_FILES = {
     "baylands.yaml": BAYLANDS_COURSE_DATA_YAML,
-    "presidio.yaml": PRESIDIO_COURSE_DATA_YAML
+    "presidio.yaml": PRESIDIO_COURSE_DATA_YAML,
 }
 
 
 @contextlib.contextmanager
-def temp_course_data_dir(course_files: dict[str, str] = TEST_COURSE_FILES) -> Generator[pathlib.Path, None, None]:
+def temp_course_data_dir(
+    course_files: dict[str, str] = TEST_COURSE_FILES,
+) -> Generator[pathlib.Path, None, None]:
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = pathlib.Path(temp_dir)
         for file_name, file_contents in course_files.items():

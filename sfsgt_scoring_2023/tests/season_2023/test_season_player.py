@@ -1,9 +1,9 @@
-"""Tests for the SeasonPlayer and SeasonPlayerGroup classes in the season module.
-"""
+"""Tests for the SeasonPlayer and SeasonPlayerGroup classes in the season module."""
+
 import pytest
 
-from sfsgt_scoring_2023 import season
-from sfsgt_scoring_2023 import player
+from sfsgt_scoring_2023 import player, season
+
 
 def test_season_player_constructor() -> None:
     test_player = season.SeasonPlayer(
@@ -11,7 +11,7 @@ def test_season_player_constructor() -> None:
         handicap_by_event={
             "Presidio": 15.5,
             "Harding Park": 14,
-        }
+        },
     )
     assert test_player.name == "Bolt"
     assert test_player.handicap_by_event == {
@@ -26,12 +26,11 @@ def test_season_player_event_handicap() -> None:
         handicap_by_event={
             "Presidio": 7.5,
             "Harding Park": 6,
-        }
+        },
     )
 
     assert test_player.event_handicap("Presidio") == 7.5
     assert test_player.event_handicap("Harding Park") == 6
-
 
 
 def test_season_player_event_handicap_undefined_event() -> None:
@@ -40,11 +39,12 @@ def test_season_player_event_handicap_undefined_event() -> None:
         handicap_by_event={
             "Presidio": 7.5,
             "Harding Park": 6,
-        }
+        },
     )
 
     with pytest.raises(KeyError, match="Can't find event Not an Event"):
         test_player.event_handicap("Not an Event")
+
 
 def test_season_player_group_constructor() -> None:
     player_list = [
@@ -53,20 +53,21 @@ def test_season_player_group_constructor() -> None:
             handicap_by_event={
                 "Presidio": 7.5,
                 "Harding Park": 6,
-            }
+            },
         ),
         season.SeasonPlayer(
             name="Geoff",
             handicap_by_event={
                 "Presidio": 15.5,
                 "Harding Park": 14,
-            }
+            },
         ),
     ]
 
     player_group = season.SeasonPlayerGroup(player_list=player_list)
 
     assert player_group.player_list == player_list
+
 
 def test_season_player_group_get_event_player_group() -> None:
     player_list = [
@@ -75,14 +76,14 @@ def test_season_player_group_get_event_player_group() -> None:
             handicap_by_event={
                 "Presidio": 7.5,
                 "Harding Park": 6,
-            }
+            },
         ),
         season.SeasonPlayer(
             name="Geoff",
             handicap_by_event={
                 "Presidio": 15.5,
                 "Harding Park": 14,
-            }
+            },
         ),
     ]
 
@@ -114,6 +115,7 @@ def test_season_player_group_get_event_player_group() -> None:
         ]
     )
 
+
 def test_season_player_group_player_names() -> None:
     player_list = [
         season.SeasonPlayer(
@@ -121,14 +123,14 @@ def test_season_player_group_player_names() -> None:
             handicap_by_event={
                 "Presidio": 7.5,
                 "Harding Park": 6,
-            }
+            },
         ),
         season.SeasonPlayer(
             name="Geoff",
             handicap_by_event={
                 "Presidio": 15.5,
                 "Harding Park": 14,
-            }
+            },
         ),
     ]
 

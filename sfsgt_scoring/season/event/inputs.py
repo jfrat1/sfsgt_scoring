@@ -62,11 +62,7 @@ class CourseTeeData:
         if not isinstance(other, CourseTeeData):
             return NotImplemented
 
-        return (
-            self.name == other.name and
-            self.rating == other.rating and
-            self.slope == other.slope
-        )
+        return self.name == other.name and self.rating == other.rating and self.slope == other.slope
 
 
 class CourseHolePars(dict[int, int]):
@@ -112,10 +108,12 @@ class EventPlayerInput(NamedTuple):
 # TODO: rename to something about "strokes"
 class IScorecard(abc.ABC):
     @abc.abstractmethod
-    def strokes_per_hole(self) -> dict[int, int]: pass
+    def strokes_per_hole(self) -> dict[int, int]:
+        pass
 
     @abc.abstractmethod
-    def hole_strokes(self, hole_num: int) -> int: pass
+    def hole_strokes(self, hole_num: int) -> int:
+        pass
 
 
 class IncompleteScorecardRequestError(Exception):
@@ -126,7 +124,7 @@ class IncompleteScorecard(IScorecard):
     def __new__(cls):
         # Implement the singleton pattern for this class because there may be many
         # instances of it and they are stateless/identical.
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(IncompleteScorecard, cls).__new__(cls)
         return cls.instance
 
@@ -153,8 +151,8 @@ class Scorecard(IScorecard):
         actual_keys = [self._strokes_per_hole.keys()]
         if expected_keys != actual_keys:
             raise EventPlayerDataVerificationError(
-                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "
-                f"\nExpected: {expected_keys}\nFound: {actual_keys}"
+                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 "
+                f"through 18. \nExpected: {expected_keys} \nFound: {actual_keys}"
             )
 
     def _verify_values(self) -> None:

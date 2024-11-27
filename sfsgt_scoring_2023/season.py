@@ -1,9 +1,9 @@
-
 import collections
 import dataclasses
-import pandas as pd
 import string
 from typing import Dict, List
+
+import pandas as pd
 
 from sfsgt_scoring_2023 import (
     event,
@@ -23,6 +23,7 @@ class SeasonEventConfig:
     # Dict with points that each player should receive for a given rank in the event
     points_by_rank: Dict[int, float]
 
+
 class SeasonPlayer:
     def __init__(self, name: str, handicap_by_event: Dict[str, float]) -> None:
         self.name = name
@@ -30,21 +31,17 @@ class SeasonPlayer:
 
     def event_handicap(self, event_name: str) -> float:
         if event_name not in self.handicap_by_event.keys():
-            raise KeyError(
-                f"Can't find event {event_name} in handicaps for player {self.name}"
-            )
+            raise KeyError(f"Can't find event {event_name} in handicaps for player {self.name}")
 
         return self.handicap_by_event[event_name]
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, SeasonPlayer):
-            return (
-                self.name == other.name
-                and self.handicap_by_event == other.handicap_by_event
-            )
+            return self.name == other.name and self.handicap_by_event == other.handicap_by_event
 
         else:
             return NotImplemented
+
 
 class SeasonPlayerGroup:
     def __init__(self, player_list: List[SeasonPlayer]) -> None:
@@ -54,15 +51,14 @@ class SeasonPlayerGroup:
         """Get a PlayerGroup for an event in a season."""
         return player.PlayerGroup(
             player_list=[
-                player.Player(
-                    name=player_.name,
-                    handicap=player_.event_handicap(event_name)
-                ) for player_ in self.player_list
+                player.Player(name=player_.name, handicap=player_.event_handicap(event_name))
+                for player_ in self.player_list
             ]
         )
 
     def player_names(self) -> List[str]:
         return [player.name for player in self.player_list]
+
 
 class Season:
     def __init__(
@@ -115,8 +111,7 @@ class Season:
         self.season_points.loc[:, event_.course.course_name] = points
 
         event_result_df.columns = [
-            string.capwords(col_label.replace("_", " "))
-            for col_label in event_result_df.columns
+            string.capwords(col_label.replace("_", " ")) for col_label in event_result_df.columns
         ]
         self.sheet.write_event_results(
             worksheet_name=event_config.results_sheet_name,
@@ -190,8 +185,7 @@ class Season:
           * Finale Handicap
         """
         HandicapParams = collections.namedtuple(
-            "HandicapParams",
-            ["num_rounds_for_avg", "penalty_strokes"]
+            "HandicapParams", ["num_rounds_for_avg", "penalty_strokes"]
         )
         handicap_calc_params_by_rounds_played = {
             1: HandicapParams(num_rounds_for_avg=1, penalty_strokes=2.0),
@@ -206,12 +200,9 @@ class Season:
         season_finale_handicaps_df = pd.DataFrame(
             data="No rounds played",
             index=self.players.player_names(),
-            columns=[
-                "Rounds Played", "Handicap Before Adjustment", "Penalty", "Finale Handicap"
-            ],
+            columns=["Rounds Played", "Handicap Before Adjustment", "Penalty", "Finale Handicap"],
         )
         for player_name, player_scoring_diffs in scoring_diffs.iterrows():
-
             rounds_played = player_scoring_diffs.count()
             if rounds_played > 0:
                 handicap_calc_params = handicap_calc_params_by_rounds_played[rounds_played]
@@ -219,7 +210,7 @@ class Season:
 
                 # Mean of the N lowest handicaps from the season
                 scoring_diffs_for_handicap = player_scoring_diffs_sorted[
-                    :handicap_calc_params.num_rounds_for_avg
+                    : handicap_calc_params.num_rounds_for_avg
                 ]
                 handicap_before_adjustment = scoring_diffs_for_handicap.mean()
 
@@ -227,16 +218,15 @@ class Season:
 
                 # Fill the dataframe
                 season_finale_handicaps_df.loc[player_name, "Rounds Played"] = int(rounds_played)
-                season_finale_handicaps_df.loc[
-                    player_name, "Handicap Before Adjustment"
-                ] = round(handicap_before_adjustment, 1)
-                season_finale_handicaps_df.loc[
-                    player_name, "Penalty"
-                ] = handicap_calc_params.penalty_strokes
-                season_finale_handicaps_df.loc[
-                    player_name, "Finale Handicap"
-                ] = round(season_handicap, 1)
+                season_finale_handicaps_df.loc[player_name, "Handicap Before Adjustment"] = round(
+                    handicap_before_adjustment, 1
+                )
+                season_finale_handicaps_df.loc[player_name, "Penalty"] = (
+                    handicap_calc_params.penalty_strokes
+                )
+                season_finale_handicaps_df.loc[player_name, "Finale Handicap"] = round(
+                    season_handicap, 1
+                )
 
         season_finale_handicaps_df.reset_index(names=["Players"], inplace=True)
         return season_finale_handicaps_df
-

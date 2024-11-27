@@ -66,9 +66,7 @@ class EventWorksheetColumnOffsets(enum.Enum):
     EVENT_RANK = 28
 
 
-EVENT_WORKSHEET_COLUMN_NAMES = [
-    e.name for e in EventWorksheetColumnOffsets
-]
+EVENT_WORKSHEET_COLUMN_NAMES = [e.name for e in EventWorksheetColumnOffsets]
 
 READ_DATA_FIRST_COLUMN = "PLAYER"
 READ_DATA_LAST_COLUMN = "HOLE_18"
@@ -81,19 +79,20 @@ class EventReadData(NamedTuple):
 
 
 class PlayerHoleScoresVerificationError(Exception):
-    """Exception to be raised when a player hole score definition is invalid when being instantiated."""
+    """Exception to be raised when a player hole score definition is invalid."""
 
 
 class IHoleScores(abc.ABC):
     @abc.abstractmethod
-    def scores(self) -> dict[int, int]: pass
+    def scores(self) -> dict[int, int]:
+        pass
 
 
 class IncompleteScore(IHoleScores):
     def __new__(cls):
         # Implement the singleton pattern for this class because there may be many
         # instances of it and they are stateless/identical.
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(IncompleteScore, cls).__new__(cls)
         return cls.instance
 
@@ -115,8 +114,8 @@ class HoleScores(IHoleScores):
         actual_keys = list(self._scores.keys())
         if expected_keys != actual_keys:
             raise PlayerHoleScoresVerificationError(
-                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 through 18. "
-                f"\nExpected: {expected_keys}\nFound: {actual_keys}"
+                "Keys in the HoleScores dictionary must be integers containing hole numbers 1 "
+                f"through 18. \nExpected: {expected_keys} \nFound: {actual_keys}"
             )
 
     def _verify_values(self) -> None:
@@ -170,7 +169,7 @@ class InvalidCellDefinition(Exception):
 
 
 class EventWorksheetVerificationError(Exception):
-    """Exception to be raised when an error is detected during verification of the event worksheet."""
+    """Exception to be raised when an error is detected while verifying the event worksheet."""
 
 
 class EventWorksheetWriteError(Exception):
@@ -187,7 +186,9 @@ class EventWorksheet:
         self._worksheet = worksheet
         self._players = players
         self._scorecard_start_cell = scorecard_start_cell
-        self._sorted_worksheet_player_names: list[str] = []  # This will be set when reading from the sheet
+        self._sorted_worksheet_player_names: list[
+            str
+        ] = []  # This will be set when reading from the sheet
 
         self._verify_scorecard_start_cell()
 
@@ -239,7 +240,9 @@ class EventWorksheet:
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
-        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[READ_DATA_FIRST_COL_INDEX:READ_DATA_LAST_COL_INDEX+1]
+        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[
+            READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1
+        ]
         worksheet_data.columns = pd.Index(column_labels)
         worksheet_data.drop(columns=["FRONT_NINE_STROKES", "PLAYER_INITIAL"], inplace=True)
         worksheet_data.set_index(keys="PLAYER", inplace=True)
@@ -349,7 +352,9 @@ class EventWorksheet:
             values=values,
         )
 
-    def _back_nine_and_event_results_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
+    def _back_nine_and_event_results_write_range(
+        self, write_data: EventWriteData
+    ) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.BACK_NINE_STROKES,
             end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
@@ -445,8 +450,6 @@ class EventWorksheet:
             for holes_range in [front_nine_holes_range, back_nine_holes_range]
         ]
         self._worksheet.format_multiple_ranges(range_formats=range_formats)
-        # Set both of the player hole ranges (discluding the summary columns) to the standard background
-        pass
 
     def _set_birdie_hole_cells_background(
         self,
@@ -489,7 +492,6 @@ class EventWorksheet:
         )
 
         name_row_map = {
-            player_name: first_row + idx
-            for idx, player_name in enumerate(player_names)
+            player_name: first_row + idx for idx, player_name in enumerate(player_names)
         }
         return name_row_map

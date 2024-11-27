@@ -1,7 +1,7 @@
 from typing import Generator, NamedTuple
+from unittest import mock
 
 import pytest
-from unittest import mock
 
 from .. import sheet
 from ..worksheet import event, players
@@ -59,10 +59,48 @@ TEST_PLAYERS_READ_DATA = players.PlayersReadData(
 TEST_PRESIDIO_EVENT_READ_DATA = event.EventReadData(
     player_scores={
         "Stanton Turner": event.HoleScores(
-            scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+            scores={
+                1: 5,
+                2: 4,
+                3: 5,
+                4: 6,
+                5: 5,
+                6: 6,
+                7: 4,
+                8: 4,
+                9: 5,
+                10: 6,
+                11: 6,
+                12: 5,
+                13: 4,
+                14: 4,
+                15: 4,
+                16: 4,
+                17: 4,
+                18: 5,
+            }  # noqa: E501
         ),
         "John Fratello": event.HoleScores(
-            scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+            scores={
+                1: 5,
+                2: 4,
+                3: 5,
+                4: 6,
+                5: 5,
+                6: 6,
+                7: 4,
+                8: 4,
+                9: 5,
+                10: 6,
+                11: 6,
+                12: 5,
+                13: 4,
+                14: 4,
+                15: 4,
+                16: 4,
+                17: 4,
+                18: 5,
+            }  # noqa: E501
         ),
     }
 )
@@ -70,10 +108,48 @@ TEST_PRESIDIO_EVENT_READ_DATA = event.EventReadData(
 TEST_HARDING_PARK_EVENT_READ_DATA = event.EventReadData(
     player_scores={
         "Stanton Turner": event.HoleScores(
-            scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+            scores={
+                1: 5,
+                2: 4,
+                3: 5,
+                4: 6,
+                5: 5,
+                6: 6,
+                7: 4,
+                8: 4,
+                9: 5,
+                10: 6,
+                11: 6,
+                12: 5,
+                13: 4,
+                14: 4,
+                15: 4,
+                16: 4,
+                17: 4,
+                18: 5,
+            }  # noqa: E501
         ),
         "John Fratello": event.HoleScores(
-            scores={1: 5, 2: 4, 3: 5, 4: 6, 5: 5, 6: 6, 7: 4, 8: 4, 9: 5, 10: 6, 11: 6, 12: 5, 13: 4, 14: 4, 15: 4, 16: 4, 17: 4, 18: 5}  # noqa: E501
+            scores={
+                1: 5,
+                2: 4,
+                3: 5,
+                4: 6,
+                5: 5,
+                6: 6,
+                7: 4,
+                8: 4,
+                9: 5,
+                10: 6,
+                11: 6,
+                12: 5,
+                13: 4,
+                14: 4,
+                15: 4,
+                16: 4,
+                17: 4,
+                18: 5,
+            }  # noqa: E501
         ),
     }
 )
@@ -175,7 +251,7 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
         events={
             1: "Presidio",
             2: "Harding Park",
-        }
+        },
     )
 
     assert stubs.event_worksheet.call_args_list == [
@@ -245,7 +321,7 @@ def test_sheet_read_data_get_player_names() -> None:
         events={
             "Presidio": TEST_PRESIDIO_EVENT_READ_DATA,
             "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
-        }
+        },
     )
     assert sheet_read_data.player_names() == ["Stanton Turner", "John Fratello"]
 
@@ -256,7 +332,7 @@ def test_sheet_read_data_get_event_names() -> None:
         events={
             "Presidio": TEST_PRESIDIO_EVENT_READ_DATA,
             "Harding Park": TEST_HARDING_PARK_EVENT_READ_DATA,
-        }
+        },
     )
     assert sheet_read_data.event_names() == ["Presidio", "Harding Park"]
 
