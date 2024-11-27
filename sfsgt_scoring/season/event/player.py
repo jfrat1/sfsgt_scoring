@@ -27,6 +27,7 @@ class EventPlayer:
         back_9_gross_strokes = self._back_9_gross_strokes(adjusted_scorecard)
         gross_strokes = front_9_gross_strokes + back_9_gross_strokes
         net_strokes = gross_strokes - course_handicap
+        score_differential = self._course.scoring_differential(gross_strokes)
 
         return results.PlayerEventIndividualResult(
             course_handicap=course_handicap,
@@ -35,6 +36,7 @@ class EventPlayer:
             total_gross=gross_strokes,
             total_net=net_strokes,
             notable_holes=self._notable_holes,
+            score_differential=score_differential,
         )
 
     def _adjust_scorecard_for_max_hole_strokes(self) -> inputs.Scorecard:

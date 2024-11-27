@@ -120,6 +120,7 @@ STANDARD_EVENT_RESULT = event_results.EventResult(
                 total_gross=86,
                 total_net=72,
                 notable_holes=STANTON_NOTABLE_HOLES,
+                score_differential=12.1,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=50.0,
@@ -138,6 +139,7 @@ STANDARD_EVENT_RESULT = event_results.EventResult(
                 total_gross=89,
                 total_net=70,
                 notable_holes=JOHN_NOTABLE_HOLES,
+                score_differential=14.7,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=45.0,
@@ -161,6 +163,7 @@ MAJOR_EVENT_RESULT = event_results.EventResult(
                 total_gross=86,
                 total_net=71,
                 notable_holes=STANTON_NOTABLE_HOLES,
+                score_differential=15.2,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=100.0,
@@ -179,6 +182,7 @@ MAJOR_EVENT_RESULT = event_results.EventResult(
                 total_gross=89,
                 total_net=68,
                 notable_holes=JOHN_NOTABLE_HOLES,
+                score_differential=17.7
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=90.0,
@@ -209,6 +213,7 @@ STANTON_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_event_wins=2,
     num_event_top_fives=2,
     num_event_top_tens=2,
+    season_handicap=15.2,
 )
 STANTON_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(STANTON_CUMULATIVE_RESULTS_UNRANKED)
 STANTON_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
@@ -225,6 +230,7 @@ JOHN_CUMULATIVE_RESULTS_UNRANKED = season.CumulativePlayerResult(
     num_event_wins=2,
     num_event_top_fives=2,
     num_event_top_tens=2,
+    season_handicap=17.7,
 )
 JOHN_CUMULATIVE_RESULTS_RANKED = copy.deepcopy(JOHN_CUMULATIVE_RESULTS_UNRANKED)
 JOHN_CUMULATIVE_RESULTS_RANKED.set_season_rank(rank.RankValue(1))
@@ -311,6 +317,7 @@ def test_player_season_ranks() -> None:
             num_event_wins=0,
             num_event_top_fives=0,
             num_event_top_tens=0,
+            season_handicap=0.0
         )
 
     cumulative_player_results = {

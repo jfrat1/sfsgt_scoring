@@ -23,8 +23,11 @@ PLAYER_COLUMN_NAME = "GOLFER"
 # Expected style for the event names in the spreadsheet.
 EVENT_COLUMN_NAME_STYLE = EventHeaderNamesStyle.UPPER_CASE
 
+FINALE_COLUMN_NAME = "FINALE"
+UNUSED_TRAILING_COLUMN_NAMES = ["TRACKING METHOD"]
+
 # Header names for columns are right of the handicap index values for each event.
-TRAILING_COLUMN_NAMES = ["TRACKING METHOD"]
+TRAILING_COLUMN_NAMES = [FINALE_COLUMN_NAME] + UNUSED_TRAILING_COLUMN_NAMES
 
 
 class PlayersReadData(NamedTuple):
@@ -45,7 +48,8 @@ class HandicapIndexByEvent(dict[str, float]):
 
     def _verify_keys(self, events: list[str]):
         keys = sorted(list(self.keys()))
-        if keys != sorted(events):
+        expected_keys = sorted(events + [FINALE_COLUMN_NAME])
+        if keys != expected_keys:
             raise PlayerHandicapsVerificationError(
                 "Player handicaps keys do not match events list."
                 f"\nExpected: {events} \nFound: {keys}"
@@ -85,11 +89,12 @@ class PlayersWorksheet:
 
     def _expected_header_names(self) -> list[str]:
         expected_headers = [PLAYER_COLUMN_NAME]
-        expected_headers.extend(self._expected_event_header_names())
-        expected_headers.extend(TRAILING_COLUMN_NAMES)
+        expected_headers.extend(self._event_header_names())
+        expected_headers.extend([FINALE_COLUMN_NAME])
+        expected_headers.extend(UNUSED_TRAILING_COLUMN_NAMES)
         return expected_headers
 
-    def _expected_event_header_names(self) -> list[str]:
+    def _event_header_names(self) -> list[str]:
         return [self._event_column_name(event_name) for event_name in self._events]
 
     def _event_column_name(self, event_name: str) -> str:
@@ -133,15 +138,16 @@ class PlayersWorksheet:
         return worksheet_data
 
     def _drop_trailing_columns(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
-        return worksheet_data.drop(columns=TRAILING_COLUMN_NAMES)
+        return worksheet_data.drop(columns=UNUSED_TRAILING_COLUMN_NAMES)
 
     def _rename_event_columns_to_input_event_names(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
         return worksheet_data.rename(columns=self._event_column_rename_map())
 
     def _event_column_rename_map(self) -> dict[str, str]:
+        events = self._events + [FINALE_COLUMN_NAME]
         return {
             self._event_column_name(event): event
-            for event in self._events
+            for event in events
         }
 
     def _check_worksheet_data(self, worksheet_data: pd.DataFrame) -> None:
@@ -150,7 +156,7 @@ class PlayersWorksheet:
 
     def _check_column_headers(self, worksheet_data: pd.DataFrame) -> None:
         column_headers = list(worksheet_data.columns)
-        expected_headers = list(self._events)
+        expected_headers = list(self._events) + [FINALE_COLUMN_NAME]
 
         if column_headers != expected_headers:
             raise PlayerWorksheetVerificationError(

@@ -73,6 +73,7 @@ class CumulativePlayerResult:
         num_event_wins: int,
         num_event_top_fives: int,
         num_event_top_tens: int,
+        season_handicap: float,
     ) -> None:
         self._season_points = season_points
         self._num_birdies = num_birdies
@@ -85,6 +86,7 @@ class CumulativePlayerResult:
         self._num_event_wins = num_event_wins
         self._num_event_top_fives = num_event_top_fives
         self._num_event_top_tens = num_event_top_tens
+        self._season_handicap = season_handicap
         self._season_rank: rank.IRankValue = rank.NoRankValue()
 
     @property
@@ -134,6 +136,10 @@ class CumulativePlayerResult:
     @property
     def num_event_top_tens(self) -> int:
         return self._num_event_top_tens
+
+    @property
+    def season_handicap(self) -> float:
+        return self._season_handicap
 
     def set_season_rank(self, new_rank: rank.RankValue) -> None:
         self._season_rank = new_rank
@@ -225,6 +231,8 @@ class Season:
         num_event_top_fives = 0
         num_event_top_tens = 0
 
+        score_differentials: list[float] = []
+
         for event_result in event_results.values():
             player_event_results = event_result.players[player_name]
 
@@ -233,7 +241,9 @@ class Season:
             num_eagles += player_event_results.num_eagles
             num_albatrosses += player_event_results.num_albatrosses
 
-            num_events_completed += 1 if player_event_results.is_complete_result() else 0
+            if player_event_results.is_complete_result():
+                num_events_completed += 1
+                score_differentials.append(player_event_results.score_differential)
 
             num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
             num_net_strokes_top_fives += 1 if player_event_results.net_score_rank.is_top_five() else 0
@@ -242,6 +252,8 @@ class Season:
             num_event_wins += 1 if player_event_results.event_rank.is_win() else 0
             num_event_top_fives += 1 if player_event_results.event_rank.is_top_five() else 0
             num_event_top_tens += 1 if player_event_results.event_rank.is_top_ten() else 0
+
+        season_handicap = calc_season_handicap(score_differentials)
 
         return CumulativePlayerResult(
             season_points=season_points,
@@ -255,6 +267,7 @@ class Season:
             num_event_wins=num_event_wins,
             num_event_top_fives=num_event_top_fives,
             num_event_top_tens=num_event_top_tens,
+            season_handicap=season_handicap,
         )
 
     def _player_season_ranks(
@@ -272,3 +285,43 @@ class Season:
         )
 
         return player_season_ranks
+
+
+def calc_season_handicap(season_score_differentials: list[float]) -> float:
+    score_differentials = sorted(season_score_differentials)
+    num_rounds = len(score_differentials)
+
+    base_season_handicap = calc_base_season_handicap(
+        score_differentials_sorted=score_differentials,
+        num_rounds=num_rounds,
+    )
+    handicap_penalty = calc_season_handicap_penalty(num_rounds=num_rounds)
+
+    return base_season_handicap - handicap_penalty
+
+
+def calc_base_season_handicap(score_differentials_sorted: list[float], num_rounds: int) -> float:
+    match num_rounds:
+        case 0:
+            return 0.0
+        case 1 | 2 | 3:
+            # Lowest 1 round used for season handicap
+            return round(score_differentials_sorted[0], 1)
+        case 4 | 5:
+            # Lowest 2 rounds used for season handicap
+            return round(sum(score_differentials_sorted[0:2]) / 2, 1)
+        case 6:
+            # Lowest 3 rounds used for season handicap
+            return round(sum(score_differentials_sorted[0:3]) / 3, 1)
+        case _:
+            return 0.0
+
+
+def calc_season_handicap_penalty(num_rounds: int) -> float:
+    match num_rounds:
+        case 1:
+            return 1.0
+        case 2:
+            return 0.5
+        case _:
+            return 0.0

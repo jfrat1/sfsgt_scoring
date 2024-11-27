@@ -21,7 +21,9 @@ TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
             sheet_name="TPC Harding",
             scorecard_start_cell="B8",
         ),
-    }
+    },
+    is_finale_enabled=False,
+    finale_handicaps_sheet_name="Finale - Corica",
 )
 
 TEST_EVENTS = [

@@ -47,6 +47,13 @@ def load_season_config_file(file_path: pathlib.Path) -> "SeasonConfig":
         raise SeasonConfigLoadError(f"Unable to load season config file at {file_path}.") from exc
 
 
+class FinaleSheetConfig(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
+
+    enabled: bool
+    sheet_name: str
+
+
 class SeasonConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
@@ -54,6 +61,7 @@ class SeasonConfig(pydantic.BaseModel):
     sheet_id: str
     players_sheet_name: str
     leaderboard_sheet_name: str
+    finale_handicaps_sheet: FinaleSheetConfig
     events: dict[int, "EventConfig"]
 
     def event_names(self) -> list[str]:

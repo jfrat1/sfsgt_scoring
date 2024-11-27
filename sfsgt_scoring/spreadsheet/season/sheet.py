@@ -21,6 +21,7 @@ SeasonEventsReadData = dict[str, worksheet.EventReadData]
 class SeasonSheetWriteData(NamedTuple):
     leaderboard: worksheet.LeaderboardWriteData
     events: "SeasonEventsWriteData"
+    finale_handicaps: worksheet.FinaleHandicapsWriteData
 
 
 SeasonEventsWriteData = dict[str, worksheet.EventWriteData]
@@ -30,6 +31,7 @@ class SeasonWorksheets(NamedTuple):
     players: worksheet.PlayersWorksheet
     leaderboard: worksheet.LeaderboardWorksheet
     events: "EventWorksheets"
+    finale_handicaps: worksheet.FinaleHandicapsWorksheet
 
 
 class EventWorksheets(dict[str, worksheet.EventWorksheet]):
@@ -47,6 +49,9 @@ class SeasonSheetConfig(NamedTuple):
     leaderboard_sheet_name: str
     players_sheet_name: str
     events: dict[str, "SeasonSheetEventConfig"]
+    # TODO: This enablement flag might not be necessary
+    is_finale_enabled: bool
+    finale_handicaps_sheet_name: str
 
     def event_names(self) -> list[str]:
         return list(self.events.keys())
@@ -115,6 +120,9 @@ class SeasonSheet:
             events=self._create_event_worksheets(
                 config=config, google_sheet=google_sheet, player_names=player_names
             ),
+            finale_handicaps=self._create_finale_handicaps_worksheet(
+                config=config, google_sheet=google_sheet, player_names=player_names
+            ),
         )
 
     def _create_players_worksheet(
@@ -171,6 +179,18 @@ class SeasonSheet:
             scorecard_start_cell=event_config.scorecard_start_cell,
         )
 
+    def _create_finale_handicaps_worksheet(
+        self,
+        config: SeasonSheetConfig,
+        google_sheet: google.GoogleSheet,
+        player_names: list[str],
+    ) -> worksheet.FinaleHandicapsWorksheet:
+        google_worksheet = google_sheet.worksheet(worksheet_name=config.finale_handicaps_sheet_name)
+        return worksheet.FinaleHandicapsWorksheet(
+            worksheet=google_worksheet,
+            players=player_names,
+        )
+
     def _verify_is_configured(self):
         if not self.is_configured:
             raise SeasonSheetNotConfiguredError(
@@ -200,3 +220,5 @@ class SeasonSheet:
         for event_name, event_worksheet in self.worksheets.events.items():
             event_write_data = data.events[event_name]
             event_worksheet.write(event_write_data)
+
+        self.worksheets.finale_handicaps.write(data.finale_handicaps)

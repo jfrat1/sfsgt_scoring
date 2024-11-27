@@ -12,6 +12,10 @@ name: SFSGT 2024
 sheet_id: test_sheet_id
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
+finale_handicaps_sheet: {
+  enabled: true,
+  sheet_name: Finale - Corica
+}
 events: {
   1: {
     event_name: Poppy Ridge,
@@ -65,6 +69,10 @@ name: SFSGT 2024
 sheet_id: test_sheet_id
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
+finale_handicaps_sheet: {
+  enabled: false,
+  sheet_name: Finale - Corica
+}
 events: {
   1: {
     event_name: Presidio,

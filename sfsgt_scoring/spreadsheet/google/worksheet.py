@@ -1,5 +1,5 @@
 import enum
-from typing import Any, Iterable, Literal, NamedTuple
+from typing import Any, Iterable, Literal, NamedTuple, Optional
 
 import gspread
 import pandas as pd
@@ -9,13 +9,85 @@ from sfsgt_scoring.spreadsheet import sheet_utils
 
 
 CellValueType = str | float | int
+CellValues = list[list[CellValueType]]
 
 
 class RangeValues(NamedTuple):
     range: str
     # Represents a 2-d array of data values to be written into the range. The
     # inner lists are rows to be written.
-    values: list[list[CellValueType]]
+    values: CellValues
+
+
+class RgbValueOutOfRangeError(Exception):
+    """Exception to be raised when an RGB value is out of range."""
+
+
+class ColorRgb:
+    """Color as reg, green, blue values. Values must be integers in the interval [0, 255]."""
+
+    def __init__(self, red: int, green: int, blue: int) -> None:
+        self._verify_rgb_value("red", red)
+        self._verify_rgb_value("green", green)
+        self._verify_rgb_value("blue", blue)
+
+        self.red = red
+        self.green = green
+        self.blue = blue
+
+    def _is_in_rgb_range(self, rgb_val: int) -> bool:
+        return rgb_val >= 0 and rgb_val <= 255
+
+    def _verify_rgb_value(self, rgb_name: str, rgb_val: int) -> None:
+        if not self._is_in_rgb_range(rgb_val):
+            raise RgbValueOutOfRangeError(
+                f"RGB values must be in the interval [0, 1]. Got {rgb_val} for color {rgb_name}."
+            )
+
+    def _rgb_int_to_float(self, rgb_int: int) -> float:
+        return rgb_int / 255
+
+    def as_google_api_dict(self) -> dict[str, float]:
+        return {
+            "red": self._rgb_int_to_float(self.red),
+            "green": self._rgb_int_to_float(self.green),
+            "blue": self._rgb_int_to_float(self.blue),
+        }
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, ColorRgb):
+            return NotImplemented
+
+        return (
+            self.red == other.red and
+            self.green == other.green and
+            self.blue == other.blue
+        )
+
+
+class CellFormat(NamedTuple):
+    backgroundColor: Optional[ColorRgb] = None
+
+    def as_google_api_dict(self) -> dict[str, dict[str, dict[str, float]]]:
+        api_json = {}
+        if self.backgroundColor is not None:
+            api_json["backgroundColorStyle"] = {
+                "rgbColor": self.backgroundColor.as_google_api_dict()
+            }
+
+        return api_json
+
+
+class RangeFormat(NamedTuple):
+    # Range in A-1 range notation
+    range: str
+    format: CellFormat
+
+    def as_google_api_cell_format(self) -> gspread.worksheet.CellFormat:
+        return gspread.worksheet.CellFormat(
+            range=self.range,
+            format=self.format.as_google_api_dict()
+        )
 
 
 class SortOrder(enum.Enum):
@@ -54,6 +126,28 @@ class GoogleWorksheet:
             self.worksheet.get_all_records(head=header_row, expected_headers=expected_headers)
         )
 
+    def range_values(
+        self,
+        range: str,
+    ) -> list[list[str]]:
+        return self.worksheet.get_values(range_name=range, maintain_size=True)
+
+    def column_range_values(
+        self,
+        column: str,
+        first_row: int,
+        last_row: int
+    ) -> list[str]:
+        range = f"{column}{first_row}:{column}{last_row}"
+        range_values = self.range_values(range=range)
+
+        # range_values is a list of lists where the inner lists hold
+        # row values with a length of 1. Flatten the inner lists to
+        # produce a 1-D array.
+        return [
+            row[0] for row in range_values
+        ]
+
     def range_to_df(
         self,
         range: str,
@@ -86,6 +180,12 @@ class GoogleWorksheet:
             [data.columns.values.tolist()] + data.values.tolist()
         )
 
+    def write_range(self, range_value: RangeValues) -> None:
+        self.worksheet.update(
+            values=range_value.values,
+            range_name=range_value.range,
+        )
+
     def write_multiple_ranges(self, range_values: Iterable[RangeValues]) -> None:
         write_data = [
             {"range": range_value.range, "values": range_value.values}
@@ -105,3 +205,9 @@ class GoogleWorksheet:
         ]
 
         self.worksheet.sort(*gspread_specs, range=range_name)
+
+    def format_multiple_ranges(self, range_formats: Iterable[RangeFormat]) -> None:
+        formats = [
+            format.as_google_api_cell_format() for format in range_formats
+        ]
+        self.worksheet.batch_format(formats=formats)

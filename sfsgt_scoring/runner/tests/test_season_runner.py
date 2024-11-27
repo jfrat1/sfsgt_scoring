@@ -19,6 +19,10 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
     sheet_id="test_sheet_id",
     players_sheet_name="Players",
     leaderboard_sheet_name="Leaderboard",
+    finale_handicaps_sheet=season_config.FinaleSheetConfig(
+        enabled=False,
+        sheet_name="Finale - Corica",
+    ),
     events={
         1: season_config.config.EventConfig(
             event_name="Standard Event",
@@ -257,7 +261,9 @@ def test_construct(stubbed_dependencies: StubbedDependencies) -> None:
                     sheet_name="Major Event Scorecard",
                     scorecard_start_cell="B5",
                 ),
-            }
+            },
+            is_finale_enabled=False,
+            finale_handicaps_sheet_name="Finale - Corica",
         )
     )
 

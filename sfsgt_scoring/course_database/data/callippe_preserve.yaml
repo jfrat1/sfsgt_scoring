@@ -1,0 +1,28 @@
+{
+  name: callippe preserve,
+  hole_pars: {
+    1: 4,
+    2: 4,
+    3: 5,
+    4: 3,
+    5: 4,
+    6: 3,
+    7: 4,
+    8: 4,
+    9: 5,
+    10: 4,
+    11: 4,
+    12: 4,
+    13: 3,
+    14: 4,
+    15: 5,
+    16: 3,
+    17: 4,
+    18: 5,
+  },
+  tees: {
+    black: {rating: 73.3, slope: 139, distance: 6748},
+    blue: {rating: 71.7, slope: 135, distance: 6409},
+    white: {rating: 70.7, slope: 132, distance: 6024},
+  }
+}

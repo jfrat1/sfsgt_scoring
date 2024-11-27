@@ -2,6 +2,10 @@ name: SFSGT 2024 Test
 sheet_id: 1exNADFXKQphQmzluc7QLftqs-tI0CxqlWr2wDU3l6cQ
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
+finale_handicaps_sheet: {
+  enabled: false,
+  sheet_name: Finale - Corica
+}
 events: {
   1: {
     event_name: Poppy Ridge,

@@ -42,7 +42,7 @@ TEST_WORKSHEET_DATA_PROCESSED = pd.DataFrame(
     index=pd.Index(data=TEST_PLAYERS, name="PLAYER"),
 )
 
-WORKSHEET_WRITE_DATA = event.EventWriteData(
+TEST_WORKSHEET_WRITE_DATA = event.EventWriteData(
     players={
         "Stanton Turner": event.PlayerEventWriteData(
             front_9_strokes=44,
@@ -84,8 +84,17 @@ WORKSHEET_WRITE_DATA = event.EventWriteData(
             event_rank=3,
         ),
     },
-    birdies=[],
-    eagles=[],
+    # The birdies and eagles don't match the actual hole scores above, but
+    # it doesn't matter for these specific tests
+    birdies=[
+        event.PlayerHole(player="Stanton Turner", hole=3),
+        event.PlayerHole(player="Stanton Turner", hole=16),
+        event.PlayerHole(player="John Fratello", hole=8),
+        event.PlayerHole(player="Steve Harasym", hole=12),
+    ],
+    eagles=[
+        event.PlayerHole(player="John Fratello", hole=9),
+    ],
     hole_scores_over_max=[],
 )
 
@@ -343,6 +352,54 @@ def test_generate_read_data_with_empty_scores_for_all_players() -> None:
     assert read_data == expected_read_data
 
 
+def test_write_before_sorted_worksheet_player_names_is_set_raises_error() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    with pytest.raises(event.EventWorksheetWriteError):
+        event_worksheet.write(write_data=TEST_WORKSHEET_WRITE_DATA)
+
+
+def test_write() -> None:
+    event_worksheet = create_test_event_worksheet()
+    event_worksheet._sorted_worksheet_player_names = [
+        "Stanton Turner", "John Fratello", "Steve Harasym"
+    ]
+
+    event_worksheet.write(write_data=TEST_WORKSHEET_WRITE_DATA)
+
+    expected_write_ranges = [
+        google_sheet.RangeValues(
+            range="L6:L8",
+            values=[
+                [44],
+                [46],
+                [43],
+            ],
+        ),
+        google_sheet.RangeValues(
+            range="W6:AD8",
+            values=[
+                [50, 94, 14, 80, 2, 2, 90, 2],
+                [43, 89, 16, 73, 1, 1, 100, 1],
+                [52, 95, 7, 88, 3, 3, 75, 3],
+            ]
+        ),
+    ]
+
+    expected_sort_range = "B6:AD8"
+    expected_sort_spec = event.google_sheet.SortSpec(
+        column="AD",
+        order=event.google_sheet.SortOrder.ASCENDING,
+    )
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+    google_worksheet_mock.write_multiple_ranges.assert_called_once_with(expected_write_ranges)
+    google_worksheet_mock.sort_range.assert_called_once_with(
+        specs=[expected_sort_spec], range_name=expected_sort_range,
+    )
+
+
 def test_front_nine_write_range() -> None:
     event_worksheet = create_test_event_worksheet()
     event_worksheet._sorted_worksheet_player_names = [
@@ -358,7 +415,26 @@ def test_front_nine_write_range() -> None:
         ],
     )
 
-    assert event_worksheet._front_nine_write_range(WORKSHEET_WRITE_DATA) == expected_range
+    assert event_worksheet._front_nine_write_range(TEST_WORKSHEET_WRITE_DATA) == expected_range
+
+
+def test_back_nine_and_event_reults_write_range() -> None:
+    event_worksheet = create_test_event_worksheet()
+    event_worksheet._sorted_worksheet_player_names = [
+        "Stanton Turner", "John Fratello", "Steve Harasym"
+    ]
+
+    expected_range = google_sheet.RangeValues(
+        range="W6:AD8",
+        values=[
+            [50, 94, 14, 80, 2, 2, 90, 2],
+            [43, 89, 16, 73, 1, 1, 100, 1],
+            [52, 95, 7, 88, 3, 3, 75, 3],
+        ]
+    )
+
+    actual_range = event_worksheet._back_nine_and_event_results_write_range(TEST_WORKSHEET_WRITE_DATA)
+    assert actual_range == expected_range
 
 
 def test_range_for_columns_nominal() -> None:
@@ -385,3 +461,124 @@ def test_range_for_columns_single_colum() -> None:
         start_col_offset=start_col,
         end_col_offset=end_col,
     ) == expected_range
+
+
+def test_sort_scorecard_by_player_event_rank() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    event_worksheet._sort_scorecard_by_player_event_rank()
+
+    expected_sort_range = "B6:AD8"
+    expected_sort_spec = event.google_sheet.SortSpec(
+        column="AD",
+        order=event.google_sheet.SortOrder.ASCENDING,
+    )
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+
+    google_worksheet_mock.sort_range.assert_called_once_with(
+        specs=[expected_sort_spec], range_name=expected_sort_range,
+    )
+
+
+def test_set_hole_cells_to_standard_backrgound() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    event_worksheet._set_hole_cells_to_standard_background()
+
+    expected_cell_format = google_sheet.CellFormat(
+        # This test value is sensitive to changes in the source configured standard background color.
+        backgroundColor=google_sheet.ColorRgb(
+            red=252,
+            green=245,
+            blue=243,
+        )
+    )
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+    google_worksheet_mock.format_multiple_ranges.assert_called_once_with(
+        range_formats=[
+            google_sheet.RangeFormat(range="C6:K8", format=expected_cell_format),
+            google_sheet.RangeFormat(range="N6:V8", format=expected_cell_format),
+        ]
+    )
+
+
+def test_set_birdie_hole_cells_background() -> None:
+    event_worksheet = create_test_event_worksheet()
+    event_worksheet._set_birdie_hole_cells_background(
+        write_data=TEST_WORKSHEET_WRITE_DATA,
+        sorted_player_rows={
+            "John Fratello": 6,
+            "Stanton Turner": 7,
+            "Steve Harasym": 8,
+        },
+    )
+
+    expected_cell_format = google_sheet.CellFormat(
+        # This test value is sensitive to changes in the source configured standard background color.
+        backgroundColor=google_sheet.ColorRgb(
+            red=217,
+            green=234,
+            blue=211,
+        )
+    )
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+    google_worksheet_mock.format_multiple_ranges.assert_called_once_with(
+        range_formats=[
+            google_sheet.RangeFormat(range="E7", format=expected_cell_format),  # Stanton hole 3
+            google_sheet.RangeFormat(range="T7", format=expected_cell_format),  # Stanton hole 16
+            google_sheet.RangeFormat(range="J6", format=expected_cell_format),  # John hole 8
+            google_sheet.RangeFormat(range="P8", format=expected_cell_format),  # Steve hole 12
+        ]
+    )
+
+
+def test_set_eagle_hole_cells_background() -> None:
+    event_worksheet = create_test_event_worksheet()
+    event_worksheet._set_eagle_hole_cells_background(
+        write_data=TEST_WORKSHEET_WRITE_DATA,
+        sorted_player_rows={
+            "John Fratello": 6,
+            "Stanton Turner": 7,
+            "Steve Harasym": 8,
+        },
+    )
+
+    expected_cell_format = google_sheet.CellFormat(
+        # This test value is sensitive to changes in the source configured standard background color.
+        backgroundColor=google_sheet.ColorRgb(
+            red=255,
+            green=187,
+            blue=137,
+        )
+    )
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+    google_worksheet_mock.format_multiple_ranges.assert_called_once_with(
+        range_formats=[
+            google_sheet.RangeFormat(range="K6", format=expected_cell_format),  # John hole 9
+        ]
+    )
+
+
+def test_player_name_row_map() -> None:
+    event_worksheet = create_test_event_worksheet()
+
+    # Extract mocked google worksheet from event_worksheet class
+    google_worksheet_mock: mock.MagicMock = event_worksheet._worksheet  # type: ignore
+    google_worksheet_mock.column_range_values.return_value = [
+        "John Fratello", "Stanton Turner", "Steve Harasym"
+    ]
+
+    player_names_map = event_worksheet._player_name_row_map()
+    assert player_names_map == {
+        "John Fratello": 6,
+        "Stanton Turner": 7,
+        "Steve Harasym": 8,
+    }

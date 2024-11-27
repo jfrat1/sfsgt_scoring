@@ -2,6 +2,10 @@ name: SFSGT 2024
 sheet_id: 1qhjZM-opDs_w6xxGDko4vgNa2dgxkeJYA20mly7Aa3M
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
+finale_handicaps_sheet: {
+  enabled: false,
+  sheet_name: Finale Handicaps
+}
 events: {
   1: {
     event_name: Poppy Ridge,
@@ -19,32 +23,30 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8
   },
-  # Disabling events below this point because they are not
-  # set up in the spreadsheet yet.
-  # 3: {
-  #   event_name: Harding Park,
-  #   sheet_name: TPC Harding,
-  #   course_name: harding park,
-  #   tee: blue,
-  #   type: major,
-  #   scorecard_sheet_start_cell: B8
-  # },
-  # 4: {
-  #   event_name: Sharp Park,
-  #   sheet_name: Sharp Park,
-  #   course_name: sharp park,
-  #   tee: White,
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8
-  # },
-  # 5: {
-  #   event_name: Baylands,
-  #   sheet_name: Baylands,
-  #   course_name: baylands,
-  #   tee: white,
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8
-  # }
+  3: {
+    event_name: TPC Harding,
+    sheet_name: TPC Harding,
+    course_name: harding park,
+    tee: blue,
+    type: major,
+    scorecard_sheet_start_cell: B8
+  },
+  4: {
+    event_name: Baylands,
+    sheet_name: Baylands,
+    course_name: baylands,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  5: {
+    event_name: Callippe,
+    sheet_name: Callippe,
+    course_name: callippe preserve,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
 }
 
 

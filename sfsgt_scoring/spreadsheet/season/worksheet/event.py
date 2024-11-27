@@ -9,6 +9,30 @@ from sfsgt_scoring.spreadsheet import google as google_sheet
 from sfsgt_scoring.spreadsheet import sheet_utils
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
+STANDARD_HOLE_CELL_FORMAT = google_sheet.CellFormat(
+    backgroundColor=google_sheet.ColorRgb(
+        red=252,
+        green=245,
+        blue=243,
+    ),
+)
+
+BIRDIE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
+    backgroundColor=google_sheet.ColorRgb(
+        red=217,
+        green=234,
+        blue=211,
+    ),
+)
+
+EAGLE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
+    backgroundColor=google_sheet.ColorRgb(
+        red=255,
+        green=187,
+        blue=137,
+    ),
+)
+
 
 class EventWorksheetColumnOffsets(enum.Enum):
     PLAYER = 0
@@ -287,12 +311,23 @@ class EventWorksheet:
                 "to ensure that data is read before being written."
             )
 
+        self._write_scorecard_data(write_data)
+        self._sort_scorecard_by_player_event_rank()
+
+        # Most of the required tests are in place. This ought to work
+        # once we switch it on. The only caveat is that it's going to
+        # set all of the event hole score cells to the same background.
+        # Right now the events have a few different base backgrounds.
+        # Chat with stanton before running in prod.
+
+        # self._format_sorted_scorecard(write_data)
+
+    def _write_scorecard_data(self, write_data):
         first_write_range = self._front_nine_write_range(write_data)
-        second_write_range = self._back_nine_and_event_results_range(write_data)
+        second_write_range = self._back_nine_and_event_results_write_range(write_data)
         write_ranges = [first_write_range, second_write_range]
 
         self._worksheet.write_multiple_ranges(write_ranges)
-        self._sort_scorecard_by_player_event_rank()
 
     def _front_nine_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
@@ -314,7 +349,7 @@ class EventWorksheet:
             values=values,
         )
 
-    def _back_nine_and_event_results_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
+    def _back_nine_and_event_results_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.BACK_NINE_STROKES,
             end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
@@ -359,6 +394,13 @@ class EventWorksheet:
     def _first_player_row_col(self) -> tuple[int, int]:
         return gspread_utils.a1_to_rowcol(self._scorecard_start_cell)
 
+    def _first_player_row(self) -> int:
+        (row, _) = self._first_player_row_col()
+        return row
+
+    def _last_player_row(self) -> int:
+        return self._first_player_row() + self._num_players() - 1
+
     def _column_letter_for_offset(self, col_offset: EventWorksheetColumnOffsets) -> str:
         (_, first_player_col) = self._first_player_row_col()
         col_idx = first_player_col + col_offset.value
@@ -376,3 +418,78 @@ class EventWorksheet:
         )
 
         self._worksheet.sort_range(specs=[sort_spec], range_name=sort_range)
+
+    def _format_sorted_scorecard(self, write_data: EventWriteData) -> None:
+        self._set_hole_cells_to_standard_background()
+        sorted_player_name_row_map = self._player_name_row_map()
+        self._set_birdie_hole_cells_background(
+            write_data=write_data,
+            sorted_player_rows=sorted_player_name_row_map,
+        )
+        self._set_eagle_hole_cells_background(
+            write_data=write_data,
+            sorted_player_rows=sorted_player_name_row_map,
+        )
+
+    def _set_hole_cells_to_standard_background(self) -> None:
+        front_nine_holes_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.HOLE_1,
+            end_col_offset=EventWorksheetColumnOffsets.HOLE_9,
+        )
+        back_nine_holes_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.HOLE_10,
+            end_col_offset=EventWorksheetColumnOffsets.HOLE_18,
+        )
+        range_formats = [
+            google_sheet.RangeFormat(range=holes_range, format=STANDARD_HOLE_CELL_FORMAT)
+            for holes_range in [front_nine_holes_range, back_nine_holes_range]
+        ]
+        self._worksheet.format_multiple_ranges(range_formats=range_formats)
+        # Set both of the player hole ranges (discluding the summary columns) to the standard background
+        pass
+
+    def _set_birdie_hole_cells_background(
+        self,
+        write_data: EventWriteData,
+        sorted_player_rows: dict[str, int],
+    ) -> None:
+        formats: list[google_sheet.RangeFormat] = []
+        for hole in write_data.birdies:
+            row = sorted_player_rows[hole.player]
+            col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole.hole}"])
+            formats.append(
+                google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT)
+            )
+
+        self._worksheet.format_multiple_ranges(range_formats=formats)
+
+    def _set_eagle_hole_cells_background(
+        self,
+        write_data: EventWriteData,
+        sorted_player_rows: dict[str, int],
+    ) -> None:
+        formats: list[google_sheet.RangeFormat] = []
+        for hole in write_data.eagles:
+            row = sorted_player_rows[hole.player]
+            col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole.hole}"])
+            formats.append(
+                google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT)
+            )
+
+        self._worksheet.format_multiple_ranges(range_formats=formats)
+
+    def _player_name_row_map(self) -> dict[str, int]:
+        column = self._column_letter_for_offset(EventWorksheetColumnOffsets.PLAYER)
+        first_row = self._first_player_row()
+        last_row = self._last_player_row()
+        player_names = self._worksheet.column_range_values(
+            column=column,
+            first_row=first_row,
+            last_row=last_row,
+        )
+
+        name_row_map = {
+            player_name: first_row + idx
+            for idx, player_name in enumerate(player_names)
+        }
+        return name_row_map

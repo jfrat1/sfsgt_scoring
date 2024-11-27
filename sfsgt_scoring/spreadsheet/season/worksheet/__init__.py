@@ -12,4 +12,9 @@ from .event import (  # noqa: F401 - names exposed for public use
     IncompleteScore,
     EventWriteData,
     PlayerEventWriteData,
-  )
+)
+from .finale_handicaps import (  # noqa: F401 - names exposed for public use
+    FinaleHandicap,
+    FinaleHandicapsWriteData,
+    FinaleHandicapsWorksheet,
+)

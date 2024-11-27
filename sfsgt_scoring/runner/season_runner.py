@@ -1,8 +1,122 @@
+from typing import NamedTuple
+
 from sfsgt_scoring import course_database, season_config, season
 from sfsgt_scoring.season import (
     event as season_event,
 )
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
+
+
+# TODO: The finale stuff belong somewhere else, but it's here for now so we
+# can get handicaps for the finale
+class FinaleHandicap(NamedTuple):
+    ghin_handicap: float
+    season_handicap: float
+    finale_handicap: float
+    # TODO: This really needs to not be hard-coded to Corica
+    corica_finale_course_handicap: float
+
+
+class FinaleHandicaps(dict[str, FinaleHandicap]):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+
+class FinaleHandicapCalculator:
+    def __init__(
+        self,
+        spreadsheet_data: season_spreadsheet.SeasonSheetReadData,
+        season_results: season.SeasonResults,
+    ) -> None:
+        self._player_names = spreadsheet_data.player_names()
+        self._player_handicaps = spreadsheet_data.players.player_handicaps
+        self._season_results = season_results
+
+    def finale_handicaps(self) -> FinaleHandicaps:
+        ghin_handicaps = self._ghin_handicaps()
+        season_handicaps = self._season_handicaps()
+        return self._finale_handicaps(
+            ghin_handicaps=ghin_handicaps,
+            season_handicaps=season_handicaps,
+        )
+
+    def _ghin_handicaps(self) -> dict[str, float]:
+        ghin_handicaps: dict[str, float] = {}
+        for player in self._player_names:
+            ghin_handicaps[player] = self._player_handicaps[player]["FINALE"]
+
+        return ghin_handicaps
+
+    def _season_handicaps(self) -> dict[str, float]:
+        season_handicaps: dict[str, float] = {}
+        for player in self._player_names:
+            season_handicaps[player] = self._season_results.cumulative.players[player].season_handicap
+
+        return season_handicaps
+
+    def _finale_handicaps(
+        self,
+        ghin_handicaps: dict[str, float],
+        season_handicaps: dict[str, float],
+    ) -> FinaleHandicaps:
+        finale_handicaps: dict[str, FinaleHandicap] = {}
+        for player in self._player_names:
+            finale_handicaps[player] = self._finale_player_handicap(
+                ghin_handicap=ghin_handicaps[player],
+                season_handicap=season_handicaps[player],
+            )
+
+        return FinaleHandicaps(finale_handicaps)
+
+    def _finale_player_handicap(
+        self,
+        ghin_handicap: float,
+        season_handicap: float,
+    ) -> FinaleHandicap:
+        MIN_GHIN_RATIO = 0.95
+        MAX_GHIN_RATIO = 1.05
+        MAX_STROKE_OFFSET = 0.5
+        MAX_FINALE_HANDICAP = 19.0
+
+        min_finale_handicap = min(
+            ghin_handicap * MIN_GHIN_RATIO,
+            ghin_handicap - MAX_STROKE_OFFSET,
+        )
+        max_finale_handicap = max(
+            ghin_handicap * MAX_GHIN_RATIO,
+            ghin_handicap + MAX_STROKE_OFFSET,
+        )
+
+        # Target a 50/50 split of GHIN and season handicap
+        target_finale_handicap = (ghin_handicap + season_handicap) / 2
+
+        # Limit that to bounds around the GHIN handicap
+        ghin_bounded_finale_handicap = min(max(target_finale_handicap, min_finale_handicap), max_finale_handicap)
+
+        # Cap that to a max overall handicap
+        capped_finale_handicap = min(ghin_bounded_finale_handicap, MAX_FINALE_HANDICAP)
+
+        # Round to 1 decimal place
+        finale_handicap = round(capped_finale_handicap, 1)
+
+        return FinaleHandicap(
+            ghin_handicap=ghin_handicap,
+            season_handicap=season_handicap,
+            finale_handicap=finale_handicap,
+            corica_finale_course_handicap=self.course_handicap(finale_handicap)
+        )
+
+    def course_handicap(self, handicap_index: float) -> int:
+        slope = 123
+        rating = 70.4
+        strokes_for_par = 72
+
+        course_handicap_raw = (
+            handicap_index * (slope / 113) + (rating - strokes_for_par)
+        )
+        course_handicap = round(course_handicap_raw, 0)
+
+        return int(course_handicap)
 
 
 class SeasonRunner:
@@ -53,14 +167,21 @@ class SeasonRunner:
             leaderboard_sheet_name=self.config.leaderboard_sheet_name,
             players_sheet_name=self.config.players_sheet_name,
             events=event_configs,
+            is_finale_enabled=self.config.finale_handicaps_sheet.enabled,
+            finale_handicaps_sheet_name=self.config.finale_handicaps_sheet.sheet_name,
         )
 
     def run(self) -> None:
         sheet_read_data = self._read_spreadsheet_data()
         season = self._create_season(spreadsheet_data=sheet_read_data)
         season_results = season.results()
-        self._write_spreadsheet_data(season_results=season_results)
-        pass
+
+        finale_handicaps = FinaleHandicapCalculator(
+            spreadsheet_data=sheet_read_data,
+            season_results=season_results,
+        ).finale_handicaps()
+
+        self._write_spreadsheet_data(season_results=season_results, finale_handicaps=finale_handicaps)
 
     def _read_spreadsheet_data(self) -> season_spreadsheet.SeasonSheetReadData:
         return self.sheet.read()
@@ -163,20 +284,30 @@ class SeasonRunner:
                 # This should not be reachable unless new event types are introduced.
                 raise ValueError(f"Unknown config event type: {config_event_type}")
 
-    def _write_spreadsheet_data(self, season_results: season.SeasonResults) -> None:
-        write_data = self._generate_spreadsheet_write_data(season_results)
+    def _write_spreadsheet_data(
+        self,
+        season_results: season.SeasonResults,
+        finale_handicaps: FinaleHandicaps,
+    ) -> None:
+        write_data = self._generate_spreadsheet_write_data(
+            season_results=season_results,
+            finale_handicaps=finale_handicaps
+        )
         self.sheet.write(data=write_data)
 
     def _generate_spreadsheet_write_data(
         self,
         season_results: season.SeasonResults,
+        finale_handicaps: FinaleHandicaps,
     ) -> season_spreadsheet.SeasonSheetWriteData:
         leaderboard_write_data = self._generate_spreadsheet_leaderboard_write_data(season_results)
         events_write_data = self._generate_spreadsheet_events_write_data(season_results)
+        finale_handicaps_write_data = self._generate_spreadsheet_finale_handicaps_write_data(finale_handicaps)
 
         return season_spreadsheet.SeasonSheetWriteData(
             leaderboard=leaderboard_write_data,
             events=events_write_data,
+            finale_handicaps=finale_handicaps_write_data,
         )
 
     def _generate_spreadsheet_leaderboard_write_data(
@@ -263,3 +394,18 @@ class SeasonRunner:
             eagles=[],
             hole_scores_over_max=[],
         )
+
+    def _generate_spreadsheet_finale_handicaps_write_data(
+        self,
+        finale_handicaps: FinaleHandicaps,
+    ) -> season_spreadsheet.worksheet.FinaleHandicapsWriteData:
+        sheet_finale_handicaps: dict[str, season_spreadsheet.worksheet.FinaleHandicap] = {}
+        for player, player_handicap in finale_handicaps.items():
+            sheet_finale_handicaps[player] = season_spreadsheet.worksheet.FinaleHandicap(
+                ghin_handicap=player_handicap.ghin_handicap,
+                season_handicap=player_handicap.season_handicap,
+                finale_handicap=player_handicap.finale_handicap,
+                finale_course_handicap=player_handicap.corica_finale_course_handicap,
+            )
+
+        return season_spreadsheet.worksheet.FinaleHandicapsWriteData(sheet_finale_handicaps)
