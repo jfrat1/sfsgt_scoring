@@ -46,11 +46,11 @@ TEST_WORKSHEET_TITLES = [
 TEST_PLAYERS_READ_DATA = players.PlayersReadData(
     player_handicaps={
         "Stanton Turner": players.HandicapIndexByEvent(
-            data={"Presidio": 12.0, "Harding Park": 12.2},
+            data={"Presidio": 12.0, "Harding Park": 12.2, "FINALE": 12.2},
             events=["Presidio", "Harding Park"],
         ),
         "John Fratello": players.HandicapIndexByEvent(
-            data={"Presidio": 15.8, "Harding Park": 15.4},
+            data={"Presidio": 15.8, "Harding Park": 15.4, "FINALE": 15.4},
             events=["Presidio", "Harding Park"],
         ),
     }

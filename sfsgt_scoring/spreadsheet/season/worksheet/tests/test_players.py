@@ -28,11 +28,11 @@ WORKSHEET_DATA_PROCESSED = (
 EXPECTED_WORKSHEET_READ_DATA = players.PlayersReadData(
     player_handicaps={
         "Geoff": players.HandicapIndexByEvent(
-            data={"Event A": 12.5, "Event B": 12.0},
+            data={"Event A": 12.5, "Event B": 12.0, "FINALE": 12.0},
             events=["Event A", "Event B"],
         ),
         "Bolt": players.HandicapIndexByEvent(
-            data={"Event A": 4.0, "Event B": 4.3},
+            data={"Event A": 4.0, "Event B": 4.3, "FINALE": 12.0},
             events=["Event A", "Event B"],
         ),
     }
