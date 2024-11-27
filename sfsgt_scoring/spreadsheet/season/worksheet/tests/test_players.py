@@ -16,13 +16,13 @@ EVENT_NAMES = ["Event A", "Event B"]
 # 2   Steve Harasym         8            8           8.5           Grint
 
 WORKSHEET_DATA_RAW = pd.DataFrame(
-    data=[["", "Geoff", 12.5, 12.0, "NCGA"], ["", "Bolt", 4, 4.3, "Grint"]],
-    columns=["", "GOLFER", "EVENT A", "EVENT B", "TRACKING METHOD"],
+    data=[["", "Geoff", 12.5, 12.0, 12.0, "NCGA"], ["", "Bolt", 4, 4.3, 4.3, "Grint"]],
+    columns=["", "GOLFER", "EVENT A", "EVENT B", "FINALE", "TRACKING METHOD"],
 )
 WORKSHEET_DATA_PROCESSED = (
     WORKSHEET_DATA_RAW.set_index(keys="GOLFER")
     .drop(columns=["", "TRACKING METHOD"])
-    .rename(columns={"EVENT A": "Event A", "EVENT B": "Event B"})
+    .rename(columns={"EVENT A": "Event A", "EVENT B": "Event B", "FINALE": "FINALE"})
 )
 
 EXPECTED_WORKSHEET_READ_DATA = players.PlayersReadData(
@@ -32,7 +32,7 @@ EXPECTED_WORKSHEET_READ_DATA = players.PlayersReadData(
             events=["Event A", "Event B"],
         ),
         "Bolt": players.HandicapIndexByEvent(
-            data={"Event A": 4.0, "Event B": 4.3, "FINALE": 12.0},
+            data={"Event A": 4.0, "Event B": 4.3, "FINALE": 4.3},
             events=["Event A", "Event B"],
         ),
     }
@@ -59,7 +59,7 @@ def test_read_nominal() -> None:
 def test_handicap_by_event_constructor() -> None:
     players.HandicapIndexByEvent(
         events=["foo", "bar"],
-        data={"foo": 12.2, "bar": 14.2},
+        data={"foo": 12.2, "bar": 14.2, "FINALE": 14.2},
     )
 
 
@@ -67,7 +67,7 @@ def test_handicap_by_event_constructor_wrong_keys_raises_error() -> None:
     with pytest.raises(players.PlayerHandicapsVerificationError):
         players.HandicapIndexByEvent(
             events=["bar", "baz"],
-            data={"foo": 12.2, "bar": 14.2},
+            data={"foo": 12.2, "bar": 14.2, "FINALE": 14.2},
         )
 
 
@@ -102,6 +102,7 @@ def test_expected_header_names() -> None:
         "GOLFER",
         "EVENT A",
         "EVENT B",
+        "FINALE",
         "TRACKING METHOD",
     ]
 

@@ -199,7 +199,7 @@ STANDARD_EVENT_RESULT = event_results.EventResult(
                 total_gross=86,
                 total_net=72,
                 notable_holes=STANTON_NOTABLE_HOLES,
-                score_differential=12.1,
+                score_differential=12.0,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=50.0,
@@ -218,7 +218,7 @@ STANDARD_EVENT_RESULT = event_results.EventResult(
                 total_gross=89,
                 total_net=70,
                 notable_holes=JOHN_NOTABLE_HOLES,
-                score_differential=14.7,
+                score_differential=14.6,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=45.0,
@@ -242,7 +242,7 @@ MAJOR_EVENT_RESULT = event_results.EventResult(
                 total_gross=86,
                 total_net=71,
                 notable_holes=STANTON_NOTABLE_HOLES,
-                score_differential=15.2,
+                score_differential=10.8,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=100.0,
@@ -261,7 +261,7 @@ MAJOR_EVENT_RESULT = event_results.EventResult(
                 total_gross=89,
                 total_net=68,
                 notable_holes=JOHN_NOTABLE_HOLES,
-                score_differential=17.7,
+                score_differential=13.3,
             ),
             cumulative_result=event_results.PlayerEventCumulativeResult(
                 gross_score_points=90.0,

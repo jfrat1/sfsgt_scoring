@@ -171,7 +171,7 @@ TEST_PLAYER_INDIVIDUAL_RESULTS: dict[str, results.IPlayerEventIndividualResult] 
         total_gross=90,
         total_net=76,
         notable_holes=STANTON_NOTABLE_HOLES,
-        score_differential=21.1,
+        score_differential=17.5,
     ),
     "John Fratello": results.PlayerEventIndividualResult(
         course_handicap=16,
@@ -180,7 +180,7 @@ TEST_PLAYER_INDIVIDUAL_RESULTS: dict[str, results.IPlayerEventIndividualResult] 
         total_gross=89,
         total_net=73,
         notable_holes=JOHN_NOTABLE_HOLES,
-        score_differential=21.1,
+        score_differential=16.6,
     ),
     "Cullan Jackson": results.PlayerEventIndividualResult(
         course_handicap=7,
@@ -189,7 +189,7 @@ TEST_PLAYER_INDIVIDUAL_RESULTS: dict[str, results.IPlayerEventIndividualResult] 
         total_gross=84,
         total_net=77,
         notable_holes=NO_NOTABLE_HOLES,
-        score_differential=21.1,
+        score_differential=12.2,
     ),
     "Jeff McCarthy": results.PlayerEventIndividualResult(
         course_handicap=22,
@@ -198,7 +198,7 @@ TEST_PLAYER_INDIVIDUAL_RESULTS: dict[str, results.IPlayerEventIndividualResult] 
         total_gross=100,
         total_net=78,
         notable_holes=NO_NOTABLE_HOLES,
-        score_differential=21.1,
+        score_differential=26.3,
     ),
     "Steve Harasym": results.IncompletePlayerEventInividualResult(),
 }

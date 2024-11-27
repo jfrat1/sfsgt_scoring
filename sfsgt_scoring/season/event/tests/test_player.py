@@ -174,7 +174,7 @@ def test_player_individual_result() -> None:
         total_gross=gross_strokes,
         total_net=net_strokes,
         notable_holes=EXPECTED_NOTABLE_HOLES,
-        score_differential=16,
+        score_differential=12.7,
     )
 
     assert player_.individual_result() == expected_result

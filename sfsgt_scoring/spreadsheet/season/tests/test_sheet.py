@@ -22,7 +22,7 @@ TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
             scorecard_start_cell="B8",
         ),
     },
-    is_finale_enabled=False,
+    is_finale_enabled=True,
     finale_handicaps_sheet_name="Finale - Corica",
 )
 
@@ -234,6 +234,7 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
         mock.call(worksheet_name="Leaderboard"),
         mock.call(worksheet_name="Presidio"),
         mock.call(worksheet_name="TPC Harding"),
+        mock.call(worksheet_name="Finale - Corica")
     ]
 
     # The same MagicMock object is returned for all calls to the google_sheet.worksheet()
