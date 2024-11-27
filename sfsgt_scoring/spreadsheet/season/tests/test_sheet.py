@@ -234,7 +234,7 @@ def verify_stub_calls_during_object_configuration(stubs: CollaboratorStubs) -> N
         mock.call(worksheet_name="Leaderboard"),
         mock.call(worksheet_name="Presidio"),
         mock.call(worksheet_name="TPC Harding"),
-        mock.call(worksheet_name="Finale - Corica")
+        mock.call(worksheet_name="Finale - Corica"),
     ]
 
     # The same MagicMock object is returned for all calls to the google_sheet.worksheet()

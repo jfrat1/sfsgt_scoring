@@ -1,6 +1,9 @@
 [tool.ruff]
 line-length = 100
-exclude = ["sfsgt_scoring_2023"]
+exclude = [
+  "sfsgt_scoring_2023",
+  "sandbox",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
@@ -9,4 +12,7 @@ select = ["E", "F", "W", "I"]
 "__init__.py" = ["F401"]
 
 [tool.mypy]
-exclude = ["sfsgt_scoring_2023"]
+exclude = [
+  "sfsgt_scoring_2023",
+  "sandbox",
+]

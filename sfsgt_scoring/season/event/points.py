@@ -110,7 +110,7 @@ class Points:
         return tuple(rank for rank in self._points_by_rank.keys())
 
     def _players_at_each_rank(self, player_ranks: dict[str, int]) -> dict[int, list[str]]:
-        """Pivot the player ranks dictionary into one that has ranks as keys and sets of player names at each rank as values."""   # noqa: E501
+        """Pivot the player ranks dictionary into one that has ranks as keys and sets of player names at each rank as values."""  # noqa: E501
         min_player_rank = min(player_ranks.values())
         max_player_rank = max(player_ranks.values())
 

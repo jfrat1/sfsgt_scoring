@@ -1,1 +1,0 @@
-mypy ./sfsgt_scoring

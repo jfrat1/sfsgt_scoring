@@ -1,2 +1,1 @@
-import config
-import event
+from . import config, event

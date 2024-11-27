@@ -179,8 +179,9 @@ def test_player_hole_scores_constructor_string_keys_raises_error() -> None:
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
             scores={
-                str(hole_num): hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)
-            }  # type: ignore # noqa: E501
+                str(hole_num): hole_score  # type: ignore
+                for hole_num, hole_score in zip(range(1, 19), hole_scores)
+            }
         )
 
 
@@ -188,7 +189,7 @@ def test_player_hols_scores_construct_string_value_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, "5", 6, 6, 5, 4, 4, 4, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}  # type: ignore # noqa: E501
         )
 
 
