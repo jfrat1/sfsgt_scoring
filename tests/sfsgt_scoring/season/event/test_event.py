@@ -1,5 +1,5 @@
-from ... import rank
-from .. import event, inputs, results
+from sfsgt_scoring.season import rank
+from sfsgt_scoring.season.event import event, inputs, results
 
 TEST_EVENT_INPUT = inputs.EventInput(
     course=inputs.CourseInput(

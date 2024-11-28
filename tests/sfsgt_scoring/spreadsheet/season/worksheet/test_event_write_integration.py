@@ -1,6 +1,6 @@
 from sfsgt_scoring.spreadsheet import google as google_sheet
 
-from .. import event
+from sfsgt_scoring.spreadsheet.season.worksheet import event
 
 # This google sheet is a copy of the 2024 sheet with a small amount of fake
 # data input for use in these tests.

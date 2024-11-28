@@ -1,4 +1,4 @@
-from .. import course, inputs, player, results
+from sfsgt_scoring.season.event import course, inputs, player, results
 
 TEST_PLAYER_HOLE_SCORES = {
     1: 5,

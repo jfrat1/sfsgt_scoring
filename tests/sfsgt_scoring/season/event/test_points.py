@@ -1,6 +1,6 @@
 import pytest
 
-from .. import inputs, points
+from sfsgt_scoring.season.event import inputs, points
 
 TEST_PLAYER_RANKS_NO_TIES = {
     "Player_1": 6,

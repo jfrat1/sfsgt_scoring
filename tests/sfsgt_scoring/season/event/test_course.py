@@ -1,6 +1,6 @@
 import pytest
 
-from .. import course, inputs
+from sfsgt_scoring.season.event import course, inputs
 
 TEST_COURSE_INPUT = inputs.CourseInput(
     name="Presidio",

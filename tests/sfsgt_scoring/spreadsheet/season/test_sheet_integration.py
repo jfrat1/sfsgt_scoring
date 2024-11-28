@@ -2,8 +2,8 @@ import pytest
 
 from sfsgt_scoring import season_config
 
-from .. import sheet
-from ..worksheet import event, players
+from sfsgt_scoring.spreadsheet.season import sheet
+from sfsgt_scoring.spreadsheet.season.worksheet import event, players
 
 pytestmark = pytest.mark.integration
 

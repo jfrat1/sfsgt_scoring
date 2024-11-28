@@ -1,7 +1,7 @@
 import pytest
 
-from ... import rank
-from .. import results
+from sfsgt_scoring.season import rank
+from sfsgt_scoring.season.event import results
 
 
 def test_incomplete_player_event_result_singleton_implementation() -> None:

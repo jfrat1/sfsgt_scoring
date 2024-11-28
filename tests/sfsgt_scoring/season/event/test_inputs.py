@@ -1,6 +1,6 @@
 import pytest
 
-from .. import inputs
+from sfsgt_scoring.season.event import inputs
 
 
 def test_course_tee_data_construct_nominal() -> None:

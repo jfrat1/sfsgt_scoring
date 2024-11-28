@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from .. import sheet
-from ..worksheet import event, players
+from sfsgt_scoring.spreadsheet.season import sheet
+from sfsgt_scoring.spreadsheet.season.worksheet import event, players
 
 TEST_SHEET_CONFIG = sheet.SeasonSheetConfig(
     sheet_id="test_sheet_id",

@@ -6,7 +6,7 @@ name = "pypi"
 [scripts]
 check = "sh scripts/lint_check.sh"
 fix = "sh scripts/lint_fix.sh"
-test = "pytest ./sfsgt_scoring -k 'not integration'"
+test = "pytest --cov=sfsgt_scoring --cov-report=html -k 'not integration' tests/"
 
 [packages]
 pandas = "*"
