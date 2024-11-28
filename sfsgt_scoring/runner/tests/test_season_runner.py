@@ -4,6 +4,9 @@ from unittest import mock
 import pytest
 
 from sfsgt_scoring import course_database, season, season_config
+
+# System under test
+from sfsgt_scoring.runner import season_runner
 from sfsgt_scoring.season import event as season_event
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 from sfsgt_scoring.spreadsheet.season.worksheet import (
@@ -12,9 +15,6 @@ from sfsgt_scoring.spreadsheet.season.worksheet import (
 from sfsgt_scoring.spreadsheet.season.worksheet import (
     players as players_worksheet,
 )
-
-# System under test
-from .. import season_runner
 
 TEST_SEASON_CONFIG = season_config.SeasonConfig(
     name="test_season",

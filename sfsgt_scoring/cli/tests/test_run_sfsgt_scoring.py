@@ -2,7 +2,7 @@ from unittest import mock
 
 from click import testing as click_testing
 
-from .. import run_sfsgt_scoring
+from sfsgt_scoring.cli import run_sfsgt_scoring
 
 
 @mock.patch.object(run_sfsgt_scoring.course_database, "load_default_database", autospec=True)

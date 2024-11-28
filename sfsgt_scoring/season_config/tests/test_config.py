@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 
-from .. import config
+from sfsgt_scoring.season_config import config
 
 TEST_SEASON_CONFIG_YAML = """
 name: SFSGT 2024

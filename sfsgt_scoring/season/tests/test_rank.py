@@ -1,6 +1,6 @@
 import pytest
 
-from .. import rank
+from sfsgt_scoring.season import rank
 
 TEST_PLAYER_VALUES_NO_TIES = {
     "Player_1": 10,

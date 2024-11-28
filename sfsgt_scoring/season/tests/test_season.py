@@ -1,7 +1,7 @@
 import copy
 
-from .. import event, rank, season
-from ..event import results as event_results
+from sfsgt_scoring.season import event, rank, season
+from sfsgt_scoring.season.event import results as event_results
 
 SEASON_INPUT = season.SeasonInput(
     events={
