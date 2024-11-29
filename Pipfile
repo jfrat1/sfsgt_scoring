@@ -10,26 +10,22 @@ test = "pytest --cov=sfsgt_scoring --cov-report=html -k 'not integration' tests/
 scoring_cli = "python app/run_sfsgt_scoring.py"
 
 [packages]
-pandas = "*"
-numpy = "*"
 click = "*"
+gspread = "*"
+numpy = "*"
+pandas = "*"
 pydantic = "*"
 pydantic-yaml = "*"
-google-api-python-client = "*"
-google-api-python-client-stubs = "*"
-google-auth-httplib2 = "*"
-google-auth-oauthlib = "*"
-gspread = "*"
 
 [dev-packages]
-pytest = "*"
-pytest-cov = "*"
 ipdb = "*"
-pdbpp = "*"
 mypy = "*"
 pandas-stubs = "*"
-types-openpyxl = "*"
+pdbpp = "*"
+pytest = "*"
+pytest-cov = "*"
 ruff = "*"
+types-openpyxl = "*"
 
 [requires]
 python_version = "3.12"

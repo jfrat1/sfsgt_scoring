@@ -1,11 +1,4 @@
-#
-*htmlcov
+htmlcov
 .coverage
-.pytest_cache
-/.mypy_cache/
-
-log.txt
 
 *__pycache__*
-
-/.venv*
