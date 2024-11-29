@@ -7,6 +7,7 @@ name = "pypi"
 check = "sh scripts/lint_check.sh"
 fix = "sh scripts/lint_fix.sh"
 test = "pytest --cov=sfsgt_scoring --cov-report=html -k 'not integration' tests/"
+scoring_cli = "python app/run_sfsgt_scoring.py"
 
 [packages]
 pandas = "*"
