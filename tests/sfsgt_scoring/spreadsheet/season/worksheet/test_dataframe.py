@@ -89,13 +89,17 @@ def test_replace_empty_string_with_none_integer_values() -> None:
 
     modified_df = dataframe.replace_empty_strings_with_none(input_df)
 
-    expected_df = pd.DataFrame(
-        data=[
-            [2, 4, 6],
-            [3, None, 9],
-        ]
-    ).astype(
-        dtype={1: object},  # Cast 2nd column to object dtype to match modified_df
-    ).replace(float("nan"), None)  # Convert NaN to None to match the function under test
+    expected_df = (
+        pd.DataFrame(
+            data=[
+                [2, 4, 6],
+                [3, None, 9],
+            ]
+        )
+        .astype(
+            dtype={1: object},  # Cast 2nd column to object dtype to match modified_df
+        )
+        .replace(float("nan"), None)
+    )  # Convert NaN to None to match the function under test
 
     pd_testing.assert_frame_equal(left=modified_df, right=expected_df)

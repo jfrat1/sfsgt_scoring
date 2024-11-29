@@ -1,7 +1,8 @@
 from typing import NamedTuple
 
 import course_database
-from sfsgt_scoring import season, season_config
+import season_config
+from sfsgt_scoring import season
 from sfsgt_scoring.season import (
     event as season_event,
 )

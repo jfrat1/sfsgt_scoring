@@ -7,9 +7,9 @@ in a production context.
 import click
 
 import course_database
+import season_config
 from sfsgt_scoring import (
     runner,
-    season_config,
 )
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
