@@ -3,11 +3,10 @@ import pathlib
 from typing import Any
 
 import gspread
-from oauth2client import service_account
 
 from sfsgt_scoring.spreadsheet.google import worksheet
 
-CREDENTIALS_FILE = (
+SERVICE_ACCOUNT_CREDENTIALS_FILE = (
     pathlib.Path(__file__).parent.parent.parent.parent
     / "google_cloud_creds"
     / "sfsgt-credentials.json"
@@ -21,14 +20,7 @@ class GoogleSheet:
     """
 
     def __init__(self, sheet_id: str) -> None:
-        scopes = [
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive",
-        ]
-        credentials = service_account.ServiceAccountCredentials.from_json_keyfile_name(
-            filename=CREDENTIALS_FILE, scopes=scopes
-        )
-        gspread_client = gspread.authorize(credentials)
+        gspread_client = gspread.service_account(filename=SERVICE_ACCOUNT_CREDENTIALS_FILE)
 
         self.sheet: gspread.spreadsheet.Spreadsheet = gspread_client.open_by_key(sheet_id)
 
