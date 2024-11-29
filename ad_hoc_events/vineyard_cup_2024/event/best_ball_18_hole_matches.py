@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from sfsgt_scoring import course_database
+import course_database
 
 from .. import config, handicap
 

@@ -6,8 +6,8 @@ in a production context.
 
 import click
 
+import course_database
 from sfsgt_scoring import (
-    course_database,
     runner,
     season_config,
 )

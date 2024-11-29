@@ -3,7 +3,8 @@ from unittest import mock
 
 import pytest
 
-from sfsgt_scoring import course_database, season, season_config
+import course_database
+from sfsgt_scoring import season, season_config
 
 # System under test
 from sfsgt_scoring.runner import season_runner
