@@ -1,16 +1,10 @@
-import enum
 from typing import NamedTuple
 
-from season_common import scorecard
+from season_common import player, scorecard
 
 
 class SeasonViewReadDataResourceNotFoundError(Exception):
     pass
-
-
-class SeasonViewPlayerGender(enum.Enum):
-    MALE = enum.auto()
-    FEMALE = enum.auto()
 
 
 class SeasonViewEventHandicapIndices(dict[str, float]):
@@ -24,8 +18,7 @@ class SeasonViewEventHandicapIndices(dict[str, float]):
 
 
 class SeasonViewReadPlayer(NamedTuple):
-    name: str
-    gender: SeasonViewPlayerGender
+    player: player.Player
     event_handicap_indices: SeasonViewEventHandicapIndices
 
 
@@ -44,7 +37,7 @@ class SeasonViewReadEvent:
         self.event_name = event_name
         self._player_scorecards = player_scorecards
 
-    def player_names(self) -> tuple[str]:
+    def player_names(self) -> tuple[str, ...]:
         return tuple(self._player_scorecards.keys())
 
     def player_scorecard(self, player: str) -> scorecard.Scorecard:
@@ -58,7 +51,7 @@ class SeasonViewReadEvent:
 
 
 class SeasonViewReadEvents(dict[str, SeasonViewReadEvent]):
-    def event_names(self) -> tuple[str]:
+    def event_names(self) -> tuple[str, ...]:
         return tuple(self.keys())
 
     def __getitem__(self, event: str) -> SeasonViewReadEvent:
