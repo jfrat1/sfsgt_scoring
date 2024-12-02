@@ -53,10 +53,14 @@ class Course(pydantic.BaseModel):
 
         return hole_pars
 
+MIN_COURSE_RATING = 60.0
+MAX_COURSE_RATING = 80.0
+MIN_COURSE_SLOPE = 55
+MAX_COURSE_SLOPE = 155
 
 class TeeInfo(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
-    rating: float
-    slope: int
+    rating: float = pydantic.Field(ge=MIN_COURSE_RATING, le=MAX_COURSE_RATING)
+    slope: int = pydantic.Field(ge=MIN_COURSE_SLOPE, le=MAX_COURSE_SLOPE)
     distance: int

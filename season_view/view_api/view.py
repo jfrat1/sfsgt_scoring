@@ -1,6 +1,6 @@
 import abc
 
-from season_view.interface import read_data, write_data
+from season_view.view_api import read_data, write_data
 
 
 class SeasonView(abc.ABC):

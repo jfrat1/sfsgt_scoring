@@ -1,9 +1,7 @@
 import enum
-from typing import NamedTuple, TypeVar
+from typing import NamedTuple
 
-from season_view.interface import hole_scores
-
-T = TypeVar("T")
+from season_common import scorecard
 
 
 class SeasonViewReadDataResourceNotFoundError(Exception):
@@ -42,16 +40,16 @@ class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
 
 
 class SeasonViewReadEvent:
-    def __init__(self, event_name: str, player_scores: dict[str, hole_scores.HoleScores]) -> None:
+    def __init__(self, event_name: str, player_scorecards: dict[str, scorecard.Scorecard]) -> None:
         self.event_name = event_name
-        self._player_scores = player_scores
+        self._player_scorecards = player_scorecards
 
     def player_names(self) -> tuple[str]:
-        return tuple(self._player_scores.keys())
+        return tuple(self._player_scorecards.keys())
 
-    def player_hole_scores(self, player: str) -> hole_scores.HoleScores:
-        if player in self._player_scores.keys():
-            return self._player_scores[player]
+    def player_scorecard(self, player: str) -> scorecard.Scorecard:
+        if player in self._player_scorecards.keys():
+            return self._player_scorecards[player]
 
         else:
             raise SeasonViewReadDataResourceNotFoundError(

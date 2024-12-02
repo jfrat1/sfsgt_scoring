@@ -3,7 +3,7 @@ import abc
 from utils import class_utils
 
 
-class HoleScores(abc.ABC):
+class Scorecard(abc.ABC):
     @abc.abstractmethod
     def is_complete_score(self) -> bool:
         pass
@@ -13,7 +13,11 @@ class HoleScores(abc.ABC):
         pass
 
 
-class IncompleteHoleScores(HoleScores, class_utils.Singleton):
+class DisallowedMethodCallError(Exception):
+    """Exceptiont to be raised when a method call is disallowed."""
+
+
+class IncompleteScorecard(Scorecard, class_utils.Singleton):
     def __init__(self):
         pass
 
@@ -21,12 +25,14 @@ class IncompleteHoleScores(HoleScores, class_utils.Singleton):
         return False
 
     def scores(self) -> dict[int, int]:
-        return {}
+        raise DisallowedMethodCallError(
+            "Scores cannot be retrieved from incomplete scorecards."
+        )
 
 
-class CompleteHoleScores(HoleScores):
+class CompleteScorecard(Scorecard):
     def __init__(self, scores: dict[int, int]):
-        HoleScoresValidator(scores).validate()
+        ScorecardValidator(scores).validate()
         self._scores = scores
 
     def is_complete_score(self):
@@ -36,11 +42,11 @@ class CompleteHoleScores(HoleScores):
         return self._scores
 
 
-class HoleScoresValidationError(Exception):
-    pass
+class ScorecardValidationError(Exception):
+    """Exception to be raised when hole scores do not pass validation."""
 
 
-class HoleScoresValidator:
+class ScorecardValidator:
     def __init__(self, hole_scores: dict[int, int]) -> None:
         self.hole_scores = hole_scores
 
@@ -52,7 +58,7 @@ class HoleScoresValidator:
         expected_keys = [hole for hole in range(1, 19)]
         actual_keys = list(self.hole_scores.keys())
         if expected_keys != actual_keys:
-            raise HoleScoresValidationError(
+            raise ScorecardValidationError(
                 "Keys in the HoleScores dictionary must be integers containing hole numbers 1 "
                 f"through 18. \nExpected: {expected_keys} \nFound: {actual_keys}"
             )
@@ -65,15 +71,15 @@ class HoleScoresValidator:
         )
 
         if not are_all_values_positive_ints:
-            raise HoleScoresValidationError(
+            raise ScorecardValidationError(
                 f"Values in the HoleScores dictionary must be positive integers. Found: {values}"
             )
 
 
-def hole_scores_factory(hole_scores: dict[int, int]) -> HoleScores:
+def scorecard_factory(hole_scores: dict[int, int]) -> Scorecard:
     try:
-        HoleScoresValidator(hole_scores).validate()
-        return CompleteHoleScores(hole_scores)
+        ScorecardValidator(hole_scores).validate()
+        return CompleteScorecard(hole_scores)
 
-    except HoleScoresValidationError:
-        return IncompleteHoleScores()
+    except ScorecardValidationError:
+        return IncompleteScorecard()
