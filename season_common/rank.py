@@ -103,4 +103,3 @@ class NoRankValue(IRankValue, class_utils.Singleton):
 
     def __repr__(self) -> str:
         return "NoRankValue()"
-

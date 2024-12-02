@@ -1,7 +1,6 @@
 from typing import NamedTuple
 
-from season_view.view_api import view
-from season_view.view_api import read_data, write_data
+from season_view.view_api import read_data, view, write_data
 
 
 class GoogleSheetSeasonViewConfig(NamedTuple):

@@ -60,8 +60,7 @@ class NotableHoles:
 
     def _hole_numbers_matching_type(self, match_hole_type: NotableHoleType) -> list[int]:
         return [
-            hole_num for hole_num, hole_type in self._holes.items()
-            if hole_type == match_hole_type
+            hole_num for hole_num, hole_type in self._holes.items() if hole_type == match_hole_type
         ]
 
     def _get_hole_type(self, hole_num: int) -> NotableHoleType:
@@ -83,7 +82,8 @@ class NotableHoles:
 
     def _all_hole_nums(self) -> list[int]:
         return [
-            hole_num for hole_num, hole_type in self._holes.items()
+            hole_num
+            for hole_num, hole_type in self._holes.items()
             if hole_type != NotableHoleType.NONE
         ]
 
@@ -91,9 +91,7 @@ class NotableHoles:
         if not isinstance(other, self.__class__):
             return NotImplemented
 
-        return (
-            self._holes == other._holes
-        )
+        return self._holes == other._holes
 
     def __repr__(self) -> str:
         attributes = self.__dict__

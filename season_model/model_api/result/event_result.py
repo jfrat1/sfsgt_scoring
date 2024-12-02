@@ -1,8 +1,8 @@
 import abc
 from typing import Any, NamedTuple
 
-from season_model.model_api.result import notable_holes
 from season_common import rank
+from season_model.model_api.result import notable_holes
 from utils import class_utils
 
 
@@ -65,7 +65,10 @@ class SeasonModelEventIPlayerEventIndividualResult(abc.ABC):
 class DisallowedApiCallError(Exception):
     """Exception raised when a call is made on an incomplete player event individual result."""
 
-class SeasonModelEventIncompletePlayerInividualResult(SeasonModelEventIPlayerEventIndividualResult, class_utils.Singleton):
+
+class SeasonModelEventIncompletePlayerInividualResult(
+    SeasonModelEventIPlayerEventIndividualResult, class_utils.Singleton
+):
     def _init__(self) -> None:
         pass
 
@@ -233,7 +236,7 @@ class SeasonModelEventPlayerResult:
         self._aggregate_result = aggregate_result
 
     def is_complete_result(self) -> bool:
-        self._individual_result.is_complete_result()
+        return self._individual_result.is_complete_result()
 
     @property
     def course_handicap(self) -> int:
@@ -319,10 +322,11 @@ class SeasonModelEventPlayerResult:
 
 class SeasonModelEventResult(NamedTuple):
     """Results for a single event in a season."""
+
     players: list[SeasonModelEventPlayerResult]
 
 
 class SeasonModelEventResults(NamedTuple):
     """Results for all events in a season."""
-    events: list[SeasonModelEventResult]
 
+    events: list[SeasonModelEventResult]

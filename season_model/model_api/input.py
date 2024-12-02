@@ -1,5 +1,5 @@
 import enum
-from typing import Any, Iterator, NamedTuple
+from typing import Iterator, NamedTuple
 
 import course_database
 from season_common import player, scorecard
@@ -7,6 +7,7 @@ from season_common import player, scorecard
 
 class CourseDataVerificationError(Exception):
     """Exception to be raised when an event's course data does not meet requirements."""
+
 
 class SeasonModelEventType(enum.Enum):
     STANDARD = enum.auto()
@@ -52,4 +53,3 @@ class SeasonModelInput:
                     f"Player names in event {event_data.event_name} do not match expectations.\n"
                     f"Expected: {self._player_names}. \nFound: {event_player_names}."
                 )
-

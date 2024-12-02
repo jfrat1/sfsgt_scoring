@@ -11,7 +11,7 @@ def test_incomplete_scorecard_is_singleton() -> None:
 
 
 def create_test_hole_scores_dict(
-    hole_score_values: list[int | str | None]
+    hole_score_values: list[int | str | None],
 ) -> dict[int, int | str | None]:
     num_scores = len(hole_score_values)
     return {
@@ -69,9 +69,7 @@ def test_scorecard_validator_string_hole_numbers_raises_error() -> None:
     score_values = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     scores = create_test_hole_scores_dict(score_values)  # type: ignore
 
-    scores_ith_str_hole_num = {
-        str(hole_num): hole_score for hole_num, hole_score in scores.items()
-    }
+    scores_ith_str_hole_num = {str(hole_num): hole_score for hole_num, hole_score in scores.items()}
     with pytest.raises(scorecard.ScorecardValidationError):
         scorecard.ScorecardValidator(scores_ith_str_hole_num).validate()  # type: ignore
 

@@ -25,9 +25,7 @@ class IncompleteScorecard(Scorecard, class_utils.Singleton):
         return False
 
     def scores(self) -> dict[int, int]:
-        raise DisallowedMethodCallError(
-            "Scores cannot be retrieved from incomplete scorecards."
-        )
+        raise DisallowedMethodCallError("Scores cannot be retrieved from incomplete scorecards.")
 
 
 class CompleteScorecard(Scorecard):
@@ -66,8 +64,7 @@ class ScorecardValidator:
     def _validate_values(self) -> None:
         values = self.hole_scores.values()
         are_all_values_positive_ints = all(
-            isinstance(value, int) and value >= 1
-            for value in values
+            isinstance(value, int) and value >= 1 for value in values
         )
 
         if not are_all_values_positive_ints:

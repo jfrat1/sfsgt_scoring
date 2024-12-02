@@ -14,7 +14,9 @@ class ScoreGeneratorStrategy(enum.Enum):
     BOGIE_GOLF = enum.auto()
 
 
-def generate_hole_scores(course: ScoreGeneratorCourse, strategy: ScoreGeneratorStrategy) -> dict[int, int]:
+def generate_hole_scores(
+    course: ScoreGeneratorCourse, strategy: ScoreGeneratorStrategy
+) -> dict[int, int]:
     course_db = course_database.load_default_database()
     course_data = course_db.get_course(course.value)
 

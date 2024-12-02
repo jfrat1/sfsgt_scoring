@@ -6,6 +6,7 @@ class PlayerGender(enum.Enum):
     FEMALE = enum.auto()
     MALE = enum.auto()
 
+
 class Player(NamedTuple):
     name: str
     gender: PlayerGender
