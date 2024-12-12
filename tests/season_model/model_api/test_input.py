@@ -68,7 +68,3 @@ def test_season_model_input_constructor_verify_input_consistency_fails() -> None
             player_names=player_names,
             events=event_inputs,
         )
-
-
-
-

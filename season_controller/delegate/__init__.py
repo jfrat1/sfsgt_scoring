@@ -1,0 +1,2 @@
+from season_controller.delegate.model_to_view import SeasonModelToViewDelegate
+from season_controller.delegate.view_to_model import SeasonViewToModelDelegate

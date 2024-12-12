@@ -9,6 +9,7 @@ class SeasonViewReadDataResourceNotFoundError(Exception):
 
 class SeasonViewEventHandicapIndices(dict[str, float]):
     """Collection of handicaps for a single player each event in a season."""
+
     def __getitem__(self, event: str) -> float:
         if event in self.keys():
             return super().__getitem__(event)
@@ -22,9 +23,18 @@ class SeasonViewReadPlayer(NamedTuple):
     player: player.Player
     event_handicap_indices: SeasonViewEventHandicapIndices
 
+    def name(self) -> str:
+        return self.player.name
 
+
+# TODO: Consider making this a list instead of a dict. The player names are duplicated
+# in the keys and in the SeasonViewReadPlayer instances
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
     """Collection of SeasonViewReadPlayer for each player in a season."""
+
+    def player_names(self) -> tuple[str, ...]:
+        return tuple(_player.name() for _player in self.values())
+
     def __getitem__(self, player: str) -> SeasonViewReadPlayer:
         if player in self.keys():
             return super().__getitem__(player)
