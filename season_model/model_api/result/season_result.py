@@ -4,7 +4,7 @@ from season_common import rank
 from season_model.model_api.result import event_result
 
 
-class SeasonModelAggregatePlayerResult:
+class SeasonModelPlayerOverallResult:
     def __init__(
         self,
         season_points: float,
@@ -115,10 +115,10 @@ class SeasonModelAggregatePlayerResult:
         return f"{self.__class__.__name__}({attributes_string})"
 
 
-class SeasonModelAggregateResults(NamedTuple):
-    players: list[SeasonModelAggregatePlayerResult]
+class SeasonModelPlayerOverallResults(NamedTuple):
+    players: list[SeasonModelPlayerOverallResult]
 
 
-class SeasonModelResult(NamedTuple):
+class SeasonModelResults(NamedTuple):
     events: event_result.SeasonModelEventResults
-    overall: SeasonModelAggregateResults
+    overall: SeasonModelPlayerOverallResults

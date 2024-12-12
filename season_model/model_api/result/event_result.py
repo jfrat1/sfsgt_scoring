@@ -6,7 +6,7 @@ from season_model.model_api.result import notable_holes
 from utils import class_utils
 
 
-class SeasonModelEventIPlayerEventIndividualResult(abc.ABC):
+class SeasonModelEventPlayerIndividualResult(abc.ABC):
     @abc.abstractmethod
     def is_complete_result(self) -> bool:
         pass
@@ -66,8 +66,8 @@ class DisallowedApiCallError(Exception):
     """Exception raised when a call is made on an incomplete player event individual result."""
 
 
-class SeasonModelEventIncompletePlayerInividualResult(
-    SeasonModelEventIPlayerEventIndividualResult, class_utils.Singleton
+class SeasonModelIncompleteEventPlayerInividualResult(
+    SeasonModelEventPlayerIndividualResult, class_utils.Singleton
 ):
     def _init__(self) -> None:
         pass
@@ -132,7 +132,7 @@ class SeasonModelEventIncompletePlayerInividualResult(
         return "IncompletePlayerEventInividualResult()"
 
 
-class SeasonModelEventPlayerIndividualResult(SeasonModelEventIPlayerEventIndividualResult):
+class SeasonModelCompleteEventPlayerIndividualResult(SeasonModelEventPlayerIndividualResult):
     def __init__(
         self,
         course_handicap: int,
@@ -229,7 +229,7 @@ class SeasonModelEventPlayerAggregateResult(NamedTuple):
 class SeasonModelEventPlayerResult:
     def __init__(
         self,
-        individual_result: SeasonModelEventIPlayerEventIndividualResult,
+        individual_result: SeasonModelEventPlayerIndividualResult,
         aggregate_result: SeasonModelEventPlayerAggregateResult,
     ) -> None:
         self._individual_result = individual_result
@@ -320,7 +320,7 @@ class SeasonModelEventPlayerResult:
         return f"{self.__class__.__name__}({attributes_string})"
 
 
-class SeasonModelEventResult(NamedTuple):
+class SeasonModelEventPlayerResults(NamedTuple):
     """Results for a single event in a season."""
 
     players: list[SeasonModelEventPlayerResult]
@@ -329,4 +329,4 @@ class SeasonModelEventResult(NamedTuple):
 class SeasonModelEventResults(NamedTuple):
     """Results for all events in a season."""
 
-    events: list[SeasonModelEventResult]
+    events: list[SeasonModelEventPlayerResults]

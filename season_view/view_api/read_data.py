@@ -8,6 +8,7 @@ class SeasonViewReadDataResourceNotFoundError(Exception):
 
 
 class SeasonViewEventHandicapIndices(dict[str, float]):
+    """Collection of handicaps for a single player each event in a season."""
     def __getitem__(self, event: str) -> float:
         if event in self.keys():
             return super().__getitem__(event)
@@ -23,6 +24,7 @@ class SeasonViewReadPlayer(NamedTuple):
 
 
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
+    """Collection of SeasonViewReadPlayer for each player in a season."""
     def __getitem__(self, player: str) -> SeasonViewReadPlayer:
         if player in self.keys():
             return super().__getitem__(player)

@@ -1,0 +1,2 @@
+from season_controller.translators.model_to_view import SeasonModelToViewTranslator
+from season_controller.translators.view_to_model import SeasonViewToModelTranslator
