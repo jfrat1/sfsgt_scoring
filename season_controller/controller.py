@@ -27,6 +27,7 @@ class SeasonController:
         model_input = SeasonViewToModelDelegate(
             view_read_data=view_read_data,
             course_db=self.course_db,
+            config=self.config,
         ).generate_model_input()
 
         model_results = self.model.calculate_results(model_input)

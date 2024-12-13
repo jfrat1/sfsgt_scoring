@@ -1,7 +1,8 @@
 import enum
-from typing import Iterator, NamedTuple
+from typing import Any, Iterator, NamedTuple, Self
 
 import course_database
+import season_config
 from season_common import player, scorecard
 
 
@@ -12,6 +13,14 @@ class CourseDataVerificationError(Exception):
 class SeasonModelEventType(enum.Enum):
     STANDARD = enum.auto()
     MAJOR = enum.auto()
+
+    @staticmethod
+    def from_config_event_type(event_type: season_config.EventType) -> "SeasonModelEventType":
+        match event_type:
+            case season_config.EventType.STANDARD:
+                return SeasonModelEventType.STANDARD
+            case season_config.EventType.MAJOR:
+                return SeasonModelEventType.MAJOR
 
 
 class SeasonModelEventPlayerInput(NamedTuple):
@@ -43,6 +52,12 @@ class SeasonModelEventInputs:
         for event in self.events:
             yield event
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, SeasonModelEventInputs):
+            return NotImplemented
+
+        return self.events == other.events
+
 
 class SeasonModelInputConsistencyError(Exception):
     """Exception to be raised when inconsistencies are detected in the season input data."""
@@ -65,3 +80,12 @@ class SeasonModelInput:
                     f"Player names in event {event_data.event_name} do not match expectations.\n"
                     f"Expected: {self._player_names}. \nFound: {sorted_event_player_names}."
                 )
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, SeasonModelInput):
+            return NotImplemented
+
+        return (
+            self._player_names == other._player_names and
+            self._events == other._events
+        )
