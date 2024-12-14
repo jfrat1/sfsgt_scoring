@@ -56,14 +56,17 @@ class SeasonViewToModelDelegate(NamedTuple):
         _players: list[season_model.SeasonModelEventPlayerInput] = []
         for player_name in self.player_names():
             _player = season_model.SeasonModelEventPlayerInput(
-                handicap_index=self.event_player_handicap_index(event_name=event_name, player_name=player_name),
+                handicap_index=self.event_player_handicap_index(
+                    event_name=event_name, player_name=player_name
+                ),
                 player=self.event_player(player_name=player_name),
-                scorecard=self.event_player_scorecard(event_name=event_name, player_name=player_name),
+                scorecard=self.event_player_scorecard(
+                    event_name=event_name, player_name=player_name
+                ),
             )
             _players.append(_player)
 
         return _players
-
 
     def event_player_handicap_index(self, event_name: str, player_name: str) -> float:
         return self.view_read_data.players[player_name].event_handicap_indices[event_name]
@@ -73,5 +76,3 @@ class SeasonViewToModelDelegate(NamedTuple):
 
     def event_player_scorecard(self, event_name: str, player_name: str) -> scorecard.Scorecard:
         return self.view_read_data.events[event_name].player_scorecard(player_name)
-
-

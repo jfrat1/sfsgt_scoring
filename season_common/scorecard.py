@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 from utils import class_utils
 
@@ -38,6 +39,12 @@ class CompleteScorecard(Scorecard):
 
     def scores(self) -> dict[int, int]:
         return self._scores
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, CompleteScorecard):
+            return NotImplemented
+
+        return self._scores == other._scores
 
 
 class ScorecardValidationError(Exception):

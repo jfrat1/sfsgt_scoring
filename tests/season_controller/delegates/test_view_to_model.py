@@ -32,10 +32,10 @@ def build_stub_course() -> mock.MagicMock:
     return stub_course
 
 
-def build_test_course_database() -> course_database.CourseDatabase:
+def build_test_course_database(stub_course: mock.MagicMock) -> course_database.CourseDatabase:
     return course_database.CourseDatabase(
         courses=[
-            build_stub_course(),
+            stub_course,
         ]
     )
 
@@ -59,7 +59,7 @@ def build_test_season_config() -> season_config.SeasonConfig:
                 type=season_config.EventType.STANDARD,
                 scorecard_sheet_start_cell="",
             )
-        }
+        },
     )
 
 
@@ -88,14 +88,14 @@ def build_stimulus_season_view_data() -> season_view.SeasonViewReadData:
     )
 
 
-def build_expected_model_input_data() -> season_model.SeasonModelInput:
+def build_expected_model_input_data(stub_course: mock.MagicMock) -> season_model.SeasonModelInput:
     return season_model.SeasonModelInput(
         player_names=["Mickey"],
         events=season_model.SeasonModelEventInputs(
             events=[
                 season_model.SeasonModelEventInput(
                     event_name="Baylands",
-                    course=build_stub_course(),
+                    course=stub_course,
                     tees="white",
                     event_type=season_model.SeasonModelEventType.STANDARD,
                     players=[
@@ -113,7 +113,8 @@ def build_expected_model_input_data() -> season_model.SeasonModelInput:
 
 def test_view_to_model_delegate() -> None:
     view_read_data = build_stimulus_season_view_data()
-    course_db = build_test_course_database()
+    stub_course = build_stub_course()
+    course_db = build_test_course_database(stub_course)
     config = build_test_season_config()
 
     delegate = view_to_model.SeasonViewToModelDelegate(
@@ -124,7 +125,6 @@ def test_view_to_model_delegate() -> None:
 
     model_input = delegate.generate_model_input()
 
-    expected_model_input = build_expected_model_input_data()
+    expected_model_input = build_expected_model_input_data(stub_course)
 
-    print("here")
-    # assert model_input == expected_model_input
+    assert model_input == expected_model_input

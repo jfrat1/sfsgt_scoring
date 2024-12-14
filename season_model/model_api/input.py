@@ -1,5 +1,5 @@
 import enum
-from typing import Any, Iterator, NamedTuple, Self
+from typing import Any, Iterator, NamedTuple
 
 import course_database
 import season_config
@@ -85,7 +85,4 @@ class SeasonModelInput:
         if not isinstance(other, SeasonModelInput):
             return NotImplemented
 
-        return (
-            self._player_names == other._player_names and
-            self._events == other._events
-        )
+        return self._player_names == other._player_names and self._events == other._events
