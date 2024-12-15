@@ -1,6 +1,8 @@
 import abc
 from typing import NamedTuple
 
+from season_model.model_api import result
+
 
 class FinalePlayerDescriptor(NamedTuple):
     name: str
@@ -16,7 +18,6 @@ class FinalePlayers(dict[str, FinalePlayerDescriptor]):
         super().__init__(*args, **kwargs)
 
 
-
 class FinaleData(abc.ABC):
     @abc.abstractmethod
     def is_active(self) -> bool:
@@ -27,25 +28,21 @@ class FinaleData(abc.ABC):
         pass
 
 
-class InactiveFinaleDataError(Exception):
-    pass
 
-class InactiveFinaleData(FinaleData):
-    def is_active(self) -> bool:
-        return False
-
-    def players(self) -> FinalePlayers:
-        raise InactiveFinaleDataError(
-            "Calls to the 'players' method of an InactiveFinaleData instance are not allowed."
-        )
-
-
-class ActiveFinaleData(FinaleData):
+class ConcreteFinaleData(FinaleData):
     """TODO: implement this class."""
+
     pass
 
 
 class FinaleDataGenerator(abc.ABC):
     @abc.abstractmethod
-    def calculate(self) -> FinaleData:
+    def generate(self) -> FinaleData:
+        pass
+
+# Ignore mypy misc check to allow NamedTuple and interface base class together
+class ConcreteFinaleDataGenerator(FinaleDataGenerator, NamedTuple):  # type: ignore[misc]
+    season_results: result.SeasonModelResults
+
+    def generate(self) -> FinaleData:
         pass

@@ -85,6 +85,9 @@ class SeasonConfig(pydantic.BaseModel):
 
         return candidate_events[0]
 
+    def is_finale_enabled(self) -> bool:
+        return self.finale_handicaps_sheet.enabled
+
     @pydantic.field_validator("events")
     @classmethod
     def _check_events(cls, events: dict[int, "EventConfig"]) -> dict[int, "EventConfig"]:

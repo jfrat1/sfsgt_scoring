@@ -11,8 +11,8 @@ class GoogleSheetSeasonView(view.SeasonView):
     def __init__(self, config: GoogleSheetSeasonViewConfig) -> None:
         self._config = config
 
-    def read(self) -> read_data.SeasonViewReadData:
+    def read_season(self) -> read_data.SeasonViewReadData:
         pass
 
-    def write(self, data: write_data.SeasonViewWriteData) -> None:
+    def write_season(self, data: write_data.SeasonViewWriteData) -> None:
         pass
