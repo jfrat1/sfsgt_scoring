@@ -7,6 +7,7 @@ from season_model.model_api.result import event_result
 class SeasonModelPlayerOverallResult:
     def __init__(
         self,
+        name: str,
         season_points: float,
         num_birdies: int,
         num_eagles: int,
@@ -19,7 +20,9 @@ class SeasonModelPlayerOverallResult:
         num_event_top_fives: int,
         num_event_top_tens: int,
         season_handicap: float,
+        season_rank: rank.IRankValue = rank.NoRankValue(),
     ) -> None:
+        self._name = name
         self._season_points = season_points
         self._num_birdies = num_birdies
         self._num_eagles = num_eagles
@@ -32,7 +35,11 @@ class SeasonModelPlayerOverallResult:
         self._num_event_top_fives = num_event_top_fives
         self._num_event_top_tens = num_event_top_tens
         self._season_handicap = season_handicap
-        self._season_rank: rank.IRankValue = rank.NoRankValue()
+        self._season_rank = season_rank
+
+    @property
+    def name(self) -> str:
+        return self._name
 
     @property
     def season_points(self) -> float:
@@ -115,10 +122,51 @@ class SeasonModelPlayerOverallResult:
         return f"{self.__class__.__name__}({attributes_string})"
 
 
-class SeasonModelPlayerOverallResults(NamedTuple):
+class SeasonModelOverallResults(NamedTuple):
     players: list[SeasonModelPlayerOverallResult]
+
+    def player_names(self) -> list[str]:
+        return [player.name for player in self.players]
+
+    def get_player(self, player_name: str) -> SeasonModelPlayerOverallResult:
+        candidates = [player for player in self.players if player.name == player_name]
+
+        num_candidates = len(candidates)
+        if num_candidates == 0:
+            raise KeyError(f"Couldn't find and players with name {player_name}.")
+        if num_candidates > 1:
+            raise KeyError(f"Found more than 1 player with name {player_name}")
+
+        return candidates[0]
 
 
 class SeasonModelResults(NamedTuple):
-    events: event_result.SeasonModelEventResults
-    overall: SeasonModelPlayerOverallResults
+    events: list[event_result.SeasonModelEventResult]
+    overall: SeasonModelOverallResults
+
+    def player_names(self) -> list[str]:
+        return self.overall.player_names()
+
+    def player_overall_result(self, player_name) -> SeasonModelPlayerOverallResult:
+        return self.overall.get_player(player_name)
+
+    def player_event_points(self, player_name: str) -> dict[str, float]:
+        event_points: dict[str, float] = {}
+        for event in self.events:
+            event_points[event.name] = event.player_result(player_name).event_points
+
+        return event_points
+
+    def event_names(self) -> list[str]:
+        return [event.name for event in self.events]
+
+    def event_result(self, event_name: str) -> event_result.SeasonModelEventResult:
+        candidates = [event for event in self.events if event.name == event_name]
+
+        num_candidates = len(candidates)
+        if num_candidates == 0:
+            raise KeyError(f"Couldn't find and events with name {event_name}.")
+        if num_candidates > 1:
+            raise KeyError(f"Found more than 1 event with name {event_name}")
+
+        return candidates[0]

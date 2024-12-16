@@ -28,7 +28,6 @@ class FinaleData(abc.ABC):
         pass
 
 
-
 class ConcreteFinaleData(FinaleData):
     """TODO: implement this class."""
 
@@ -39,6 +38,7 @@ class FinaleDataGenerator(abc.ABC):
     @abc.abstractmethod
     def generate(self) -> FinaleData:
         pass
+
 
 # Ignore mypy misc check to allow NamedTuple and interface base class together
 class ConcreteFinaleDataGenerator(FinaleDataGenerator, NamedTuple):  # type: ignore[misc]

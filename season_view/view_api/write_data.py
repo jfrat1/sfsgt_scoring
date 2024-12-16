@@ -2,7 +2,7 @@ from typing import NamedTuple
 
 
 class SeasonViewWriteLeaderboardPlayer(NamedTuple):
-    player_name: str
+    name: str
     season_points: float
     season_rank: int
     events_played: int
@@ -25,11 +25,11 @@ class SeasonViewWriteLeaderboard(NamedTuple):
         return sorted(self.players, key=lambda player: player.season_rank)
 
     def player_names(self) -> list[str]:
-        return [player.player_name for player in self.players]
+        return [player.name for player in self.players]
 
 
 class SeasonViewWriteEventPlayer(NamedTuple):
-    player_name: str
+    name: str
     front_9_strokes: int
     back_9_strokes: int
     gross_strokes: int
@@ -44,25 +44,10 @@ class SeasonViewWriteEventPlayer(NamedTuple):
 
 
 class SeasonViewWriteEvent(NamedTuple):
+    name: str
     players: list[SeasonViewWriteEventPlayer]
-
-
-class SeasonViewWriteEvents(NamedTuple):
-    events: list[SeasonViewWriteEvent]
-
-
-class SeasonViewWriteFinaleHandicapPlayer(NamedTuple):
-    ghin_handicap: float
-    season_handicap: float
-    finale_handicap: float
-    finale_course_handicap: float
-
-
-class SeasonViewWriteFinaleHandicaps(NamedTuple):
-    players: list[SeasonViewWriteFinaleHandicapPlayer]
 
 
 class SeasonViewWriteData(NamedTuple):
     leaderboard: SeasonViewWriteLeaderboard
-    events: SeasonViewWriteEvents
-    finale_handicaps: SeasonViewWriteFinaleHandicaps
+    events: list[SeasonViewWriteEvent]

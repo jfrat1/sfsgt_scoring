@@ -229,14 +229,20 @@ class SeasonModelEventPlayerAggregateResult(NamedTuple):
 class SeasonModelEventPlayerResult:
     def __init__(
         self,
+        name: str,
         individual_result: SeasonModelEventPlayerIndividualResult,
         aggregate_result: SeasonModelEventPlayerAggregateResult,
     ) -> None:
+        self._name = name
         self._individual_result = individual_result
         self._aggregate_result = aggregate_result
 
     def is_complete_result(self) -> bool:
         return self._individual_result.is_complete_result()
+
+    @property
+    def name(self) -> str:
+        return self._name
 
     @property
     def course_handicap(self) -> int:
@@ -320,13 +326,22 @@ class SeasonModelEventPlayerResult:
         return f"{self.__class__.__name__}({attributes_string})"
 
 
-class SeasonModelEventPlayerResults(NamedTuple):
+class SeasonModelEventResult(NamedTuple):
     """Results for a single event in a season."""
 
+    name: str
     players: list[SeasonModelEventPlayerResult]
 
+    def player_names(self) -> list[str]:
+        return [player.name for player in self.players]
 
-class SeasonModelEventResults(NamedTuple):
-    """Results for all events in a season."""
+    def player_result(self, player_name: str) -> SeasonModelEventPlayerResult:
+        candidates = [player for player in self.players if player.name == player_name]
 
-    events: list[SeasonModelEventPlayerResults]
+        num_candidates = len(candidates)
+        if num_candidates == 0:
+            raise KeyError(f"Couldn't find and players with name {player_name}.")
+        if num_candidates > 1:
+            raise KeyError(f"Found more than 1 player with name {player_name}")
+
+        return candidates[0]

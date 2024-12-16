@@ -7,4 +7,10 @@ from season_view.view_api.read_data import (
     SeasonViewReadPlayers,
 )
 from season_view.view_api.view import SeasonView
-from season_view.view_api.write_data import SeasonViewWriteData
+from season_view.view_api.write_data import (
+    SeasonViewWriteData,
+    SeasonViewWriteEvent,
+    SeasonViewWriteEventPlayer,
+    SeasonViewWriteLeaderboard,
+    SeasonViewWriteLeaderboardPlayer,
+)
