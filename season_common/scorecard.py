@@ -14,8 +14,8 @@ class Scorecard(abc.ABC):
         pass
 
 
-class DisallowedMethodCallError(Exception):
-    """Exceptiont to be raised when a method call is disallowed."""
+class IncompleteScorecardCallError(Exception):
+    """Exception to be raised when a disallowed call is made to an IncompleteScorecard."""
 
 
 class IncompleteScorecard(Scorecard, class_utils.Singleton):
@@ -26,7 +26,7 @@ class IncompleteScorecard(Scorecard, class_utils.Singleton):
         return False
 
     def scores(self) -> dict[int, int]:
-        raise DisallowedMethodCallError("Scores cannot be retrieved from incomplete scorecards.")
+        raise IncompleteScorecardCallError("Scores cannot be retrieved from incomplete scorecards.")
 
 
 class CompleteScorecard(Scorecard):
