@@ -14,9 +14,7 @@ from sfsgt_scoring import (
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 
-@click.command()
-@click.option("--season", "season_name", required=True, help="Season to be executed.")
-def cli(season_name: str) -> None:
+def run_prod_mode_app(season_name: str) -> None:
     season_cfg = season_config.load_season_config(season_name)
     sheet = season_spreadsheet.SeasonSheet()
     course_provider = courses.build_default_concrete_course_provider()
@@ -27,6 +25,23 @@ def cli(season_name: str) -> None:
     )
     season_runner.run()
 
+def run_dev_mode_app(season_name: str) -> None:
+    print("Running in dev mode.")
+
+@click.command()
+@click.option("--season", "season_name", required=True, help="Season to be executed.")
+@click.option(
+    "--dev-mode",
+    "is_dev_mode",
+    is_flag=True,
+    default=False,
+    help="Use development mode. Behavior may vary, see source code for details.",
+)
+def cli(season_name: str, is_dev_mode: bool) -> None:
+    if is_dev_mode:
+        run_dev_mode_app(season_name=season_name)
+    else:
+        run_prod_mode_app(season_name=season_name)
 
 if __name__ == "__main__":
     cli()
