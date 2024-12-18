@@ -1,6 +1,5 @@
 import abc
 import pathlib
-from typing import NamedTuple
 
 from . import course
 

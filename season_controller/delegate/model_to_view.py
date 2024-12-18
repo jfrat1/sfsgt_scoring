@@ -11,17 +11,12 @@ class SeasonModelToViewDelegate(NamedTuple):
         event_names = self.model_results.event_names()
         return season_view.SeasonViewWriteData(
             leaderboard=self._leaderboard(),
-            events=[
-                self._event(event_name) for event_name in event_names
-            ]
+            events=[self._event(event_name) for event_name in event_names],
         )
 
     def _leaderboard(self) -> season_view.SeasonViewWriteLeaderboard:
         return season_view.SeasonViewWriteLeaderboard(
-            players=[
-                self._leaderboard_player(player_name)
-                for player_name in self._player_names()
-            ]
+            players=[self._leaderboard_player(player_name) for player_name in self._player_names()]
         )
 
     def _player_names(self) -> list[str]:
@@ -47,7 +42,6 @@ class SeasonModelToViewDelegate(NamedTuple):
             event_points=event_points,
         )
 
-
     def _event(self, event_name: str) -> season_view.SeasonViewWriteEvent:
         event_results = self.model_results.event_result(event_name)
         player_names = self._player_names()
@@ -56,9 +50,8 @@ class SeasonModelToViewDelegate(NamedTuple):
             players=[
                 self._event_player(event_results=event_results, player_name=player_name)
                 for player_name in player_names
-            ]
+            ],
         )
-
 
     def _event_player(
         self,
@@ -81,4 +74,3 @@ class SeasonModelToViewDelegate(NamedTuple):
             event_points=event_player_result.event_points,
             event_rank=event_player_result.event_rank.rank(),
         )
-

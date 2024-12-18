@@ -5,7 +5,9 @@ from click import testing as click_testing
 from app import run_sfsgt_scoring
 
 
-@mock.patch.object(run_sfsgt_scoring.courses, "build_default_concrete_course_provider", autospec=True)
+@mock.patch.object(
+    run_sfsgt_scoring.courses, "build_default_concrete_course_provider", autospec=True
+)
 @mock.patch.object(run_sfsgt_scoring.season_spreadsheet, "SeasonSheet")
 @mock.patch.object(run_sfsgt_scoring.runner, "SeasonRunner", autospec=True)
 @mock.patch.object(run_sfsgt_scoring.season_config, "load_season_config", autospec=True)
