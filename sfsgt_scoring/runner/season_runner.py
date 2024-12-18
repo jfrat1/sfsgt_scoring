@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-import course_database
+import courses
 import season_config
 from sfsgt_scoring import season
 from sfsgt_scoring.season import (
@@ -141,11 +141,11 @@ class SeasonRunner:
         self,
         config: season_config.SeasonConfig,
         sheet: season_spreadsheet.SeasonSheet,
-        course_db: course_database.CourseDatabase,
+        course_provider: courses.CourseProvider,
     ) -> None:
         self.config = config
         self.sheet = sheet
-        self.course_db = course_db
+        self.course_provider = course_provider
 
         self._configure_season_sheet()
 
@@ -239,7 +239,7 @@ class SeasonRunner:
         course_name = event_config.course_name
         tee_name = event_config.tee
 
-        course_info = self.course_db.get_course(course_name)
+        course_info = self.course_provider.get_course(course_name)
         tee_info = course_info.get_tee_info(tee_name)
 
         return season_event.CourseInput(

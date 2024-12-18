@@ -1,4 +1,4 @@
-import course_database
+import courses
 import season_config
 import season_finale
 import season_model
@@ -15,19 +15,19 @@ class SeasonController:
         model: season_model.SeasonModel,
         view: season_view.SeasonView,
         config: season_config.SeasonConfig,
-        course_db: course_database.CourseDatabase,
+        course_provider: courses.CourseProvider,
     ) -> None:
         self.model = model
         self.view = view
         self.config = config
-        self.course_db = course_db
+        self.course_db = course_provider
 
     def run_season(self) -> None:
         view_read_data = self.view.read_season()
 
         model_input = SeasonViewToModelDelegate(
             view_read_data=view_read_data,
-            course_db=self.course_db,
+            course_provider=self.course_db,
             config=self.config,
         ).generate_model_input()
 

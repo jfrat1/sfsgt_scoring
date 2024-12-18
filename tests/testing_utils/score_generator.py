@@ -1,7 +1,7 @@
 import enum
 from typing import NamedTuple
 
-import course_database
+import courses
 
 
 class ScoreGeneratorCourse(enum.Enum):
@@ -20,13 +20,12 @@ class HoleScoreGenerator(NamedTuple):
     strategy: ScoreGeneratorStrategy
 
     def generate(self) -> dict[int, int]:
-        course_db = course_database.load_default_database()
-        course_data = course_db.get_course(self.course.value)
+        course = courses.build_default_concrete_course_provider().get_course(self.course.value)
 
         match self.strategy:
             case ScoreGeneratorStrategy.EVEN_PAR:
-                return course_data.hole_pars
+                return course.hole_pars
             case ScoreGeneratorStrategy.BOGIE_GOLF:
-                return {hole_num: hole_par + 1 for hole_num, hole_par in course_data.hole_pars.items()}
+                return {hole_num: hole_par + 1 for hole_num, hole_par in course.hole_pars.items()}
             case _:
                 return {}

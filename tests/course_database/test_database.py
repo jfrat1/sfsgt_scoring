@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 
-from course_database import database
+from courses import provider
 
 BAYLANDS_COURSE_DATA_YAML = """
 {
@@ -87,9 +87,9 @@ def temp_course_data_dir(
         yield temp_path
 
 
-def test_database_from_folder() -> None:
+def test_build_concrete_course_provider_from_folder() -> None:
     with temp_course_data_dir() as courses_dir:
-        course_db = database.database_from_folder(courses_dir)
+        course_db = provider.build_concrete_course_provider_from_folder(courses_dir)
         course_names = {course.name for course in course_db.courses}
         expected_names = {"baylands", "presidio"}
         assert course_names == expected_names
@@ -97,7 +97,7 @@ def test_database_from_folder() -> None:
 
 def test_get_course_nominal() -> None:
     with temp_course_data_dir() as courses_dir:
-        course_db = database.database_from_folder(courses_dir)
+        course_db = provider.build_concrete_course_provider_from_folder(courses_dir)
         course = course_db.get_course("baylands")
 
         assert course.name == "baylands"
@@ -106,8 +106,8 @@ def test_get_course_nominal() -> None:
 
 def test_get_course_not_found_raises_error() -> None:
     with temp_course_data_dir() as courses_dir:
-        course_db = database.database_from_folder(courses_dir)
-        with pytest.raises(database.GetCourseError):
+        course_db = provider.build_concrete_course_provider_from_folder(courses_dir)
+        with pytest.raises(provider.GetCourseError):
             course_db.get_course("not a known course")
 
 
@@ -115,6 +115,6 @@ def test_get_course_multiple_found_raises_error() -> None:
     course_files = TEST_COURSE_FILES
     course_files["baylands_duplicate"] = BAYLANDS_COURSE_DATA_YAML
     with temp_course_data_dir(course_files=course_files) as courses_dir:
-        course_db = database.database_from_folder(courses_dir)
-        with pytest.raises(database.GetCourseError):
+        course_db = provider.build_concrete_course_provider_from_folder(courses_dir)
+        with pytest.raises(provider.GetCourseError):
             course_db.get_course("baylands")

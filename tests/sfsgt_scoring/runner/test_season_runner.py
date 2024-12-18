@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-import course_database
+import courses
 import season_config
 from sfsgt_scoring import season
 
@@ -343,7 +343,7 @@ def stubbed_dependencies() -> StubbedDependencies:
     stub_sheet = mock.MagicMock(spec=season_spreadsheet.SeasonSheet)
     stub_sheet.read.return_value = TEST_SEASON_SHEET_READ_DATA
 
-    stub_course_db = mock.MagicMock(spec=course_database.CourseDatabase)
+    stub_course_db = mock.MagicMock(spec=courses.CourseProvider)
     stub_course_db.get_course.side_effect = course_db_get_course
 
     return StubbedDependencies(
@@ -356,12 +356,12 @@ def test_construct(stubbed_dependencies: StubbedDependencies) -> None:
     runner = season_runner.SeasonRunner(
         config=TEST_SEASON_CONFIG,
         sheet=stubbed_dependencies.season_sheet,
-        course_db=stubbed_dependencies.course_database,
+        course_provider=stubbed_dependencies.course_database,
     )
 
     assert runner.config == TEST_SEASON_CONFIG
     assert runner.sheet is stubbed_dependencies.season_sheet
-    assert runner.course_db is stubbed_dependencies.course_database
+    assert runner.course_provider is stubbed_dependencies.course_database
 
     stubbed_dependencies.season_sheet.configure.assert_called_once_with(
         season_spreadsheet.SeasonSheetConfig(
@@ -390,7 +390,7 @@ def test_read_spreadsheet_data(stubbed_dependencies: StubbedDependencies) -> Non
     runner = season_runner.SeasonRunner(
         config=TEST_SEASON_CONFIG,
         sheet=stubbed_dependencies.season_sheet,
-        course_db=stubbed_dependencies.course_database,
+        course_provider=stubbed_dependencies.course_database,
     )
     assert runner._read_spreadsheet_data() == TEST_SEASON_SHEET_READ_DATA
 
@@ -399,7 +399,7 @@ def test_create_season(stubbed_dependencies: StubbedDependencies) -> None:
     runner = season_runner.SeasonRunner(
         config=TEST_SEASON_CONFIG,
         sheet=stubbed_dependencies.season_sheet,
-        course_db=stubbed_dependencies.course_database,
+        course_provider=stubbed_dependencies.course_database,
     )
 
     season_ = runner._create_season(TEST_SEASON_SHEET_READ_DATA)
@@ -410,7 +410,7 @@ def test_create_season_input(stubbed_dependencies: StubbedDependencies) -> None:
     runner = season_runner.SeasonRunner(
         config=TEST_SEASON_CONFIG,
         sheet=stubbed_dependencies.season_sheet,
-        course_db=stubbed_dependencies.course_database,
+        course_provider=stubbed_dependencies.course_database,
     )
 
     season_input = runner._season_input(spreadsheet_data=TEST_SEASON_SHEET_READ_DATA)

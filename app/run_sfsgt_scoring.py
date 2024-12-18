@@ -6,7 +6,7 @@ in a production context.
 
 import click
 
-import course_database
+import courses
 import season_config
 from sfsgt_scoring import (
     runner,
@@ -19,11 +19,11 @@ from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 def cli(season_name: str) -> None:
     season_cfg = season_config.load_season_config(season_name)
     sheet = season_spreadsheet.SeasonSheet()
-    course_db = course_database.load_default_database()
+    course_provider = courses.build_default_concrete_course_provider()
     season_runner = runner.SeasonRunner(
         config=season_cfg,
         sheet=sheet,
-        course_db=course_db,
+        course_provider=course_provider,
     )
     season_runner.run()
 

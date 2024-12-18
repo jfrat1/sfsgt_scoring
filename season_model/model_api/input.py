@@ -1,7 +1,7 @@
 import enum
 from typing import Any, Iterator, NamedTuple
 
-import course_database
+import courses
 import season_config
 from season_common import player, scorecard
 
@@ -35,7 +35,7 @@ class SeasonModelEventPlayerInput(NamedTuple):
 
 class SeasonModelEventInput(NamedTuple):
     event_name: str
-    course: course_database.Course
+    course: courses.Course
     tees: str
     event_type: SeasonModelEventType
     players: list[SeasonModelEventPlayerInput]

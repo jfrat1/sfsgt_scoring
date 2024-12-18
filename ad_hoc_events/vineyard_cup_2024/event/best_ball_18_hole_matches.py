@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-import course_database
+import courses
 
 from .. import config, handicap
 
@@ -68,8 +68,8 @@ class BestBall18HoleMatches(NamedTuple):
     tee_name: str
 
     def display_matchups(self) -> None:
-        course_db = course_database.load_default_database()
-        course = course_db.get_course(course_name=self.course_name)
+        course_provider = courses.build_default_concrete_course_provider()
+        course = course_provider.get_course(course_name=self.course_name)
         course_tee = course.get_tee_info(tee_name=self.tee_name)
 
         handicap_calc = handicap.HandicapCalculator(

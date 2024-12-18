@@ -5,7 +5,7 @@ from typing import Generator
 
 import pytest
 
-from course_database import course
+from courses import course
 
 DEFAULT_COURSE_DATA_YAML = """
 {

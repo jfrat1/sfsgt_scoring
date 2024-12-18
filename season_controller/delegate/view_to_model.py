@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-import course_database
+import courses
 import season_config
 import season_model
 import season_view
@@ -9,7 +9,7 @@ from season_common import player, scorecard
 
 class SeasonViewToModelDelegate(NamedTuple):
     view_read_data: season_view.SeasonViewReadData
-    course_db: course_database.CourseDatabase
+    course_provider: courses.CourseProvider
     config: season_config.SeasonConfig
 
     def generate_model_input(self) -> season_model.SeasonModelInput:
@@ -41,9 +41,9 @@ class SeasonViewToModelDelegate(NamedTuple):
 
         return _events
 
-    def _event_course(self, event_name: str) -> course_database.Course:
+    def _event_course(self, event_name: str) -> courses.Course:
         course_name = self.config.get_event_config(event_name).course_name
-        return self.course_db.get_course(course_name)
+        return self.course_provider.get_course(course_name)
 
     def _event_tees(self, event_name: str) -> str:
         return self.config.get_event_config(event_name).tee

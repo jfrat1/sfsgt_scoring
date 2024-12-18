@@ -1,6 +1,6 @@
 from unittest import mock
 
-import course_database
+import courses
 import season_config
 import season_model
 import season_view
@@ -27,13 +27,13 @@ def build_test_player_scorecard() -> scorecard.Scorecard:
 
 def build_stub_course() -> mock.MagicMock:
     """Simple stub as this shouldn't be called from any tests in this file."""
-    stub_course = mock.MagicMock(spec=course_database.Course)
+    stub_course = mock.MagicMock(spec=courses.Course)
     stub_course.name = "Baylands"
     return stub_course
 
 
-def build_test_course_database(stub_course: mock.MagicMock) -> course_database.CourseDatabase:
-    return course_database.CourseDatabase(
+def build_test_course_provider(stub_course: mock.MagicMock) -> courses.CourseProvider:
+    return courses.ConcreteCourseProvider(
         courses=[
             stub_course,
         ]
@@ -114,12 +114,12 @@ def build_expected_model_input_data(stub_course: mock.MagicMock) -> season_model
 def test_view_to_model_delegate() -> None:
     view_read_data = build_stimulus_season_view_data()
     stub_course = build_stub_course()
-    course_db = build_test_course_database(stub_course)
+    course_provider = build_test_course_provider(stub_course)
     config = build_test_season_config()
 
     delegate = view_to_model.SeasonViewToModelDelegate(
         view_read_data=view_read_data,
-        course_db=course_db,
+        course_provider=course_provider,
         config=config,
     )
 
