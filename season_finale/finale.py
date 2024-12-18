@@ -40,9 +40,9 @@ class FinaleDataGenerator(abc.ABC):
         pass
 
 
-# Ignore mypy misc check to allow NamedTuple and interface base class together
-class ConcreteFinaleDataGenerator(FinaleDataGenerator, NamedTuple):  # type: ignore[misc]
-    season_results: result.SeasonModelResults
+class ConcreteFinaleDataGenerator(FinaleDataGenerator):
+    def __init__(self, season_results: result.SeasonModelResults) -> None:
+        self.season_results = season_results
 
     def generate(self) -> FinaleData:
         pass

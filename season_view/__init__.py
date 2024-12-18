@@ -1,3 +1,7 @@
+from season_view.google_sheet_view import (
+    GoogleSheetSeasonView,
+    GoogleSheetSeasonViewConfig,
+)
 from season_view.view_api.read_data import (
     SeasonViewEventHandicapIndices,
     SeasonViewReadData,

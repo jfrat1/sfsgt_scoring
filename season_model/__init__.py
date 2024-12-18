@@ -1,3 +1,4 @@
+from season_model.concrete_model.season import ConcreteSeasonModel
 from season_model.model_api.input import (
     SeasonModelEventInput,
     SeasonModelEventInputs,
