@@ -1,0 +1,53 @@
+name: SFSGT 2024
+sheet_id: 1CwgQFHNAq37iMXl2COC62nKgLpXfcvky9UwWK9ZSFSU
+players_sheet_name: Handicaps
+leaderboard_sheet_name: Leaderboard
+finale_handicaps_sheet: {
+  enabled: false,
+  sheet_name: Finale Handicaps
+}
+events: {
+  1: {
+    event_name: Poppy Ridge,
+    sheet_name: Poppy Ridge,
+    course_name: poppy ridge zinfandel/chardonnay construction,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  2: {
+    event_name: Presidio,
+    sheet_name: Presidio,
+    course_name: presidio,
+    tee: blue,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  3: {
+    event_name: TPC Harding,
+    sheet_name: TPC Harding,
+    course_name: harding park,
+    tee: blue,
+    type: major,
+    scorecard_sheet_start_cell: B8
+  },
+  4: {
+    event_name: Baylands,
+    sheet_name: Baylands,
+    course_name: baylands,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+  5: {
+    event_name: Callippe,
+    sheet_name: Callippe,
+    course_name: callippe preserve,
+    tee: white,
+    type: standard,
+    scorecard_sheet_start_cell: B8
+  },
+}
+
+
+

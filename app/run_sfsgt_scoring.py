@@ -51,7 +51,8 @@ def run_dev_mode_app(season_name: str) -> None:
     )
     view_config = season_view.GoogleSheetSeasonViewConfig()
     view = season_view.GoogleSheetSeasonView(
-        config=view_config, sheet_controller=google_sheet_controller
+        config=view_config,
+        sheet_controller=google_sheet_controller,
     )
 
     course_provider = courses.build_default_concrete_course_provider()
