@@ -1,7 +1,7 @@
 from typing import Any, NamedTuple
 
 from season_common import rank
-from season_model.model_api.result import event_result
+from season_model.api.result import event_result
 
 
 class SeasonModelPlayerOverallResult:

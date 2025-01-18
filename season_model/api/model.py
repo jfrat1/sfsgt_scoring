@@ -1,6 +1,6 @@
 import abc
 
-from season_model.model_api import input, result
+from season_model.api import input, result
 
 
 class SeasonModel(abc.ABC):

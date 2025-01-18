@@ -1,7 +1,7 @@
 import abc
 from typing import NamedTuple
 
-from season_model.model_api import result
+from season_model.api import result
 
 
 class FinalePlayerDescriptor(NamedTuple):

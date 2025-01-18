@@ -1,6 +1,6 @@
 import pytest
 
-from season_model.model_api.result import notable_holes
+from season_model.api.result import notable_holes
 
 
 def test_notable_holes_set_hole() -> None:

@@ -2,7 +2,7 @@ import abc
 from typing import Any, NamedTuple
 
 from season_common import rank
-from season_model.model_api.result import notable_holes
+from season_model.api.result import notable_holes
 from utils import class_utils
 
 

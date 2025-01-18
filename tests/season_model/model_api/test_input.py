@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 
-from season_model.model_api import input
+from season_model.api import input
 
 
 def test_season_model_event_inputs_iter() -> None:
