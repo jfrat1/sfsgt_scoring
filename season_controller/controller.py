@@ -25,22 +25,22 @@ class SeasonController:
     def run_season(self) -> None:
         view_read_data = self.view.read_season()
 
-        model_input = SeasonViewToModelDelegate(
-            view_read_data=view_read_data,
-            course_provider=self.course_db,
-            config=self.config,
-        ).generate_model_input()
+        # model_input = SeasonViewToModelDelegate(
+        #     view_read_data=view_read_data,
+        #     course_provider=self.course_db,
+        #     config=self.config,
+        # ).generate_model_input()
 
-        model_results = self.model.calculate_results(model_input)
+        # model_results = self.model.calculate_results(model_input)
 
-        if self.config.is_finale_enabled():
-            finale_data = season_finale.ConcreteFinaleDataGenerator(
-                season_results=model_results
-            ).generate()
-            # TODO: DO something with the finale data. Maybe modify the write data
-            # to add it. Maybe have a separate method in the SeasonView to write
-            # the finale sheet.
+        # if self.config.is_finale_enabled():
+        #     finale_data = season_finale.ConcreteFinaleDataGenerator(
+        #         season_results=model_results
+        #     ).generate()
+        #     # TODO: DO something with the finale data. Maybe modify the write data
+        #     # to add it. Maybe have a separate method in the SeasonView to write
+        #     # the finale sheet.
 
-        view_write_data = SeasonModelToViewDelegate(model_results).generate_view_write_data()
+        # view_write_data = SeasonModelToViewDelegate(model_results).generate_view_write_data()
 
-        self.view.write_season(view_write_data)
+        # self.view.write_season(view_write_data)

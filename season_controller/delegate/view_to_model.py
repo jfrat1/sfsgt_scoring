@@ -19,17 +19,18 @@ class SeasonViewToModelDelegate(NamedTuple):
         )
 
     def _player_names(self) -> list[str]:
-        return [player.name() for player in self.view_read_data.players.values()]
+        return self.view_read_data.players.player_names
 
     def _model_event_inputs(self) -> season_model.SeasonModelEventInputs:
         return season_model.SeasonModelEventInputs(events=self._events())
 
-    def _event_names(self) -> tuple[str, ...]:
-        return self.view_read_data.events.event_names()
+    @property
+    def _event_names(self) -> list[str]:
+        return self.view_read_data.events.event_names
 
     def _events(self) -> list[season_model.SeasonModelEventInput]:
         _events: list[season_model.SeasonModelEventInput] = []
-        for event_name in self._event_names():
+        for event_name in self._event_names:
             _event = season_model.SeasonModelEventInput(
                 event_name=event_name,
                 course=self._event_course(event_name),

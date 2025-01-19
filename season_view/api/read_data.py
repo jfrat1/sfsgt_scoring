@@ -26,18 +26,32 @@ class SeasonViewReadPlayer(NamedTuple):
     def name(self) -> str:
         return self.player.name
 
-
-# TODO: Consider making this a list instead of a dict. The player names are duplicated
-# in the keys and in the SeasonViewReadPlayer instances
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
     """Collection of SeasonViewReadPlayer for each player in a season."""
 
-    def player_names(self) -> tuple[str, ...]:
-        return tuple(_player.name() for _player in self.values())
+    def __init__(self, players: list[SeasonViewReadPlayer]) -> None:
+        """Constructs a SeasonVieReadPlayersInstance from a list of SeasonViewReadPlayer."""
+        player_names = [player.name for player in players]
+        dedup_player_names = set(player_names)
 
-    def __getitem__(self, player: str) -> SeasonViewReadPlayer:
-        if player in self.keys():
-            return super().__getitem__(player)
+        if len(player_names) != len(dedup_player_names):
+            duplicates = [name for name in dedup_player_names if player_names.count(name) > 1]
+            raise ValueError(
+                f"Duplicate player names are not allowed. Found these duplicates: {duplicates}"
+                )
+
+        players_dict = {
+            player.name(): player for player in players
+        }
+        super().__init__(players_dict)
+
+    @property
+    def player_names(self) -> list[str]:
+        return list(self.keys())
+
+    def __getitem__(self, player_name: str) -> SeasonViewReadPlayer:
+        if player_name in self.keys():
+            return super().__getitem__(player_name)
         else:
             raise SeasonViewReadDataResourceNotFoundError(
                 f"Can't locate player named '{player}' in Season View players."
@@ -49,8 +63,9 @@ class SeasonViewReadEvent:
         self.event_name = event_name
         self._player_scorecards = player_scorecards
 
-    def player_names(self) -> tuple[str, ...]:
-        return tuple(self._player_scorecards.keys())
+    @property
+    def player_names(self) -> list[str]:
+        return list(self._player_scorecards.keys())
 
     def player_scorecard(self, player: str) -> scorecard.Scorecard:
         if player in self._player_scorecards.keys():
@@ -63,8 +78,9 @@ class SeasonViewReadEvent:
 
 
 class SeasonViewReadEvents(dict[str, SeasonViewReadEvent]):
-    def event_names(self) -> tuple[str, ...]:
-        return tuple(self.keys())
+    @property
+    def event_names(self) -> list[str]:
+        return list(self.keys())
 
     def __getitem__(self, event: str) -> SeasonViewReadEvent:
         if event in self.keys():
@@ -79,3 +95,11 @@ class SeasonViewReadEvents(dict[str, SeasonViewReadEvent]):
 class SeasonViewReadData(NamedTuple):
     players: SeasonViewReadPlayers
     events: SeasonViewReadEvents
+
+    @property
+    def player_names(self) -> list[str]:
+        return self.players.player_names
+
+    @property
+    def event_names(self) -> list[str]:
+        return self.events.event_names

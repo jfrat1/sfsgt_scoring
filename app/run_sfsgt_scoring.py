@@ -39,6 +39,28 @@ def run_prod_mode_app(season_name: str) -> None:
     season_runner.run()
 
 
+class GoogleSheetViewConfigGenerator:
+    def __init__(self, season_cfg: season_config.SeasonConfig) -> None:
+        self._season_cfg = season_cfg
+
+    def generate(self) -> season_view.GoogleSheetSeasonViewConfig:
+        event_configs = [
+            self._generate_event_config(event_name) for event_name in self._season_cfg.event_names()
+        ]
+        return season_view.GoogleSheetSeasonViewConfig(
+            players_worksheet_name=self._season_cfg.players_sheet_name,
+            leaderboard_worksheet_name=self._season_cfg.leaderboard_sheet_name,
+            event_worksheet_configs=event_configs,
+        )
+
+    def _generate_event_config(self, event_name: str) -> season_view.GoogleSheetSeasonViewEventConfig:
+        season_event_config = self._season_cfg.get_event_config(event_name)
+        return season_view.GoogleSheetSeasonViewEventConfig(
+            event_name=season_event_config.event_name,
+            worksheet_name=season_event_config.sheet_name,
+            scorecard_start_cell=season_event_config.scorecard_sheet_start_cell,
+        )
+
 def run_dev_mode_app(season_name: str) -> None:
     season_cfg = season_config.load_season_config(season_name)
 
@@ -49,7 +71,8 @@ def run_dev_mode_app(season_name: str) -> None:
         gspread_client=gspread_client,
         sheet_id=season_cfg.sheet_id,
     )
-    view_config = season_view.GoogleSheetSeasonViewConfig()
+
+    view_config = GoogleSheetViewConfigGenerator(season_cfg=season_cfg).generate()
     view = season_view.GoogleSheetSeasonView(
         config=view_config,
         sheet_controller=google_sheet_controller,
@@ -63,7 +86,10 @@ def run_dev_mode_app(season_name: str) -> None:
         config=season_cfg,
         course_provider=course_provider,
     )
+
     print(f"Running season `{season_name}` in dev mode.")
+
+    controller.run_season()
 
 
 @click.command()
