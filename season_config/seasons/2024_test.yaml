@@ -11,7 +11,9 @@ events: {
     event_name: Poppy Ridge,
     sheet_name: Poppy Ridge,
     course_name: poppy ridge zinfandel/chardonnay construction,
-    tee: white,
+    tees: {
+      mens_tee: white,
+    },
     type: standard,
     scorecard_sheet_start_cell: B8
   },
@@ -19,7 +21,9 @@ events: {
     event_name: Presidio,
     sheet_name: Presidio,
     course_name: presidio,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+    },
     type: standard,
     scorecard_sheet_start_cell: B8
   },
@@ -27,7 +31,9 @@ events: {
     event_name: Harding Park,
     sheet_name: TPC Harding,
     course_name: harding park,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+    },
     type: major,
     scorecard_sheet_start_cell: B8
   },

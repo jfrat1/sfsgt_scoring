@@ -227,7 +227,9 @@ class SeasonRunner:
         event_config: season_config.EventConfig,
     ) -> season_event.CourseInput:
         course_name = event_config.course_name
-        tee_name = event_config.tee
+        # TODO: This rendition of the app assumes that there's only 1 tee.
+        # We default to the mens tee for now, but a refactor is underway.
+        tee_name = event_config.tees.mens_tee
 
         course_info = self.course_provider.get_course(course_name)
         tee_info = course_info.get_tee_info(tee_name)

@@ -32,7 +32,9 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
             event_name="Standard Event",
             sheet_name="Standard Event Scorecard",
             course_name="standard_event_course",
-            tee="white",
+            tees=season_config.config.EventTeeConfig(
+                mens_tee="white",
+            ),
             type=season_config.config.EventType.STANDARD,
             scorecard_sheet_start_cell="A1",
         ),
@@ -40,7 +42,9 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
             event_name="Major Event",
             sheet_name="Major Event Scorecard",
             course_name="major_event_course",
-            tee="blue",
+            tees=season_config.config.EventTeeConfig(
+                mens_tee="blue",
+            ),
             type=season_config.config.EventType.MAJOR,
             scorecard_sheet_start_cell="B5",
         ),

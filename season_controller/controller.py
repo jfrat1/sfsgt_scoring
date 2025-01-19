@@ -2,6 +2,7 @@ import courses
 import season_config
 import season_model
 import season_view
+from season_controller import delegate
 
 
 class SeasonController:
@@ -20,11 +21,13 @@ class SeasonController:
     def run_season(self) -> None:
         view_read_data = self.view.read_season()
 
-        # model_input = SeasonViewToModelDelegate(
-        #     view_read_data=view_read_data,
-        #     course_provider=self.course_db,
-        #     config=self.config,
-        # ).generate_model_input()
+        model_input = delegate.SeasonViewToModelDelegate(
+            view_read_data=view_read_data,
+            course_provider=self.course_db,
+            config=self.config,
+        ).generate_model_input()
+
+        pass
 
         # model_results = self.model.calculate_results(model_input)
 

@@ -47,7 +47,8 @@ class SeasonViewToModelDelegate(NamedTuple):
         return self.course_provider.get_course(course_name)
 
     def _event_tees(self, event_name: str) -> str:
-        return self.config.get_event_config(event_name).tee
+        # TODO: Set up the event input to be able to support mens and womens tees
+        return self.config.get_event_config(event_name).tees.mens_tee
 
     def _event_type(self, event_name: str) -> season_model.SeasonModelEventType:
         config_event_type = self.config.get_event_config(event_name).type

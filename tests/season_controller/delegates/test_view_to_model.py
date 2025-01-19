@@ -55,7 +55,10 @@ def build_test_season_config() -> season_config.SeasonConfig:
                 event_name="Baylands",
                 sheet_name="",
                 course_name="Baylands",
-                tee="white",
+                tees=season_config.EventTeeConfig(
+                    mens_tee="white",
+                    womens_tee="red",
+                ),
                 type=season_config.EventType.STANDARD,
                 scorecard_sheet_start_cell="",
             )

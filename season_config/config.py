@@ -1,5 +1,6 @@
 import enum
 import pathlib
+from typing import Optional
 
 import pydantic
 import pydantic_yaml
@@ -125,17 +126,22 @@ class SeasonConfig(pydantic.BaseModel):
             raise ValueError("Event names in the events dictionary must be unique.")
 
 
+class EventTeeConfig(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
+
+    mens_tee: str
+    womens_tee: Optional[str] = None
+
+class EventType(enum.Enum):
+    STANDARD = "standard"
+    MAJOR = "major"
+
 class EventConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
 
     event_name: str
     sheet_name: str
     course_name: str
-    tee: str
-    type: "EventType"
+    tees: EventTeeConfig
+    type: EventType
     scorecard_sheet_start_cell: str
-
-
-class EventType(enum.Enum):
-    STANDARD = "standard"
-    MAJOR = "major"

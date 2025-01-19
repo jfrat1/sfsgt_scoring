@@ -21,7 +21,10 @@ events: {
     event_name: Poppy Ridge,
     sheet_name: Poppy Ridge,
     course_name: poppy ridge chardonnay/zinfandel,
-    tee: white,
+    tees: {
+      mens_tee: white,
+      womens_tee: red,
+    },
     type: standard,
     scorecard_sheet_start_cell: B15
   },
@@ -29,7 +32,10 @@ events: {
     event_name: Presidio,
     sheet_name: Presidio,
     course_name: presidio,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+      womens_tee: red,
+    },
     type: standard,
     scorecard_sheet_start_cell: B8
   },
@@ -37,7 +43,10 @@ events: {
     event_name: Harding Park,
     sheet_name: TPC Harding,
     course_name: harding park,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+      womens_tee: green,
+    },
     type: major,
     scorecard_sheet_start_cell: B8,
   },
@@ -80,7 +89,9 @@ events: {
     event_name: Presidio,
     sheet_name: Presidio Scorecard,
     course_name: presidio,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+    },
     type: standard,
     scorecard_sheet_start_cell: B8,
     not_a_key: Foo Bar,
@@ -89,7 +100,9 @@ events: {
     event_name: Harding Park,
     sheet_name: Harding Park Scorecard,
     course_name: harding park,
-    tee: blue,
+    tees: {
+      mens_tee: blue,
+    },
     type: major,
     scorecard_sheet_start_cell: B8,
     not_a_key: Foo Bar,
@@ -108,7 +121,9 @@ EVENT_CONFIG_FOO = config.EventConfig(
     event_name="foo",
     sheet_name="foo sheet",
     course_name="foo course",
-    tee="white",
+    tees=config.EventTeeConfig(
+        mens_tee="white",
+    ),
     type=config.EventType.STANDARD,
     scorecard_sheet_start_cell="A1",
 )
@@ -117,7 +132,9 @@ EVENT_CONFIG_BAR = config.EventConfig(
     event_name="bar",
     sheet_name="bar sheet",
     course_name="bar course",
-    tee="white",
+    tees=config.EventTeeConfig(
+        mens_tee="white",
+    ),
     type=config.EventType.STANDARD,
     scorecard_sheet_start_cell="A1",
 )
@@ -174,7 +191,10 @@ def test_get_event_config() -> None:
             event_name="Presidio",
             sheet_name="Presidio",
             course_name="presidio",
-            tee="blue",
+            tees=config.EventTeeConfig(
+                mens_tee="blue",
+                womens_tee="red",
+            ),
             type=config.EventType.STANDARD,
             scorecard_sheet_start_cell="B8",
         )
