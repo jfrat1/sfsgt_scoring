@@ -132,9 +132,11 @@ class EventTeeConfig(pydantic.BaseModel):
     mens_tee: str
     womens_tee: Optional[str] = None
 
+
 class EventType(enum.Enum):
     STANDARD = "standard"
     MAJOR = "major"
+
 
 class EventConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
