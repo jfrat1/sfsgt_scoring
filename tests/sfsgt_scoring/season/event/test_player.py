@@ -129,9 +129,7 @@ def test_player_adjust_strokes_for_hole_max() -> None:
 def test_player_note_below_par_holes() -> None:
     player_ = player.EventPlayer(input=TEST_PLAYER_INPUT, course_=TEST_COURSE)
 
-    adjusted_strokes = inputs.Scorecard(
-        strokes_per_hole=TEST_PLAYER_HOLE_SCORES_WITH_MAX_STROKES_LIMIT
-    )
+    adjusted_strokes = inputs.Scorecard(strokes_per_hole=TEST_PLAYER_HOLE_SCORES_WITH_MAX_STROKES_LIMIT)
 
     player_._note_below_par_holes(adjusted_strokes)
     notable_holes = player_._notable_holes

@@ -21,9 +21,7 @@ from sfsgt_scoring import (
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 SERVICE_ACCOUNT_CREDENTIALS_FILE = (
-    pathlib.Path(__file__).parent.parent.parent.parent
-    / "google_cloud_creds"
-    / "sfsgt-credentials.json"
+    pathlib.Path(__file__).parent.parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
 )
 
 
@@ -44,9 +42,7 @@ class GoogleSheetViewConfigGenerator:
         self._season_cfg = season_cfg
 
     def generate(self) -> season_view.GoogleSheetSeasonViewConfig:
-        event_configs = [
-            self._generate_event_config(event_name) for event_name in self._season_cfg.event_names()
-        ]
+        event_configs = [self._generate_event_config(event_name) for event_name in self._season_cfg.event_names()]
         return season_view.GoogleSheetSeasonViewConfig(
             players_worksheet_name=self._season_cfg.players_sheet_name,
             leaderboard_worksheet_name=self._season_cfg.leaderboard_sheet_name,
@@ -60,6 +56,7 @@ class GoogleSheetViewConfigGenerator:
             worksheet_name=season_event_config.sheet_name,
             scorecard_start_cell=season_event_config.scorecard_sheet_start_cell,
         )
+
 
 def run_dev_mode_app(season_name: str) -> None:
     season_cfg = season_config.load_season_config(season_name)

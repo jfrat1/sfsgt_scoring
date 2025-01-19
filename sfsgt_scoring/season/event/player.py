@@ -41,9 +41,7 @@ class EventPlayer:
 
     def _adjust_scorecard_for_max_hole_strokes(self) -> inputs.Scorecard:
         if isinstance(self._input.scorecard, inputs.IncompleteScorecard):
-            raise EventPlayerProcessError(
-                "Processing cannot be performed with an incomplete player scorecard."
-            )
+            raise EventPlayerProcessError("Processing cannot be performed with an incomplete player scorecard.")
 
         adjusted_strokes: dict[int, int] = {}
         for hole in self._ALL_HOLES:
@@ -52,9 +50,7 @@ class EventPlayer:
             strokes = self._input.scorecard.hole_strokes(hole)
 
             if strokes > max_strokes:
-                self._notable_holes.set_hole(
-                    hole_num=hole, score_type=results.NotableHoleType.OVER_MAX
-                )
+                self._notable_holes.set_hole(hole_num=hole, score_type=results.NotableHoleType.OVER_MAX)
                 strokes = max_strokes
 
             adjusted_strokes[hole] = strokes
@@ -87,14 +83,8 @@ class EventPlayer:
 
             match strokes_below_par:
                 case 1:
-                    self._notable_holes.set_hole(
-                        hole_num=hole, score_type=results.NotableHoleType.BIRDIE
-                    )
+                    self._notable_holes.set_hole(hole_num=hole, score_type=results.NotableHoleType.BIRDIE)
                 case 2:
-                    self._notable_holes.set_hole(
-                        hole_num=hole, score_type=results.NotableHoleType.EAGLE
-                    )
+                    self._notable_holes.set_hole(hole_num=hole, score_type=results.NotableHoleType.EAGLE)
                 case 3:
-                    self._notable_holes.set_hole(
-                        hole_num=hole, score_type=results.NotableHoleType.ALBATROSS
-                    )
+                    self._notable_holes.set_hole(hole_num=hole, score_type=results.NotableHoleType.ALBATROSS)

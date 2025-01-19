@@ -3,7 +3,7 @@ from .controller import (
     GoogleSheetController,
 )
 from .worksheet import (
-    GoogleWorksheet,
     CellFormat,
     ColorRgb,
+    GoogleWorksheet,
 )

@@ -291,9 +291,7 @@ def test_cumulative_results_from_complete_individual_results() -> None:
     )
 
     expected_result = {
-        name: result
-        for name, result in TEST_PLAYER_CUMULATIVE_RESULTS.items()
-        if name in PLAYERS_WITH_COMPLETE_SCORES
+        name: result for name, result in TEST_PLAYER_CUMULATIVE_RESULTS.items() if name in PLAYERS_WITH_COMPLETE_SCORES
     }
 
     assert cum_result._cumulative_results_from_complete_individual_results() == expected_result
@@ -306,9 +304,7 @@ def test_highest_complete_results_rank() -> None:
     )
 
     complete_results = {
-        name: result
-        for name, result in TEST_PLAYER_CUMULATIVE_RESULTS.items()
-        if name in PLAYERS_WITH_COMPLETE_SCORES
+        name: result for name, result in TEST_PLAYER_CUMULATIVE_RESULTS.items() if name in PLAYERS_WITH_COMPLETE_SCORES
     }
 
     assert cum_result._highest_complete_results_rank(complete_results) == rank.RankValue(4)
@@ -338,9 +334,7 @@ def test_cumulative_results_from_incomplete_individual_results() -> None:
             event_points=0.0,
             gross_score_rank=rank.NoRankValue(),
             net_score_rank=rank.NoRankValue(),
-            event_rank=rank.RankValue(
-                6
-            ),  # This value is sensitive to the higheest ranke value below.
+            event_rank=rank.RankValue(6),  # This value is sensitive to the higheest ranke value below.
         )
     }
 
@@ -359,12 +353,8 @@ def test_event_rank_for_all_incomplete_results() -> None:
     )
 
     assert cum_result._event_rank_for_all_incomplete_results(rank.RankValue(4)) == rank.RankValue(5)
-    assert cum_result._event_rank_for_all_incomplete_results(rank.RankValue(12)) == rank.RankValue(
-        13
-    )
-    assert cum_result._event_rank_for_all_incomplete_results(rank.RankValue(33)) == rank.RankValue(
-        34
-    )
+    assert cum_result._event_rank_for_all_incomplete_results(rank.RankValue(12)) == rank.RankValue(13)
+    assert cum_result._event_rank_for_all_incomplete_results(rank.RankValue(33)) == rank.RankValue(34)
 
 
 def test_event_rank_for_all_incomplete_results_no_rank_value_returns_1() -> None:
@@ -373,6 +363,4 @@ def test_event_rank_for_all_incomplete_results_no_rank_value_returns_1() -> None
         event_type=inputs.EventType.STANDARD,
     )
 
-    assert cum_result._event_rank_for_all_incomplete_results(rank.NoRankValue()) == rank.RankValue(
-        1
-    )
+    assert cum_result._event_rank_for_all_incomplete_results(rank.NoRankValue()) == rank.RankValue(1)

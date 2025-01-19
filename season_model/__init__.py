@@ -1,4 +1,3 @@
-from season_model.concrete_model.season import ConcreteSeasonModel
 from season_model.api.input import (
     SeasonModelEventInput,
     SeasonModelEventInputs,
@@ -25,3 +24,4 @@ from season_model.api.result.season_result import (
     SeasonModelPlayerOverallResult,
     SeasonModelResults,
 )
+from season_model.concrete_model.season import ConcreteSeasonModel

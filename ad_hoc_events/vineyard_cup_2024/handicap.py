@@ -15,14 +15,10 @@ class HandicapCalculator(NamedTuple):
         return round(course_handicap_unrounded)
 
     def _course_handicap_unrounded(self, player_handicap_index: float) -> float:
-        return player_handicap_index * (self.course_slope / 113) + (
-            self.course_rating - self.course_par
-        )
+        return player_handicap_index * (self.course_slope / 113) + (self.course_rating - self.course_par)
 
     def playing_handicap(self, player_handicap_index: float, handicap_allowance: float) -> int:
-        playing_handicap_unrounded = (
-            self._course_handicap_unrounded(player_handicap_index) * handicap_allowance
-        )
+        playing_handicap_unrounded = self._course_handicap_unrounded(player_handicap_index) * handicap_allowance
         return round(playing_handicap_unrounded)
 
     def two_person_scramble_playing_handicap(

@@ -33,8 +33,7 @@ class Course(pydantic.BaseModel):
         except KeyError as exc:
             available_tees = list(self.tees.keys())
             raise KeyError(
-                f"Tee named '{tee_name}' not found for course: {self.name}. Available "
-                f"tees: {available_tees}"
+                f"Tee named '{tee_name}' not found for course: {self.name}. Available " f"tees: {available_tees}"
             ) from exc
 
     @pydantic.field_validator("hole_pars")
@@ -47,9 +46,7 @@ class Course(pydantic.BaseModel):
 
         for hole, par in hole_pars.items():
             if par not in (3, 4, 5):
-                raise ValueError(
-                    f"Par values must be one of 3, 4, or 5. Found {par} for hole {hole}"
-                )
+                raise ValueError(f"Par values must be one of 3, 4, or 5. Found {par} for hole {hole}")
 
         return hole_pars
 

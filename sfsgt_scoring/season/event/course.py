@@ -13,9 +13,7 @@ class Course:
         self._strokes_for_par = input.hole_pars.total_par()
 
     def player_course_handicap(self, player_handicap_index: float) -> int:
-        course_handicap_raw = player_handicap_index * (self._slope / 113) + (
-            self._rating - self._strokes_for_par
-        )
+        course_handicap_raw = player_handicap_index * (self._slope / 113) + (self._rating - self._strokes_for_par)
         course_handicap = round(course_handicap_raw, 0)
 
         return int(course_handicap)
@@ -26,8 +24,6 @@ class Course:
 
     def hole_par(self, hole_num: int) -> int:
         if hole_num not in range(1, 19):
-            raise CourseHoleRequestError(
-                f"Hole number must be in the range [1, 18]. Got: {hole_num}"
-            )
+            raise CourseHoleRequestError(f"Hole number must be in the range [1, 18]. Got: {hole_num}")
 
         return self._hole_pars[hole_num]

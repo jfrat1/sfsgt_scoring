@@ -66,9 +66,7 @@ class DisallowedApiCallError(Exception):
     """Exception raised when a call is made on an incomplete player event individual result."""
 
 
-class SeasonModelIncompleteEventPlayerInividualResult(
-    SeasonModelEventPlayerIndividualResult, class_utils.Singleton
-):
+class SeasonModelIncompleteEventPlayerInividualResult(SeasonModelEventPlayerIndividualResult, class_utils.Singleton):
     def _init__(self) -> None:
         pass
 
@@ -77,8 +75,7 @@ class SeasonModelIncompleteEventPlayerInividualResult(
 
     def _disallowed_api_call_error(self) -> None:
         raise DisallowedApiCallError(
-            "API calls cannot be made to an incomplete player event because it does not "
-            "contain any data."
+            "API calls cannot be made to an incomplete player event because it does not " "contain any data."
         )
 
     @property
@@ -211,9 +208,7 @@ class SeasonModelCompleteEventPlayerIndividualResult(SeasonModelEventPlayerIndiv
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -312,17 +307,12 @@ class SeasonModelEventPlayerResult:
         if not isinstance(other, self.__class__):
             return NotImplemented
 
-        return (
-            self._individual_result == other._individual_result
-            and self._aggregate_result == other._aggregate_result
-        )
+        return self._individual_result == other._individual_result and self._aggregate_result == other._aggregate_result
 
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 

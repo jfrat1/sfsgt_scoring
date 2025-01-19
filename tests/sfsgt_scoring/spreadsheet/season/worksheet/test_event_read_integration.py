@@ -44,15 +44,9 @@ def test_read_real_event_worksheet() -> None:
 
     expected_read_data = event.EventReadData(
         player_scores={
-            "Stanton Turner": create_player_hole_scores(
-                [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
-            ),
-            "John Fratello": create_player_hole_scores(
-                [5, 7, 6, 3, 5, 6, 3, 5, 6, 7, 6, 4, 3, 5, 3, 4, 5, 6]
-            ),
-            "Steve Harasym": create_player_hole_scores(
-                [4, 6, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 5, 4, 5, 8]
-            ),
+            "Stanton Turner": create_player_hole_scores([5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]),
+            "John Fratello": create_player_hole_scores([5, 7, 6, 3, 5, 6, 3, 5, 6, 7, 6, 4, 3, 5, 3, 4, 5, 6]),
+            "Steve Harasym": create_player_hole_scores([4, 6, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 5, 4, 5, 8]),
         }
     )
 
@@ -74,9 +68,7 @@ def test_read_real_event_worksheet_some_players_missing_scores() -> None:
 
     expected_read_data = event.EventReadData(
         player_scores={
-            "Stanton Turner": create_player_hole_scores(
-                [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
-            ),
+            "Stanton Turner": create_player_hole_scores([5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]),
             "John Fratello": event.IncompleteScore(),
             "Steve Harasym": event.IncompleteScore(),
         }

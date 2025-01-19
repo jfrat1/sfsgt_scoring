@@ -116,9 +116,7 @@ class SeasonModelPlayerOverallResult:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 

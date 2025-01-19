@@ -17,6 +17,7 @@ class PlayerGender(enum.Enum):
 
         raise ValueError(f"{value} is not a valid member of {cls.__name__}")
 
+
 class Player(NamedTuple):
     name: str
     gender: PlayerGender

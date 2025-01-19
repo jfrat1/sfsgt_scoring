@@ -18,15 +18,16 @@ class GoogleSheetSeasonViewConfig(NamedTuple):
 
     def worksheet_names(self) -> list[str]:
         event_worksheet_names = {event.worksheet_name for event in self.event_worksheet_configs}
-        return list({
-            self.players_worksheet_name,
-            self.leaderboard_worksheet_name,
-        }.union(event_worksheet_names))
+        return list(
+            {
+                self.players_worksheet_name,
+                self.leaderboard_worksheet_name,
+            }.union(event_worksheet_names)
+        )
 
     @property
     def event_names(self) -> list[str]:
         return [event.event_name for event in self.event_worksheet_configs]
-
 
     def event_config(self, event_name: str) -> GoogleSheetSeasonViewEventConfig:
         for event_cfg in self.event_worksheet_configs:
@@ -65,7 +66,6 @@ class GoogleSheetSeasonView(view.SeasonView):
                 f"Some required worksheets are not available. Missing worksheets: {missing_worksheets}"
             )
 
-
     def read_season(self) -> read_data.SeasonViewReadData:
         players_data = self.read_players_worksheet()
 
@@ -80,17 +80,16 @@ class GoogleSheetSeasonView(view.SeasonView):
     def _generate_event_worksheets(self, players: list[str]) -> dict[str, worksheets.EventWorksheet]:
         event_worksheets: dict[str, worksheets.EventWorksheet] = {}
         for event in self._config.event_names:
-           event_config = self._config.event_config(event_name=event)
-           event_worksheet_controller =  self._sheet_controller.worksheet(event_config.worksheet_name)
-           event_worksheets[event] = worksheets.EventWorksheet(
-               event_name=event,
-               worksheet_controller=event_worksheet_controller,
-               scorecard_start_cell=event_config.scorecard_start_cell,
-               players=players,
-           )
+            event_config = self._config.event_config(event_name=event)
+            event_worksheet_controller = self._sheet_controller.worksheet(event_config.worksheet_name)
+            event_worksheets[event] = worksheets.EventWorksheet(
+                event_name=event,
+                worksheet_controller=event_worksheet_controller,
+                scorecard_start_cell=event_config.scorecard_start_cell,
+                players=players,
+            )
 
         return event_worksheets
-
 
     def write_season(self, data: write_data.SeasonViewWriteData) -> None:
         if len(self._event_worksheets) == 0:

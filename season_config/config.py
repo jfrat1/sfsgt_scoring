@@ -33,9 +33,7 @@ def load_season_config(season: str) -> "SeasonConfig":
     season_config_file_name = season + ".yaml"
     season_config_file = SEASON_CONFIG_PATH / season_config_file_name
     if not season_config_file.is_file():
-        raise SeasonConfigFileNotFoundError(
-            f"Can't locate season config file at: {season_config_file}."
-        )
+        raise SeasonConfigFileNotFoundError(f"Can't locate season config file at: {season_config_file}.")
 
     return load_season_config_file(file_path=season_config_file)
 
@@ -72,16 +70,12 @@ class SeasonConfig(pydantic.BaseModel):
         return self.events
 
     def get_event_config(self, event_name: str) -> "EventConfig":
-        candidate_events = [
-            event for event in self.events.values() if event.event_name == event_name
-        ]
+        candidate_events = [event for event in self.events.values() if event.event_name == event_name]
         if len(candidate_events) == 0:
             raise SeasonConfigGetEventError(f"No events can be found with name {event_name}")
         if len(candidate_events) > 1:
             # Due to validation of unique event names below, this should not be possible to reach.
-            raise SeasonConfigGetEventError(
-                f"More than 1 event with name '{event_name}' found in config."
-            )
+            raise SeasonConfigGetEventError(f"More than 1 event with name '{event_name}' found in config.")
 
         return candidate_events[0]
 
@@ -104,9 +98,7 @@ class SeasonConfig(pydantic.BaseModel):
         event_numbers = list(events.keys())
         expected_event_numbers = list(range(1, event_count + 1))
         if event_numbers != expected_event_numbers:
-            raise ValueError(
-                "Keys in events dict must be start with 1 and increment by 1 for each new event."
-            )
+            raise ValueError("Keys in events dict must be start with 1 and increment by 1 for each new event.")
 
     @classmethod
     def _check_event_names_are_unique(cls, events: dict[int, "EventConfig"]):

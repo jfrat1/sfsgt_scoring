@@ -93,18 +93,12 @@ def test_points_construct_major_event() -> None:
 
 def test_player_points_from_ranks_no_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
-    assert (
-        points_.player_points_from_ranks(TEST_PLAYER_RANKS_NO_TIES)
-        == TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT
-    )
+    assert points_.player_points_from_ranks(TEST_PLAYER_RANKS_NO_TIES) == TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT
 
 
 def test_player_points_from_ranks_with_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
-    assert (
-        points_.player_points_from_ranks(TEST_PLAYER_RANKS_WITH_TIES)
-        == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
-    )
+    assert points_.player_points_from_ranks(TEST_PLAYER_RANKS_WITH_TIES) == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
 
 
 def test_player_points_from_ranks_empty_ranks_returns_empty_dict() -> None:
@@ -150,37 +144,25 @@ def test_verify_player_ranks_raises_error_if_rank_not_in_allowed_range() -> None
 def test_players_at_each_rank_no_ties() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
 
-    assert (
-        points_._players_at_each_rank(TEST_PLAYER_RANKS_NO_TIES)
-        == TEST_PLAYERS_AT_EACH_RANK_NO_TIES
-    )
+    assert points_._players_at_each_rank(TEST_PLAYER_RANKS_NO_TIES) == TEST_PLAYERS_AT_EACH_RANK_NO_TIES
 
 
 def test_players_at_each_rank_with_ties() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
 
-    assert (
-        points_._players_at_each_rank(TEST_PLAYER_RANKS_WITH_TIES)
-        == TEST_PLAYERS_AT_EACH_RANK_WITH_TIES
-    )
+    assert points_._players_at_each_rank(TEST_PLAYER_RANKS_WITH_TIES) == TEST_PLAYERS_AT_EACH_RANK_WITH_TIES
 
 
 def test_player_points_no_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
 
-    assert (
-        points_._player_points(TEST_PLAYERS_AT_EACH_RANK_NO_TIES)
-        == TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT
-    )
+    assert points_._player_points(TEST_PLAYERS_AT_EACH_RANK_NO_TIES) == TEST_PLAYER_POINTS_NO_TIES_STANDARD_EVENT
 
 
 def test_player_points_with_ties_standard_event() -> None:
     points_ = points.Points(inputs.EventType.STANDARD)
 
-    assert (
-        points_._player_points(TEST_PLAYERS_AT_EACH_RANK_WITH_TIES)
-        == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
-    )
+    assert points_._player_points(TEST_PLAYERS_AT_EACH_RANK_WITH_TIES) == TEST_PLAYER_POINTS_WITH_TIES_STANDARD_EVENT
 
 
 def test_points_for_players_at_rank_one_player_standard_event() -> None:

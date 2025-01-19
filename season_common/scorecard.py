@@ -70,9 +70,7 @@ class ScorecardValidator:
 
     def _validate_values(self) -> None:
         values = self.hole_scores.values()
-        are_all_values_positive_ints = all(
-            isinstance(value, int) and value >= 1 for value in values
-        )
+        are_all_values_positive_ints = all(isinstance(value, int) and value >= 1 for value in values)
 
         if not are_all_values_positive_ints:
             raise ScorecardValidationError(

@@ -31,12 +31,8 @@ class _Matchup(NamedTuple):
 
             is_player_1_lower_handicap = player_1_playing_handicap < player_2_playing_handicap
 
-            lower_handicap_player = (
-                self.player_1.name if is_player_1_lower_handicap else self.player_2.name
-            )
-            higher_handicap_player = (
-                self.player_2.name if is_player_1_lower_handicap else self.player_1.name
-            )
+            lower_handicap_player = self.player_1.name if is_player_1_lower_handicap else self.player_2.name
+            higher_handicap_player = self.player_2.name if is_player_1_lower_handicap else self.player_1.name
 
             print(
                 f"- {higher_handicap_player} receives {stroke_differential} strokes from {lower_handicap_player}."  # noqa: E501

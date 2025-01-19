@@ -138,35 +138,25 @@ def test_check_event_names_are_unique_passes() -> None:
 
 def test_check_event_names_are_unique_fails() -> None:
     with pytest.raises(ValueError):
-        config.SeasonConfig._check_event_names_are_unique(
-            {1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO}
-        )
+        config.SeasonConfig._check_event_names_are_unique({1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO})
 
 
 def test_check_event_sheet_names_are_unique_passes() -> None:
-    config.SeasonConfig._check_event_sheet_names_are_unique(
-        {1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_BAR}
-    )
+    config.SeasonConfig._check_event_sheet_names_are_unique({1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_BAR})
 
 
 def test_check_event_sheet_names_are_unique_fails() -> None:
     with pytest.raises(ValueError):
-        config.SeasonConfig._check_event_sheet_names_are_unique(
-            {1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO}
-        )
+        config.SeasonConfig._check_event_sheet_names_are_unique({1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO})
 
 
 def test_check_event_course_names_are_unique_passes() -> None:
-    config.SeasonConfig._check_event_course_names_are_unique(
-        {1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_BAR}
-    )
+    config.SeasonConfig._check_event_course_names_are_unique({1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_BAR})
 
 
 def test_check_event_course_names_are_unique_fails() -> None:
     with pytest.raises(ValueError):
-        config.SeasonConfig._check_event_course_names_are_unique(
-            {1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO}
-        )
+        config.SeasonConfig._check_event_course_names_are_unique({1: EVENT_CONFIG_FOO, 2: EVENT_CONFIG_FOO})
 
 
 def test_event_names() -> None:

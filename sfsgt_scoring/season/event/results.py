@@ -90,16 +90,13 @@ class PlayerEventResult:
             return NotImplemented
 
         return (
-            self._individual_result == other._individual_result
-            and self._cumulative_result == other._cumulative_result
+            self._individual_result == other._individual_result and self._cumulative_result == other._cumulative_result
         )
 
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -173,8 +170,7 @@ class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
 
     def _disallowed_api_call_error(self) -> None:
         raise IncompletePlayerEventIndividualResultApiCallError(
-            "API calls cannot be made to an incomplete player event because it does not "
-            "contain any data."
+            "API calls cannot be made to an incomplete player event because it does not " "contain any data."
         )
 
     @property
@@ -304,9 +300,7 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -353,9 +347,7 @@ class NotableHoles:
 
     def set_hole(self, hole_num: int, score_type: "NotableHoleType"):
         if self._has_hole_num_been_set(hole_num):
-            raise NotableHoleDuplicationError(
-                f"A notable hole score has alredy been set for hole {hole_num}"
-            )
+            raise NotableHoleDuplicationError(f"A notable hole score has alredy been set for hole {hole_num}")
 
         match score_type:
             case NotableHoleType.BIRDIE:
@@ -390,9 +382,7 @@ class NotableHoles:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 

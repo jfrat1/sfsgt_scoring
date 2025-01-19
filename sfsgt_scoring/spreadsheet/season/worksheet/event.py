@@ -186,9 +186,7 @@ class EventWorksheet:
         self._worksheet = worksheet
         self._players = players
         self._scorecard_start_cell = scorecard_start_cell
-        self._sorted_worksheet_player_names: list[
-            str
-        ] = []  # This will be set when reading from the sheet
+        self._sorted_worksheet_player_names: list[str] = []  # This will be set when reading from the sheet
 
         self._verify_scorecard_start_cell()
 
@@ -240,9 +238,7 @@ class EventWorksheet:
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
-        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[
-            READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1
-        ]
+        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1]
         worksheet_data.columns = pd.Index(column_labels)
         worksheet_data.drop(columns=["FRONT_NINE_STROKES", "PLAYER_INITIAL"], inplace=True)
         worksheet_data.set_index(keys="PLAYER", inplace=True)
@@ -267,8 +263,7 @@ class EventWorksheet:
         index = sorted(list(worksheet_data.index))
         if not index == expected_index:
             raise EventWorksheetVerificationError(
-                f"Worksheet data row labels do not match expectations."
-                f"\nExpected: {expected_index}, \nFound:{index}"
+                f"Worksheet data row labels do not match expectations." f"\nExpected: {expected_index}, \nFound:{index}"
             )
 
     def _check_data_values(self, worksheet_data: pd.DataFrame) -> None:
@@ -301,8 +296,7 @@ class EventWorksheet:
         else:
             scores_dict_raw = scores_ser.to_dict()
             scores_dict = {
-                int(hole_num.replace("HOLE_", "")): hole_score
-                for hole_num, hole_score in scores_dict_raw.items()
+                int(hole_num.replace("HOLE_", "")): hole_score for hole_num, hole_score in scores_dict_raw.items()
             }
             return HoleScores(scores=scores_dict)
 
@@ -352,9 +346,7 @@ class EventWorksheet:
             values=values,
         )
 
-    def _back_nine_and_event_results_write_range(
-        self, write_data: EventWriteData
-    ) -> google_sheet.RangeValues:
+    def _back_nine_and_event_results_write_range(self, write_data: EventWriteData) -> google_sheet.RangeValues:
         range_name = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.BACK_NINE_STROKES,
             end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
@@ -460,9 +452,7 @@ class EventWorksheet:
         for hole in write_data.birdies:
             row = sorted_player_rows[hole.player]
             col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole.hole}"])
-            formats.append(
-                google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT)
-            )
+            formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT))
 
         self._worksheet.format_multiple_ranges(range_formats=formats)
 
@@ -475,9 +465,7 @@ class EventWorksheet:
         for hole in write_data.eagles:
             row = sorted_player_rows[hole.player]
             col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole.hole}"])
-            formats.append(
-                google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT)
-            )
+            formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT))
 
         self._worksheet.format_multiple_ranges(range_formats=formats)
 
@@ -491,7 +479,5 @@ class EventWorksheet:
             last_row=last_row,
         )
 
-        name_row_map = {
-            player_name: first_row + idx for idx, player_name in enumerate(player_names)
-        }
+        name_row_map = {player_name: first_row + idx for idx, player_name in enumerate(player_names)}
         return name_row_map

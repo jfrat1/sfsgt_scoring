@@ -69,9 +69,7 @@ def build_stimulus_season_view_data() -> season_view.SeasonViewReadData:
             [
                 season_view.SeasonViewReadPlayer(
                     player=build_test_player(),
-                    event_handicap_indices=season_view.SeasonViewEventHandicapIndices(
-                        {"Baylands": 16.0}
-                    ),
+                    event_handicap_indices=season_view.SeasonViewEventHandicapIndices({"Baylands": 16.0}),
                 ),
             ]
         ),

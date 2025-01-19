@@ -16,9 +16,7 @@ class _Matchup(NamedTuple):
         team_1_playing_handicaps = self.team_playing_handicaps(self.team_1_pair)
         team_2_playing_handicaps = self.team_playing_handicaps(self.team_2_pair)
 
-        lowest_handicap = self.lowest_playing_handicap(
-            team_1_playing_handicaps, team_2_playing_handicaps
-        )
+        lowest_handicap = self.lowest_playing_handicap(team_1_playing_handicaps, team_2_playing_handicaps)
         team_1_handicaps_normalized = self.normalize_team_playing_handicaps(
             team_playing_handicaps=team_1_playing_handicaps,
             lowest_playing_handicap=lowest_handicap,
@@ -46,9 +44,7 @@ class _Matchup(NamedTuple):
         team_1_playing_handicaps: dict[str, int],
         team_2_playing_handicaps: dict[str, int],
     ) -> int:
-        return min(
-            list(team_1_playing_handicaps.values()) + list(team_2_playing_handicaps.values())
-        )
+        return min(list(team_1_playing_handicaps.values()) + list(team_2_playing_handicaps.values()))
 
     def normalize_team_playing_handicaps(
         self,

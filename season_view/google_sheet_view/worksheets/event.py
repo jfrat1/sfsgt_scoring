@@ -72,8 +72,10 @@ READ_DATA_LAST_COLUMN = "HOLE_18"
 READ_DATA_FIRST_COL_INDEX = EVENT_WORKSHEET_COLUMN_NAMES.index(READ_DATA_FIRST_COLUMN)
 READ_DATA_LAST_COL_INDEX = EVENT_WORKSHEET_COLUMN_NAMES.index(READ_DATA_LAST_COLUMN)
 
+
 class EventWorksheetError(Exception):
     pass
+
 
 class EventWorksheet:
     def __init__(
@@ -160,13 +162,10 @@ class EventWorksheetReader:
             player_scorecards=scorecards,
         )
 
-
     @property
     def player_order_at_read_time(self) -> list[str]:
         if len(self._player_order_at_read_time) == 0:
-            raise EventWorksheetError(
-                "The `read` method must be called before this property is accessed."
-            )
+            raise EventWorksheetError("The `read` method must be called before this property is accessed.")
         return self._player_order_at_read_time
 
     def _raw_worksheet_data(self) -> pd.DataFrame:
@@ -195,20 +194,16 @@ class EventWorksheetReader:
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
-        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[
-            READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1
-        ]
+        column_labels = EVENT_WORKSHEET_COLUMN_NAMES[READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1]
         worksheet_data.columns = pd.Index(column_labels)
         worksheet_data.drop(columns=["FRONT_NINE_STROKES", "PLAYER_INITIAL"], inplace=True)
         worksheet_data.set_index(keys="PLAYER", inplace=True)
 
         return sheet_utils.numericise_all_values(worksheet_data)
 
-
     def _check_worksheet_data(self, worksheet_data: pd.DataFrame) -> None:
         self._check_column_headers(worksheet_data)
         self._check_data_values(worksheet_data)
-
 
     def _check_column_headers(self, worksheet_data: pd.DataFrame) -> None:
         expected_columns = [f"HOLE_{str(hole_num)}" for hole_num in range(1, 19)]

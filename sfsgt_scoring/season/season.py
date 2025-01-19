@@ -163,9 +163,7 @@ class CumulativePlayerResult:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join(
-            [f"{name.lstrip("_")}: {value}" for name, value in attributes.items()]
-        )
+        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -175,10 +173,7 @@ class Season:
         self._events = self._create_events()
 
     def _create_events(self) -> dict[str, event.Event]:
-        return {
-            event_name: self._create_event(event_input)
-            for event_name, event_input in self._input.events.items()
-        }
+        return {event_name: self._create_event(event_input) for event_name, event_input in self._input.events.items()}
 
     def _create_event(self, event_input: event.EventInput) -> event.Event:
         return event.Event(input=event_input)
@@ -214,9 +209,7 @@ class Season:
 
         return cumulative_player_results
 
-    def _player_cumulative_results(
-        self, event_results: EventResults, player_name: str
-    ) -> CumulativePlayerResult:
+    def _player_cumulative_results(self, event_results: EventResults, player_name: str) -> CumulativePlayerResult:
         season_points = 0.0
         num_birdies = 0
         num_eagles = 0
@@ -244,9 +237,7 @@ class Season:
                 score_differentials.append(player_event_results.score_differential)
 
             num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
-            num_net_strokes_top_fives += (
-                1 if player_event_results.net_score_rank.is_top_five() else 0
-            )
+            num_net_strokes_top_fives += 1 if player_event_results.net_score_rank.is_top_five() else 0
             num_net_strokes_top_tens += 1 if player_event_results.net_score_rank.is_top_ten() else 0
 
             num_event_wins += 1 if player_event_results.event_rank.is_win() else 0
@@ -276,8 +267,7 @@ class Season:
     ) -> dict[str, rank.RankValue]:
         rank_manager = rank.Rank()
         player_season_points = {
-            player_name: player_result.season_points
-            for player_name, player_result in cumulative_player_results.items()
+            player_name: player_result.season_points for player_name, player_result in cumulative_player_results.items()
         }
         player_season_ranks = rank_manager.player_ranks_from_values(
             player_values=player_season_points,

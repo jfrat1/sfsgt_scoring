@@ -26,6 +26,7 @@ class SeasonViewReadPlayer(NamedTuple):
     def name(self) -> str:
         return self.player.name
 
+
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
     """Collection of SeasonViewReadPlayer for each player in a season."""
 
@@ -36,13 +37,9 @@ class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
 
         if len(player_names) != len(dedup_player_names):
             duplicates = [name for name in dedup_player_names if player_names.count(name) > 1]
-            raise ValueError(
-                f"Duplicate player names are not allowed. Found these duplicates: {duplicates}"
-                )
+            raise ValueError(f"Duplicate player names are not allowed. Found these duplicates: {duplicates}")
 
-        players_dict = {
-            player.name(): player for player in players
-        }
+        players_dict = {player.name(): player for player in players}
         super().__init__(players_dict)
 
     @property
@@ -87,9 +84,7 @@ class SeasonViewReadEvents(dict[str, SeasonViewReadEvent]):
             return super().__getitem__(event)
 
         else:
-            raise SeasonViewReadDataResourceNotFoundError(
-                f"Can't locate event namaed '{event}' in Season View events."
-            )
+            raise SeasonViewReadDataResourceNotFoundError(f"Can't locate event namaed '{event}' in Season View events.")
 
 
 class SeasonViewReadData(NamedTuple):

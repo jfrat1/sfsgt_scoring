@@ -91,9 +91,7 @@ def test_read_with_string_numerics_in_raw_worksheet_data() -> None:
 def test_get_worksheet_data() -> None:
     players_worksheet = create_test_players_worksheet()
 
-    pd_testing.assert_frame_equal(
-        left=players_worksheet._get_worksheet_data(), right=WORKSHEET_DATA_PROCESSED
-    )
+    pd_testing.assert_frame_equal(left=players_worksheet._get_worksheet_data(), right=WORKSHEET_DATA_PROCESSED)
 
 
 def test_expected_header_names() -> None:

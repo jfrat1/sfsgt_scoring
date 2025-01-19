@@ -57,13 +57,9 @@ class SeasonViewToModelDelegate(NamedTuple):
         _players: list[season_model.SeasonModelEventPlayerInput] = []
         for player_name in self._player_names():
             _player = season_model.SeasonModelEventPlayerInput(
-                handicap_index=self._event_player_handicap_index(
-                    event_name=event_name, player_name=player_name
-                ),
+                handicap_index=self._event_player_handicap_index(event_name=event_name, player_name=player_name),
                 player=self._event_player(player_name=player_name),
-                scorecard=self._event_player_scorecard(
-                    event_name=event_name, player_name=player_name
-                ),
+                scorecard=self._event_player_scorecard(event_name=event_name, player_name=player_name),
             )
             _players.append(_player)
 

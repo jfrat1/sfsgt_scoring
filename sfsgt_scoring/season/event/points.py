@@ -53,9 +53,7 @@ STANDARD_EVENT_POINTS_BY_RANK = {
     50: 0.5,
 }
 
-MAJOR_EVENT_POINTS_BY_RANK = {
-    rank: points * 2 for rank, points in STANDARD_EVENT_POINTS_BY_RANK.items()
-}
+MAJOR_EVENT_POINTS_BY_RANK = {rank: points * 2 for rank, points in STANDARD_EVENT_POINTS_BY_RANK.items()}
 
 
 class UnknownEventTypeError(Exception):
@@ -121,9 +119,7 @@ class Points:
         return players_at_each_rank
 
     def _find_players_at_rank(self, rank: int, player_ranks: dict[str, int]) -> list[str]:
-        return [
-            player_name for player_name, player_rank in player_ranks.items() if player_rank == rank
-        ]
+        return [player_name for player_name, player_rank in player_ranks.items() if player_rank == rank]
 
     def _player_points(self, players_at_each_rank: dict[int, list[str]]) -> dict[str, float]:
         player_points: dict[str, float] = {}

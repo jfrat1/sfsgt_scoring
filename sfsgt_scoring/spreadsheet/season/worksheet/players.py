@@ -51,8 +51,7 @@ class HandicapIndexByEvent(dict[str, float]):
         expected_keys = sorted(events + [FINALE_COLUMN_NAME])
         if keys != expected_keys:
             raise PlayerHandicapsVerificationError(
-                "Player handicaps keys do not match events list."
-                f"\nExpected: {expected_keys} \nFound: {keys}"
+                "Player handicaps keys do not match events list." f"\nExpected: {expected_keys} \nFound: {keys}"
             )
 
 
@@ -111,9 +110,7 @@ class PlayersWorksheet:
 
         worksheet_data_processed = self._raise_player_column_to_index(worksheet_data_processed)
         worksheet_data_processed = self._drop_unused_columns(worksheet_data_processed)
-        worksheet_data_processed = self._rename_event_columns_to_input_event_names(
-            worksheet_data_processed
-        )
+        worksheet_data_processed = self._rename_event_columns_to_input_event_names(worksheet_data_processed)
         worksheet_data_processed = dataframe.numericise_all_values(worksheet_data_processed)
 
         return worksheet_data_processed
@@ -142,9 +139,7 @@ class PlayersWorksheet:
     def _drop_trailing_columns(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
         return worksheet_data.drop(columns=UNUSED_TRAILING_COLUMN_NAMES)
 
-    def _rename_event_columns_to_input_event_names(
-        self, worksheet_data: pd.DataFrame
-    ) -> pd.DataFrame:
+    def _rename_event_columns_to_input_event_names(self, worksheet_data: pd.DataFrame) -> pd.DataFrame:
         return worksheet_data.rename(columns=self._event_column_rename_map())
 
     def _event_column_rename_map(self) -> dict[str, str]:
@@ -185,7 +180,5 @@ class PlayersWorksheet:
         return PlayersReadData(player_handicaps=player_handicaps)
 
     def _generate_player_handicaps(self, player_row: pd.Series) -> HandicapIndexByEvent:
-        handicaps_by_event = {
-            str(event_name): handicap_index for event_name, handicap_index in player_row.items()
-        }
+        handicaps_by_event = {str(event_name): handicap_index for event_name, handicap_index in player_row.items()}
         return HandicapIndexByEvent(data=handicaps_by_event, events=self._events)

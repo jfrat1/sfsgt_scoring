@@ -190,17 +190,9 @@ def test_season_inputs_construct() -> None:
     assert season_input.events["Poppy Ridge"].course.tee.name == "White"
 
     assert season_input.events["Harding Park"].players["Stanton Turner"].handicap_index == 14.2
-    assert (
-        season_input.events["Harding Park"]
-        .players["Stanton Turner"]
-        .scorecard.strokes_per_hole()[1]
-        == 5
-    )
+    assert season_input.events["Harding Park"].players["Stanton Turner"].scorecard.strokes_per_hole()[1] == 5
     assert season_input.events["Poppy Ridge"].players["John Fratello"].handicap_index == 15.8
-    assert (
-        season_input.events["Poppy Ridge"].players["John Fratello"].scorecard.strokes_per_hole()[6]
-        == 6
-    )
+    assert season_input.events["Poppy Ridge"].players["John Fratello"].scorecard.strokes_per_hole()[6] == 6
 
     assert season_input.player_names == ["Stanton Turner", "John Fratello"]
 

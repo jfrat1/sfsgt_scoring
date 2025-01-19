@@ -93,9 +93,7 @@ class SeasonSheet:
         self.google_sheet = google_sheet
         self.is_configured = True
 
-    def _verify_available_worksheets(
-        self, config: SeasonSheetConfig, google_sheet: google.GoogleSheet
-    ) -> None:
+    def _verify_available_worksheets(self, config: SeasonSheetConfig, google_sheet: google.GoogleSheet) -> None:
         event_worksheets = {f"{event.sheet_name}" for event in config.events.values()}
         required_worksheets = {
             config.leaderboard_sheet_name,
@@ -105,13 +103,9 @@ class SeasonSheet:
 
         if not required_worksheets.issubset(available_worksheets):
             missing_worksheets = required_worksheets.difference(available_worksheets)
-            raise SeasonSheetVerificationError(
-                f"Some required worksheets are missing: {missing_worksheets}"
-            )
+            raise SeasonSheetVerificationError(f"Some required worksheets are missing: {missing_worksheets}")
 
-    def _create_worksheets(
-        self, config: SeasonSheetConfig, google_sheet: google.GoogleSheet
-    ) -> "SeasonWorksheets":
+    def _create_worksheets(self, config: SeasonSheetConfig, google_sheet: google.GoogleSheet) -> "SeasonWorksheets":
         players_worksheet = self._create_players_worksheet(config=config, google_sheet=google_sheet)
         player_names = players_worksheet.player_names()
         return SeasonWorksheets(
@@ -119,9 +113,7 @@ class SeasonSheet:
             leaderboard=self._create_leaderboard_worksheet(
                 config=config, google_sheet=google_sheet, player_names=player_names
             ),
-            events=self._create_event_worksheets(
-                config=config, google_sheet=google_sheet, player_names=player_names
-            ),
+            events=self._create_event_worksheets(config=config, google_sheet=google_sheet, player_names=player_names),
             finale_handicaps=self._create_finale_handicaps_worksheet(
                 config=config, google_sheet=google_sheet, player_names=player_names
             ),
@@ -148,9 +140,7 @@ class SeasonSheet:
         return worksheet.LeaderboardWorksheet(
             worksheet=google_worksheet,
             players=player_names,
-            events={
-                event_data.event_num: event_name for event_name, event_data in config.events.items()
-            },
+            events={event_data.event_num: event_name for event_name, event_data in config.events.items()},
         )
 
     def _create_event_worksheets(
@@ -203,9 +193,7 @@ class SeasonSheet:
     def read(self) -> SeasonSheetReadData:
         self._verify_is_configured()
 
-        assert (
-            self.worksheets is not None
-        )  # This is here to satisfy mypy. It should not be reachable.
+        assert self.worksheets is not None  # This is here to satisfy mypy. It should not be reachable.
 
         return SeasonSheetReadData(
             players=self.worksheets.players.read(),

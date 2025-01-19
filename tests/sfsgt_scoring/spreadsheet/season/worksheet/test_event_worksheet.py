@@ -108,15 +108,9 @@ def create_player_hole_scores(hole_scores: list[int]) -> event.HoleScores:
 
 EXPECTED_TEST_READ_DATA = event.EventReadData(
     player_scores={
-        "Stanton Turner": create_player_hole_scores(
-            [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
-        ),
-        "John Fratello": create_player_hole_scores(
-            [5, 7, 6, 3, 5, 6, 3, 5, 6, 7, 6, 4, 3, 5, 3, 4, 5, 6]
-        ),
-        "Steve Harasym": create_player_hole_scores(
-            [4, 6, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 5, 4, 5, 8]
-        ),
+        "Stanton Turner": create_player_hole_scores([5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]),
+        "John Fratello": create_player_hole_scores([5, 7, 6, 3, 5, 6, 3, 5, 6, 7, 6, 4, 3, 5, 3, 4, 5, 6]),
+        "Steve Harasym": create_player_hole_scores([4, 6, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 5, 4, 5, 8]),
     }
 )
 
@@ -142,9 +136,7 @@ def create_test_event_worksheet(
 
 def test_player_hole_scores_constructor_all_integer_hole_scores() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
-    event.HoleScores(
-        scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)}
-    )
+    event.HoleScores(scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, 19), hole_scores)})
 
 
 def test_player_hole_scores_constructor_missing_some_hole_scores_raises_error() -> None:
@@ -167,10 +159,7 @@ def test_player_hole_scores_constructor_missing_keys_raises_error() -> None:
     hole_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5]
     with pytest.raises(event.PlayerHoleScoresVerificationError):
         event.HoleScores(
-            scores={
-                hole_num: hole_score
-                for hole_num, hole_score in zip(range(1, len(hole_scores) + 1), hole_scores)
-            }
+            scores={hole_num: hole_score for hole_num, hole_score in zip(range(1, len(hole_scores) + 1), hole_scores)}
         )
 
 
@@ -264,13 +253,9 @@ def test_read_range_col_offset() -> None:
 
 def test_process_raw_worksheet_data() -> None:
     event_worksheet = create_test_event_worksheet()
-    worksheet_data_processed = event_worksheet._process_raw_worksheet_data(
-        worksheet_data_raw=TEST_WORKSHEET_DATA_RAW
-    )
+    worksheet_data_processed = event_worksheet._process_raw_worksheet_data(worksheet_data_raw=TEST_WORKSHEET_DATA_RAW)
 
-    pd_testing.assert_frame_equal(
-        left=worksheet_data_processed, right=TEST_WORKSHEET_DATA_PROCESSED
-    )
+    pd_testing.assert_frame_equal(left=worksheet_data_processed, right=TEST_WORKSHEET_DATA_PROCESSED)
 
 
 def test_check_worksheet_data_nominal() -> None:
@@ -441,9 +426,7 @@ def test_back_nine_and_event_reults_write_range() -> None:
         ],
     )
 
-    actual_range = event_worksheet._back_nine_and_event_results_write_range(
-        TEST_WORKSHEET_WRITE_DATA
-    )
+    actual_range = event_worksheet._back_nine_and_event_results_write_range(TEST_WORKSHEET_WRITE_DATA)
     assert actual_range == expected_range
 
 

@@ -34,10 +34,7 @@ class Event:
         )
 
     def _player_individual_results(self) -> dict[str, results.IPlayerEventIndividualResult]:
-        return {
-            player_name: player_.individual_result()
-            for player_name, player_ in self._players.items()
-        }
+        return {player_name: player_.individual_result() for player_name, player_ in self._players.items()}
 
     def _player_cumulative_results(
         self,
@@ -101,22 +98,15 @@ class CumulativeResults:
         player_results: dict[str, results.IPlayerEventIndividualResult],
         class_type: type[T],
     ) -> dict[str, T]:
-        return {
-            player_name: result
-            for player_name, result in player_results.items()
-            if isinstance(result, class_type)
-        }
+        return {player_name: result for player_name, result in player_results.items() if isinstance(result, class_type)}
 
     def _verify_grouping_of_results(self, player_names: list[str]) -> None:
-        grouped_player_names = set(self._complete_results.keys()).union(
-            set(self._incomplete_results.keys())
-        )
+        grouped_player_names = set(self._complete_results.keys()).union(set(self._incomplete_results.keys()))
 
         if grouped_player_names != set(player_names):
             # This should not be reachable, but it's best to prove that theory.
             raise EventCumulativeResultsGroupingError(
-                "Player inividual results could not be grouped into complete and "
-                "incomlpete results."
+                "Player inividual results could not be grouped into complete and " "incomlpete results."
             )
 
     def cumulative_results(self) -> dict[str, results.PlayerEventCumulativeResult]:
@@ -137,15 +127,11 @@ class CumulativeResults:
 
         # TODO: this whole thing feels messy to me
         gross_score_ranks = self._rank_manager.player_ranks_from_values(
-            player_values={
-                name: result.total_gross for name, result in self._complete_results.items()
-            },
+            player_values={name: result.total_gross for name, result in self._complete_results.items()},
             rank_order=rank.RankOrder.ASCENDING,
         )
         net_score_ranks = self._rank_manager.player_ranks_from_values(
-            player_values={
-                name: result.total_net for name, result in self._complete_results.items()
-            },
+            player_values={name: result.total_net for name, result in self._complete_results.items()},
             rank_order=rank.RankOrder.ASCENDING,
         )
         gross_score_points = self._points_manager.player_points_from_ranks(
@@ -154,9 +140,7 @@ class CumulativeResults:
         net_score_points = self._points_manager.player_points_from_ranks(
             player_ranks={name: int(rank_) for name, rank_ in net_score_ranks.items()}
         )
-        event_points = {
-            name: gross_score_points[name] + net_score_points[name] for name in player_names
-        }
+        event_points = {name: gross_score_points[name] + net_score_points[name] for name in player_names}
         event_ranks = self._rank_manager.player_ranks_from_values(
             player_values=event_points,
             rank_order=rank.RankOrder.DESCENDING,

@@ -14,10 +14,7 @@ def create_test_hole_scores_dict(
     hole_score_values: list[int | str | None],
 ) -> dict[int, int | str | None]:
     num_scores = len(hole_score_values)
-    return {
-        hole_num: hole_score
-        for hole_num, hole_score in zip(range(1, num_scores + 1), hole_score_values)
-    }
+    return {hole_num: hole_score for hole_num, hole_score in zip(range(1, num_scores + 1), hole_score_values)}
 
 
 def test_scorecard_validator_with_valid_scores() -> None:
@@ -58,9 +55,7 @@ def test_scorecard_validator_offset_hole_numbers_raises_error() -> None:
     score_values = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
     scores = create_test_hole_scores_dict(score_values)  # type: ignore
 
-    scores_with_offset_hole_num = {
-        hole_num + 1: hole_score for hole_num, hole_score in scores.items()
-    }
+    scores_with_offset_hole_num = {hole_num + 1: hole_score for hole_num, hole_score in scores.items()}
     with pytest.raises(scorecard.ScorecardValidationError):
         scorecard.ScorecardValidator(scores_with_offset_hole_num).validate()  # type: ignore
 

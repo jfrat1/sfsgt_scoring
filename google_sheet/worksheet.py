@@ -66,9 +66,7 @@ class CellFormat(NamedTuple):
     def as_google_api_dict(self) -> dict[str, dict[str, dict[str, float]]]:
         api_json = {}
         if self.backgroundColor is not None:
-            api_json["backgroundColorStyle"] = {
-                "rgbColor": self.backgroundColor.as_google_api_dict()
-            }
+            api_json["backgroundColorStyle"] = {"rgbColor": self.backgroundColor.as_google_api_dict()}
 
         return api_json
 
@@ -79,9 +77,7 @@ class RangeFormat(NamedTuple):
     format: CellFormat
 
     def as_google_api_cell_format(self) -> gspread.worksheet.CellFormat:
-        return gspread.worksheet.CellFormat(
-            range=self.range, format=self.format.as_google_api_dict()
-        )
+        return gspread.worksheet.CellFormat(range=self.range, format=self.format.as_google_api_dict())
 
 
 class SortOrder(enum.Enum):
@@ -174,17 +170,13 @@ class GoogleWorksheet:
         )
 
     def write_multiple_ranges(self, range_values: Iterable[RangeValues]) -> None:
-        write_data = [
-            {"range": range_value.range, "values": range_value.values}
-            for range_value in range_values
-        ]
+        write_data = [{"range": range_value.range, "values": range_value.values} for range_value in range_values]
         self.worksheet.batch_update(data=write_data)
 
     def sort_range(self, specs: Iterable[SortSpec], range_name: str) -> None:
         if not sheet_utils.is_range_a1_notation(range_name):
             raise ValueError(
-                "The 'range' argument must be a valid A1 range name, e.g. 'A1:C6'.\n"
-                f"Found: {range_name}."
+                "The 'range' argument must be a valid A1 range name, e.g. 'A1:C6'.\n" f"Found: {range_name}."
             )
 
         gspread_specs = [(spec.column_idx(), spec.order.gspread_sort_order()) for spec in specs]

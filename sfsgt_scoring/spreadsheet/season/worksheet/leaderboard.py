@@ -103,9 +103,7 @@ class LeaderboardWorksheet:
             raise LeaderboardWorksheetWriteError("Duplicate player names found in write data.")
 
         if not sorted(write_data_players_deduplicated) == sorted(self._players):
-            raise LeaderboardWorksheetWriteError(
-                "Player names in write data do not match expected players."
-            )
+            raise LeaderboardWorksheetWriteError("Player names in write data do not match expected players.")
 
         for player_data in write_data.players:
             player_events = list(player_data.event_points.keys())
@@ -115,9 +113,7 @@ class LeaderboardWorksheet:
                     f"Expected: {self._sorted_event_names}\nFound: {player_events}"
                 )
 
-    def _standings_write_range(
-        self, sorted_player_data: list[PlayerLeaderboardWriteData]
-    ) -> worksheet.RangeValues:
+    def _standings_write_range(self, sorted_player_data: list[PlayerLeaderboardWriteData]) -> worksheet.RangeValues:
         range_start = LeaderboardColumns.SEASON_RANK + str(self._first_player_row())
         range_end = LeaderboardColumns.NUM_BIRDIES + str(self._last_player_row())
         range_name = f"{range_start}:{range_end}"
@@ -180,9 +176,7 @@ class LeaderboardWorksheet:
             values=values,
         )
 
-    def _event_points_write_range(
-        self, sorted_player_data: list[PlayerLeaderboardWriteData]
-    ) -> worksheet.RangeValues:
+    def _event_points_write_range(self, sorted_player_data: list[PlayerLeaderboardWriteData]) -> worksheet.RangeValues:
         start_col = str(LeaderboardColumns.FIRST_EVENT)
         start_col_idx = sheet_utils.column_letter_to_idx(start_col)
         end_col_idx = start_col_idx + len(self._sorted_event_names) - 1

@@ -1,12 +1,7 @@
 import courses
 import season_config
-import season_finale
 import season_model
 import season_view
-from season_controller.delegate import (
-    SeasonModelToViewDelegate,
-    SeasonViewToModelDelegate,
-)
 
 
 class SeasonController:

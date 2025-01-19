@@ -1,2 +1,2 @@
-from .players import PlayersWorksheet
 from .event import EventWorksheet
+from .players import PlayersWorksheet

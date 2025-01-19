@@ -48,8 +48,7 @@ class SeasonModelToViewDelegate(NamedTuple):
         return season_view.SeasonViewWriteEvent(
             name=event_name,
             players=[
-                self._event_player(event_results=event_results, player_name=player_name)
-                for player_name in player_names
+                self._event_player(event_results=event_results, player_name=player_name) for player_name in player_names
             ],
         )
 

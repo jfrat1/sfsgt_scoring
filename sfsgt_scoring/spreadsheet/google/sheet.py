@@ -7,9 +7,7 @@ import gspread
 from sfsgt_scoring.spreadsheet.google import worksheet
 
 SERVICE_ACCOUNT_CREDENTIALS_FILE = (
-    pathlib.Path(__file__).parent.parent.parent.parent
-    / "google_cloud_creds"
-    / "sfsgt-credentials.json"
+    pathlib.Path(__file__).parent.parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
 )
 
 
