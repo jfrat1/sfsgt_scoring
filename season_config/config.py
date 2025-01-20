@@ -1,6 +1,5 @@
 import enum
 import pathlib
-from typing import Optional
 
 import pydantic
 import pydantic_yaml
