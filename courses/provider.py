@@ -42,7 +42,7 @@ def build_concrete_course_provider_from_folder(courses_dir: pathlib.Path) -> Con
         try:
             course_ = course.load_course_file(course_file)
             courses.append(course_)
-        except course.CourseLoadError as exc:
+        except course.CourseError as exc:
             raise CourseLoadError(
                 f"Unable to load database. Error encountere while processing file: {course_file}."
             ) from exc

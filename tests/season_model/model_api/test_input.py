@@ -22,10 +22,10 @@ def test_season_model_input_constructor_verify_input_consistency_ok() -> None:
     player_names = ["Charlie Brown", "Snoopy"]
 
     stub_event_input_1 = mock.MagicMock(spec=input.SeasonModelEventInput, autospec=True)
-    stub_event_input_1.player_names.return_value = player_names.copy()
+    stub_event_input_1.player_names = player_names.copy()
 
     stub_event_input_2 = mock.MagicMock(spec=input.SeasonModelEventInput, autospec=True)
-    stub_event_input_2.player_names.return_value = player_names.copy()
+    stub_event_input_2.player_names = player_names.copy()
 
     event_inputs = input.SeasonModelEventInputs(events=[stub_event_input_1, stub_event_input_2])
 
@@ -39,10 +39,10 @@ def test_season_model_input_constructor_verify_input_consistency_out_of_order_na
     player_names = ["Charlie Brown", "Snoopy", "Linus"]
 
     stub_event_input_1 = mock.MagicMock(spec=input.SeasonModelEventInput, autospec=True)
-    stub_event_input_1.player_names.return_value = ["Snoopy", "Linus", "Charlie Brown"]
+    stub_event_input_1.player_names = ["Snoopy", "Linus", "Charlie Brown"]
 
     stub_event_input_2 = mock.MagicMock(spec=input.SeasonModelEventInput, autospec=True)
-    stub_event_input_2.player_names.return_value = ["Linus", "Charlie Brown", "Snoopy"]
+    stub_event_input_2.player_names = ["Linus", "Charlie Brown", "Snoopy"]
 
     event_inputs = input.SeasonModelEventInputs(events=[stub_event_input_1, stub_event_input_2])
 

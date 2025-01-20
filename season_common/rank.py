@@ -1,7 +1,58 @@
 import abc
-from typing import Any, Union
+import enum
+from typing import Any, Literal, Union
+
+import pandas as pd
 
 from utils import class_utils
+
+
+class RankOrder(enum.Enum):
+    # The lowest input value is assigned rank 1
+    ASCENDING = enum.auto()
+    # The highest input value is assigned rank 1
+    DESCENDING = enum.auto()
+
+    def is_ascending(self) -> bool:
+        return self == RankOrder.ASCENDING
+
+
+AllowedPandasRankMethods = Literal["min", "max"]
+
+
+class RankTieMethod(enum.Enum):
+    # Lowest rank in the group is used for tie.
+    MIN = enum.auto()
+    # Highest rank in the group is used for tie.
+    MAX = enum.auto()
+
+    def as_pandas_rank_method(self) -> AllowedPandasRankMethods:
+        match self:
+            case RankTieMethod.MIN:
+                return "min"
+
+            case RankTieMethod.MAX:
+                return "max"
+
+
+class RankManager:
+    _rank_tie_method = RankTieMethod.MIN
+
+    def __init__(self):
+        pass
+
+    def player_ranks_from_values(
+        self,
+        player_values: dict[str, int] | dict[str, float],
+        rank_order: RankOrder,
+    ) -> dict[str, "RankValue"]:
+        ranks_ser = pd.Series(player_values).rank(
+            ascending=rank_order.is_ascending(),
+            method=self._rank_tie_method.as_pandas_rank_method(),
+        )
+        players_ranks_raw: dict[str, int] = ranks_ser.astype(int).to_dict()
+
+        return {player: RankValue(rank) for player, rank in players_ranks_raw.items()}
 
 
 class RankValueNotIntegerError(Exception):
@@ -12,7 +63,7 @@ class NoRankValueApiCallError(Exception):
     """Exception to be raisd when a access requests are made on a NoRank event."""
 
 
-class IRankValue(metaclass=abc.ABCMeta):
+class Rank(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def as_str(self) -> str:
         pass
@@ -36,18 +87,18 @@ class IRankValue(metaclass=abc.ABCMeta):
     def __int__(self) -> int:
         return self.rank()
 
-    def __add__(self, addend: Union[int, "IRankValue"]) -> "RankValue":
+    def __add__(self, addend: Union[int, "Rank"]) -> "RankValue":
         new_rank = self.rank() + int(addend)
         return RankValue(new_rank)
 
     def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, IRankValue):
+        if not isinstance(other, Rank):
             return NotImplemented
 
         return self.rank() < other.rank()
 
 
-class RankValue(IRankValue):
+class RankValue(Rank):
     def __init__(self, rank: int) -> None:
         if not isinstance(rank, int):
             raise RankValueNotIntegerError(f"Event rank value must be an integer. Got: {rank}")
@@ -78,7 +129,7 @@ class RankValue(IRankValue):
         return f"RankValue({self.as_str()})"
 
 
-class NoRankValue(IRankValue, class_utils.Singleton):
+class NoRankValue(Rank, class_utils.Singleton):
     def __init__(self):
         pass
 

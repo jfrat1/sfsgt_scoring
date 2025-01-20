@@ -216,9 +216,9 @@ class SeasonModelEventPlayerAggregateResult(NamedTuple):
     gross_score_points: float
     net_score_points: float
     event_points: float
-    gross_score_rank: rank.IRankValue
-    net_score_rank: rank.IRankValue
-    event_rank: rank.IRankValue
+    gross_score_rank: rank.Rank
+    net_score_rank: rank.Rank
+    event_rank: rank.Rank
 
 
 class SeasonModelEventPlayerResult:
@@ -232,6 +232,7 @@ class SeasonModelEventPlayerResult:
         self._individual_result = individual_result
         self._aggregate_result = aggregate_result
 
+    @property
     def is_complete_result(self) -> bool:
         return self._individual_result.is_complete_result()
 
@@ -276,15 +277,15 @@ class SeasonModelEventPlayerResult:
         return self._aggregate_result.event_points
 
     @property
-    def gross_score_rank(self) -> rank.IRankValue:
+    def gross_score_rank(self) -> rank.Rank:
         return self._aggregate_result.gross_score_rank
 
     @property
-    def net_score_rank(self) -> rank.IRankValue:
+    def net_score_rank(self) -> rank.Rank:
         return self._aggregate_result.net_score_rank
 
     @property
-    def event_rank(self) -> rank.IRankValue:
+    def event_rank(self) -> rank.Rank:
         return self._aggregate_result.event_rank
 
     @property

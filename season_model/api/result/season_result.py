@@ -20,7 +20,7 @@ class SeasonModelPlayerOverallResult:
         num_event_top_fives: int,
         num_event_top_tens: int,
         season_handicap: float,
-        season_rank: rank.IRankValue = rank.NoRankValue(),
+        season_rank: rank.Rank = rank.NoRankValue(),
     ) -> None:
         self._name = name
         self._season_points = season_points
@@ -46,7 +46,7 @@ class SeasonModelPlayerOverallResult:
         return self._season_points
 
     @property
-    def season_rank(self) -> rank.IRankValue:
+    def season_rank(self) -> rank.Rank:
         return self._season_rank
 
     @property

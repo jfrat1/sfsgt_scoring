@@ -56,20 +56,29 @@ class SeasonModelToViewDelegate(NamedTuple):
         self,
         event_results: season_model.SeasonModelEventResult,
         player_name: str,
-    ) -> season_view.SeasonViewWriteEventPlayer:
+    ) -> season_view.SeasonViewWritePlayerEvent:
         event_player_result = event_results.player_result(player_name)
 
-        return season_view.SeasonViewWriteEventPlayer(
-            name=player_name,
-            front_9_strokes=event_player_result.front_9_gross,
-            back_9_strokes=event_player_result.back_9_gross,
-            gross_strokes=event_player_result.total_gross,
-            course_handicap=event_player_result.course_handicap,
-            net_strokes=event_player_result.total_net,
-            gross_rank=event_player_result.gross_score_rank.rank(),
-            net_rank=event_player_result.net_score_rank.rank(),
-            gross_points=event_player_result.gross_score_points,
-            net_points=event_player_result.net_score_points,
-            event_points=event_player_result.event_points,
-            event_rank=event_player_result.event_rank.rank(),
-        )
+        if event_player_result.is_complete_result:
+            return season_view.SeasonViewWritePlayerCompleteEvent(
+                name=player_name,
+                front_9_strokes=event_player_result.front_9_gross,
+                back_9_strokes=event_player_result.back_9_gross,
+                gross_strokes=event_player_result.total_gross,
+                course_handicap=event_player_result.course_handicap,
+                net_strokes=event_player_result.total_net,
+                gross_rank=event_player_result.gross_score_rank.rank(),
+                net_rank=event_player_result.net_score_rank.rank(),
+                gross_points=event_player_result.gross_score_points,
+                net_points=event_player_result.net_score_points,
+                event_points=event_player_result.event_points,
+                event_rank=event_player_result.event_rank.rank(),
+            )
+        else:
+            return season_view.SeasonViewWritePlayerIncompleteEvent(
+                name=player_name,
+                gross_points=event_player_result.gross_score_points,
+                net_points=event_player_result.net_score_points,
+                event_points=event_player_result.event_points,
+                event_rank=event_player_result.event_rank.rank(),
+            )

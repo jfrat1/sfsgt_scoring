@@ -77,7 +77,7 @@ COURSE_DATA_YAML_MISSING_HOLE_NUMBERS = """
 
 def test_load_course_missing_holes_raises_error() -> None:
     with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_MISSING_HOLE_NUMBERS) as course_file:
-        with pytest.raises(course.CourseLoadError):
+        with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
 
@@ -116,7 +116,7 @@ COURSE_DATA_YAML_TOO_MANY_HOLE_NUMBERS = """
 
 def test_load_course_too_many_holes_raises_error() -> None:
     with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_TOO_MANY_HOLE_NUMBERS) as course_file:
-        with pytest.raises(course.CourseLoadError):
+        with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
 
@@ -154,7 +154,7 @@ COURSE_DATA_YAML_HOLE_1_HAS_PAR_6 = """
 
 def test_load_course_hole_has_par_6_raises_error() -> None:
     with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_HOLE_1_HAS_PAR_6) as course_file:
-        with pytest.raises(course.CourseLoadError):
+        with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
 
@@ -192,7 +192,7 @@ COURSE_DATA_YAML_HOLE_1_HAS_PAR_2 = """
 
 def test_load_course_hole_has_par_2_raises_error() -> None:
     with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_HOLE_1_HAS_PAR_2) as course_file:
-        with pytest.raises(course.CourseLoadError):
+        with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
 

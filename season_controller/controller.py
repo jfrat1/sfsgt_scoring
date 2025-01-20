@@ -27,9 +27,7 @@ class SeasonController:
             config=self.config,
         ).generate_model_input()
 
-        pass
-
-        # model_results = self.model.calculate_results(model_input)
+        model_results = self.model.calculate_results(model_input)
 
         # if self.config.is_finale_enabled():
         #     finale_data = season_finale.ConcreteFinaleDataGenerator(
@@ -39,6 +37,8 @@ class SeasonController:
         #     # to add it. Maybe have a separate method in the SeasonView to write
         #     # the finale sheet.
 
-        # view_write_data = SeasonModelToViewDelegate(model_results).generate_view_write_data()
+        view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
+
+        pass
 
         # self.view.write_season(view_write_data)

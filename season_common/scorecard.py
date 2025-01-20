@@ -4,6 +4,10 @@ from typing import Any
 from utils import class_utils
 
 
+class ScorecardError(Exception):
+    pass
+
+
 class Scorecard(abc.ABC):
     @abc.abstractmethod
     def is_complete_score(self) -> bool:
@@ -11,6 +15,10 @@ class Scorecard(abc.ABC):
 
     @abc.abstractmethod
     def scores(self) -> dict[int, int]:
+        pass
+
+    @abc.abstractmethod
+    def hole_strokes(self, hole_num: int) -> int:
         pass
 
 
@@ -28,6 +36,9 @@ class IncompleteScorecard(Scorecard, class_utils.Singleton):
     def scores(self) -> dict[int, int]:
         raise IncompleteScorecardCallError("Scores cannot be retrieved from incomplete scorecards.")
 
+    def hole_strokes(self, hole_num):
+        raise IncompleteScorecardCallError("Scores cannot be retrieved from incomplete scorecards.")
+
 
 class CompleteScorecard(Scorecard):
     def __init__(self, scores: dict[int, int]):
@@ -39,6 +50,12 @@ class CompleteScorecard(Scorecard):
 
     def scores(self) -> dict[int, int]:
         return self._scores
+
+    def hole_strokes(self, hole_num):
+        try:
+            return self._scores[hole_num]
+        except KeyError:
+            raise ScorecardError(f"Hole number {hole_num} does not exist in scorecard.")
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, CompleteScorecard):

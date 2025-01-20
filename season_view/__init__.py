@@ -10,9 +10,11 @@ from season_view.api.view import SeasonView
 from season_view.api.write_data import (
     SeasonViewWriteData,
     SeasonViewWriteEvent,
-    SeasonViewWriteEventPlayer,
     SeasonViewWriteLeaderboard,
     SeasonViewWriteLeaderboardPlayer,
+    SeasonViewWritePlayerCompleteEvent,
+    SeasonViewWritePlayerEvent,
+    SeasonViewWritePlayerIncompleteEvent,
 )
 from season_view.google_sheet_view import (
     GoogleSheetSeasonView,

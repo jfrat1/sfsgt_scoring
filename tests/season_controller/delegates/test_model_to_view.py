@@ -83,7 +83,7 @@ def build_test_season_view_write_data() -> season_view.SeasonViewWriteData:
             season_view.SeasonViewWriteEvent(
                 name="Baylands",
                 players=[
-                    season_view.SeasonViewWriteEventPlayer(
+                    season_view.SeasonViewWritePlayerCompleteEvent(
                         name="Mickey",
                         front_9_strokes=42,
                         back_9_strokes=43,
