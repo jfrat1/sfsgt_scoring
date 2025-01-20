@@ -34,6 +34,7 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
             course_name="standard_event_course",
             tees=season_config.config.EventTeeConfig(
                 mens_tee="white",
+                womens_tee="red",
             ),
             type=season_config.config.EventType.STANDARD,
             scorecard_sheet_start_cell="A1",
@@ -44,6 +45,7 @@ TEST_SEASON_CONFIG = season_config.SeasonConfig(
             course_name="major_event_course",
             tees=season_config.config.EventTeeConfig(
                 mens_tee="blue",
+                womens_tee="red",
             ),
             type=season_config.config.EventType.MAJOR,
             scorecard_sheet_start_cell="B5",

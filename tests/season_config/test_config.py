@@ -123,6 +123,7 @@ EVENT_CONFIG_FOO = config.EventConfig(
     course_name="foo course",
     tees=config.EventTeeConfig(
         mens_tee="white",
+        womens_tee="red",
     ),
     type=config.EventType.STANDARD,
     scorecard_sheet_start_cell="A1",
@@ -134,6 +135,7 @@ EVENT_CONFIG_BAR = config.EventConfig(
     course_name="bar course",
     tees=config.EventTeeConfig(
         mens_tee="white",
+        womens_tee="red",
     ),
     type=config.EventType.STANDARD,
     scorecard_sheet_start_cell="A1",

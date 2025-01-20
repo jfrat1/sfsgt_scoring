@@ -32,11 +32,14 @@ class SeasonModelEventPlayerInput(NamedTuple):
     def player_name(self) -> str:
         return self.player.name
 
+class SeasonModelEventTees(NamedTuple):
+    mens_tee: str
+    womens_tee: str
 
 class SeasonModelEventInput(NamedTuple):
     event_name: str
     course: courses.Course
-    tees: str
+    tees: SeasonModelEventTees
     event_type: SeasonModelEventType
     players: list[SeasonModelEventPlayerInput]
 

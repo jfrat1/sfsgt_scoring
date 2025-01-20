@@ -2,6 +2,7 @@ from season_model.api.input import (
     SeasonModelEventInput,
     SeasonModelEventInputs,
     SeasonModelEventPlayerInput,
+    SeasonModelEventTees,
     SeasonModelEventType,
     SeasonModelInput,
 )

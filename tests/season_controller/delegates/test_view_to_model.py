@@ -97,7 +97,10 @@ def build_expected_model_input_data(stub_course: mock.MagicMock) -> season_model
                 season_model.SeasonModelEventInput(
                     event_name="Baylands",
                     course=stub_course,
-                    tees="white",
+                    tees=season_model.SeasonModelEventTees(
+                        mens_tee="white",
+                        womens_tee="red",
+                    ),
                     event_type=season_model.SeasonModelEventType.STANDARD,
                     players=[
                         season_model.SeasonModelEventPlayerInput(
