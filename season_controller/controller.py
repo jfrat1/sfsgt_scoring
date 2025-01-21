@@ -39,6 +39,4 @@ class SeasonController:
 
         view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
 
-        pass
-
-        # self.view.write_season(view_write_data)
+        self.view.write_season(view_write_data)

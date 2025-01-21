@@ -25,8 +25,13 @@ class SeasonViewWriteLeaderboard(NamedTuple):
     def players_rank_sorted(self) -> list[SeasonViewWriteLeaderboardPlayer]:
         return sorted(self.players, key=lambda player: player.season_rank)
 
+    @property
     def player_names(self) -> list[str]:
         return [player.name for player in self.players]
+
+    @property
+    def num_players(self) -> int:
+        return len(self.players)
 
 
 class SeasonViewWritePlayerEvent(abc.ABC):
@@ -285,7 +290,20 @@ class SeasonViewWriteEvent(NamedTuple):
     name: str
     players: list[SeasonViewWritePlayerEvent]
 
+    def get_player(self, player_name: str) -> SeasonViewWritePlayerEvent:
+        for player in self.players:
+            if player.name == player_name:
+                return player
+
+        raise KeyError(f"Player {player} cannot be found in write data for event {self.name}.")
 
 class SeasonViewWriteData(NamedTuple):
     leaderboard: SeasonViewWriteLeaderboard
     events: list[SeasonViewWriteEvent]
+
+    def get_event(self, event_name: str) -> SeasonViewWriteEvent:
+        for event in self.events:
+            if event.name == event_name:
+                return event
+
+        raise KeyError(f"Event {event} cannot be found in season write data.")

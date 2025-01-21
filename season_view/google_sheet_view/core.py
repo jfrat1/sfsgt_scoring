@@ -6,6 +6,7 @@ from season_view.google_sheet_view import worksheets
 
 
 class GoogleSheetSeasonViewEventConfig(NamedTuple):
+    event_number: int
     event_name: str
     worksheet_name: str
     scorecard_start_cell: str
@@ -28,6 +29,11 @@ class GoogleSheetSeasonViewConfig(NamedTuple):
     @property
     def event_names(self) -> list[str]:
         return [event.event_name for event in self.event_worksheet_configs]
+
+    @property
+    def ordered_event_names(self) -> list[str]:
+        ordered_event_configs = sorted(self.event_worksheet_configs, key=lambda event: event.event_number)
+        return [event.event_name for event in ordered_event_configs]
 
     def event_config(self, event_name: str) -> GoogleSheetSeasonViewEventConfig:
         for event_cfg in self.event_worksheet_configs:
@@ -55,6 +61,38 @@ class GoogleSheetSeasonView(view.SeasonView):
         # These will be instantiated after the players sheet is read.
         self._event_worksheets: dict[str, worksheets.EventWorksheet] = {}
 
+    def read_season(self) -> read_data.SeasonViewReadData:
+        players_data = self._read_players_worksheet()
+
+        self._event_worksheets = self._generate_event_worksheets(players_data.player_names)
+        events_data = self._read_event_worksheets()
+
+        return read_data.SeasonViewReadData(
+            players=players_data,
+            events=events_data,
+        )
+
+    def write_season(self, data: write_data.SeasonViewWriteData) -> None:
+        if len(self._event_worksheets) == 0:
+            raise GoogleSheetSeasonViewError(
+                f"An unexpected error has occurred. This error suggests that a {self.__class__.__name__} "
+                "instance was not read before it was written to. Check your implementation to ensure that "
+                "a read event occurs before a write event."
+            )
+
+        for event in self._config.event_names:
+            worksheet = self._event_worksheets[event]
+            event_data = data.get_event(event_name=event)
+
+            worksheet.write(data=event_data)
+
+        leaderboard_worksheet_controller = self._sheet_controller.worksheet(self._config.leaderboard_worksheet_name)
+        worksheets.LeaderboardWorksheet(
+            data=data.leaderboard,
+            worksheet_controller=leaderboard_worksheet_controller,
+            ordered_event_names=self._config.ordered_event_names,
+        ).write()
+
     def _verify_available_worksheets(self) -> None:
         required_worksheets = set(self._config.worksheet_names())
         available_worksheets = set(self._sheet_controller.worksheet_titles())
@@ -66,16 +104,13 @@ class GoogleSheetSeasonView(view.SeasonView):
                 f"Some required worksheets are not available. Missing worksheets: {missing_worksheets}"
             )
 
-    def read_season(self) -> read_data.SeasonViewReadData:
-        players_data = self.read_players_worksheet()
+    def _read_players_worksheet(self) -> read_data.SeasonViewReadPlayers:
+        players_worksheet_controller = self._sheet_controller.worksheet(self._config.players_worksheet_name)
 
-        self._event_worksheets = self._generate_event_worksheets(players_data.player_names)
-        events_data = self.read_event_worksheets()
-
-        return read_data.SeasonViewReadData(
-            players=players_data,
-            events=events_data,
-        )
+        return worksheets.PlayersWorksheet(
+            worksheet_controller=players_worksheet_controller,
+            events=self._config.event_names,
+        ).read()
 
     def _generate_event_worksheets(self, players: list[str]) -> dict[str, worksheets.EventWorksheet]:
         event_worksheets: dict[str, worksheets.EventWorksheet] = {}
@@ -91,25 +126,7 @@ class GoogleSheetSeasonView(view.SeasonView):
 
         return event_worksheets
 
-    def write_season(self, data: write_data.SeasonViewWriteData) -> None:
-        if len(self._event_worksheets) == 0:
-            raise GoogleSheetSeasonViewError(
-                f"An unexpected error has occurred. This error suggests that a {self.__class__.__name__} "
-                "instance was not read before it was written to. Check your implementation to ensure that "
-                "a read event occurs before a write event."
-            )
-
-        pass
-
-    def read_players_worksheet(self) -> read_data.SeasonViewReadPlayers:
-        players_worksheet_controller = self._sheet_controller.worksheet(self._config.players_worksheet_name)
-
-        return worksheets.PlayersWorksheet(
-            worksheet_controller=players_worksheet_controller,
-            events=self._config.event_names,
-        ).read()
-
-    def read_event_worksheets(self) -> read_data.SeasonViewReadEvents:
+    def _read_event_worksheets(self) -> read_data.SeasonViewReadEvents:
         events_data: dict[str, read_data.SeasonViewReadEvent] = {}
         for event in self._config.event_names:
             events_data[event] = self._event_worksheets[event].read()

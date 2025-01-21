@@ -66,6 +66,11 @@ class SeasonConfig(pydantic.BaseModel):
     def event_names(self) -> list[str]:
         return [event.event_name for event in self.events.values()]
 
+    def ordered_event_names(self) -> dict[int, str]:
+        return {
+            event_num: event.event_name for event_num, event in self.events.items()
+        }
+
     def event_configs(self) -> dict[int, "EventConfig"]:
         return self.events
 

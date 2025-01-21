@@ -4,6 +4,10 @@ from .controller import (
 )
 from .worksheet import (
     CellFormat,
+    CellValues,
+    CellValueType,
     ColorRgb,
     GoogleWorksheet,
+    RangeValues,
+    RangeFormat,
 )

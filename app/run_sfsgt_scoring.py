@@ -42,16 +42,21 @@ class GoogleSheetViewConfigGenerator:
         self._season_cfg = season_cfg
 
     def generate(self) -> season_view.GoogleSheetSeasonViewConfig:
-        event_configs = [self._generate_event_config(event_name) for event_name in self._season_cfg.event_names()]
+        ordered_event_names = self._season_cfg.ordered_event_names()
+        event_configs = [
+            self._generate_event_config(event_num, event_name)
+            for event_num, event_name in ordered_event_names.items()
+        ]
         return season_view.GoogleSheetSeasonViewConfig(
             players_worksheet_name=self._season_cfg.players_sheet_name,
             leaderboard_worksheet_name=self._season_cfg.leaderboard_sheet_name,
             event_worksheet_configs=event_configs,
         )
 
-    def _generate_event_config(self, event_name: str) -> season_view.GoogleSheetSeasonViewEventConfig:
+    def _generate_event_config(self, event_num: int, event_name: str) -> season_view.GoogleSheetSeasonViewEventConfig:
         season_event_config = self._season_cfg.get_event_config(event_name)
         return season_view.GoogleSheetSeasonViewEventConfig(
+            event_number=event_num,
             event_name=season_event_config.event_name,
             worksheet_name=season_event_config.sheet_name,
             scorecard_start_cell=season_event_config.scorecard_sheet_start_cell,
