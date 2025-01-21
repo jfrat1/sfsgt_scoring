@@ -137,6 +137,9 @@ class SeasonModelOverallResults(NamedTuple):
 
         return candidates[0]
 
+    def sesaon_handicaps_by_player(self) -> dict[str, float]:
+        return {player.name: player.season_handicap for player in self.players}
+
 
 class SeasonModelResults(NamedTuple):
     events: list[event_result.SeasonModelEventResult]
@@ -168,3 +171,6 @@ class SeasonModelResults(NamedTuple):
             raise KeyError(f"Found more than 1 event with name {event_name}")
 
         return candidates[0]
+
+    def season_handicaps_by_player(self) -> dict[str, float]:
+        return self.overall.sesaon_handicaps_by_player()

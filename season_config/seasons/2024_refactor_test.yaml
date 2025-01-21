@@ -3,7 +3,7 @@ sheet_id: 1CwgQFHNAq37iMXl2COC62nKgLpXfcvky9UwWK9ZSFSU
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
 finale_handicaps_sheet: {
-  enabled: false,
+  enabled: true,
   sheet_name: Finale Handicaps
 }
 events: {

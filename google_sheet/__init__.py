@@ -8,6 +8,6 @@ from .worksheet import (
     CellValueType,
     ColorRgb,
     GoogleWorksheet,
-    RangeValues,
     RangeFormat,
+    RangeValues,
 )

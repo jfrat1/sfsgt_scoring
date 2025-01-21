@@ -38,7 +38,7 @@ class LeaderboardWorksheet:
         self,
         data: SeasonViewWriteLeaderboard,
         worksheet_controller: google_sheet.GoogleWorksheet,
-        ordered_event_names: list[str]
+        ordered_event_names: list[str],
     ) -> None:
         self._data = data
         self._worksheet_controller = worksheet_controller
@@ -121,7 +121,9 @@ class LeaderboardWorksheet:
             values=values,
         )
 
-    def _event_points_write_range(self, sorted_player_data: list[SeasonViewWriteLeaderboardPlayer]) -> google_sheet.RangeValues:
+    def _event_points_write_range(
+        self, sorted_player_data: list[SeasonViewWriteLeaderboardPlayer]
+    ) -> google_sheet.RangeValues:
         start_col = str(LeaderboardColumns.FIRST_EVENT)
         start_col_idx = sheet_utils.column_letter_to_idx(start_col)
         end_col_idx = start_col_idx + len(self._ordered_event_names) - 1

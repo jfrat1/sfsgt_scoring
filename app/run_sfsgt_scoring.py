@@ -44,8 +44,7 @@ class GoogleSheetViewConfigGenerator:
     def generate(self) -> season_view.GoogleSheetSeasonViewConfig:
         ordered_event_names = self._season_cfg.ordered_event_names()
         event_configs = [
-            self._generate_event_config(event_num, event_name)
-            for event_num, event_name in ordered_event_names.items()
+            self._generate_event_config(event_num, event_name) for event_num, event_name in ordered_event_names.items()
         ]
         return season_view.GoogleSheetSeasonViewConfig(
             players_worksheet_name=self._season_cfg.players_sheet_name,

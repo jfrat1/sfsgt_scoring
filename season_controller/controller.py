@@ -1,5 +1,6 @@
 import courses
 import season_config
+import season_finale
 import season_model
 import season_view
 from season_controller import delegate
@@ -16,26 +17,31 @@ class SeasonController:
         self.model = model
         self.view = view
         self.config = config
-        self.course_db = course_provider
+        self.course_provider = course_provider
 
     def run_season(self) -> None:
         view_read_data = self.view.read_season()
 
         model_input = delegate.SeasonViewToModelDelegate(
             view_read_data=view_read_data,
-            course_provider=self.course_db,
+            course_provider=self.course_provider,
             config=self.config,
         ).generate_model_input()
 
         model_results = self.model.calculate_results(model_input)
 
-        # if self.config.is_finale_enabled():
-        #     finale_data = season_finale.ConcreteFinaleDataGenerator(
-        #         season_results=model_results
-        #     ).generate()
-        #     # TODO: DO something with the finale data. Maybe modify the write data
-        #     # to add it. Maybe have a separate method in the SeasonView to write
-        #     # the finale sheet.
+        if view_read_data.are_finale_hcps_available and self.config.is_finale_enabled():
+            finale_course = self.course_provider.get_course("Callippe Preserve")
+            # TODO: Several things
+            #  - Players need to be passed in. Including gender.
+            #  - A finale course needs to be configurable along with tees by gender.
+            #  - Create a finale worksheet controller, finale write data, etc.
+            #  - Consider making a delegate to convert data for the view
+            finale_data = season_finale.FinaleDataGenerator(
+                season_handicaps_by_player=model_results.season_handicaps_by_player(),
+                finale_ghin_handicaps_by_player=view_read_data.finale_handicaps_by_player(),
+                course=finale_course,
+            ).generate()
 
         view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
 

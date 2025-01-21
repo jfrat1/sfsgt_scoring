@@ -297,6 +297,7 @@ class SeasonViewWriteEvent(NamedTuple):
 
         raise KeyError(f"Player {player} cannot be found in write data for event {self.name}.")
 
+
 class SeasonViewWriteData(NamedTuple):
     leaderboard: SeasonViewWriteLeaderboard
     events: list[SeasonViewWriteEvent]

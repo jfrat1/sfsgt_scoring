@@ -1,7 +1,7 @@
 import abc
 import pathlib
 
-from . import course
+from courses.course import Course, CourseError, load_course_file
 
 DEFAULT_COURSE_DATA_PATH = pathlib.Path(__file__).parent / "data"
 
@@ -10,39 +10,49 @@ class CourseLoadError(Exception):
     """Exception to be raised when an error is encountered while attempting to load a course."""
 
 
-class GetCourseError(Exception):
-    """Exception to be raised when an error is encountered while searching for a course by name."""
+class CourseProviderError(Exception):
+    """Exception to be raised when an error is encountered in a course provider."""
 
 
 class CourseProvider(abc.ABC):
     @abc.abstractmethod
-    def get_course(self, course_name: str) -> course.Course:
+    def get_course(self, course_name: str) -> Course:
         pass
 
 
 class ConcreteCourseProvider(CourseProvider):
-    def __init__(self, courses: list[course.Course]) -> None:
+    def __init__(self, courses: list[Course]) -> None:
         self.courses = courses
+        self._check_duplicate_course_names()
 
-    def get_course(self, course_name: str) -> course.Course:
-        candidate_courses = [course_ for course_ in self.courses if course_.name == course_name]
-        num_candidates = len(candidate_courses)
+    def get_course(self, course_name: str) -> Course:
+        for course in self.courses:
+            if course.name.lower() == course_name.lower():
+                return course
 
-        if num_candidates == 0:
-            raise GetCourseError(f"Could not find any courses with the name {course_name} in database.")
-        if num_candidates > 1:
-            raise GetCourseError(f"Found more than 1 course with the name {course_name} in database.")
+        raise CourseProviderError(f"Could not find any courses with the name {course_name}.")
 
-        return candidate_courses[0]
+    def _check_duplicate_course_names(self) -> None:
+        course_names = [course.name for course in self.courses]
+        num_courses = len(course_names)
+
+        unique_courses = set(course_names)
+        num_unique_courses = len(unique_courses)
+
+        if num_unique_courses != num_courses:
+            duplicates = [course for course in unique_courses if course_names.count(course) > 1]
+            raise CourseProviderError(
+                f"Course names must be unique. Found the following duplicate course names: {duplicates}"
+            )
 
 
 def build_concrete_course_provider_from_folder(courses_dir: pathlib.Path) -> ConcreteCourseProvider:
-    courses: list[course.Course] = []
+    courses: list[Course] = []
     for course_file in courses_dir.glob("*"):
         try:
-            course_ = course.load_course_file(course_file)
+            course_ = load_course_file(course_file)
             courses.append(course_)
-        except course.CourseError as exc:
+        except CourseError as exc:
             raise CourseLoadError(
                 f"Unable to load database. Error encountere while processing file: {course_file}."
             ) from exc

@@ -26,12 +26,27 @@ class SeasonViewReadPlayer(NamedTuple):
     def name(self) -> str:
         return self.player.name
 
+    def event_handicap_index(self, event_name: str) -> float:
+        try:
+            return self.event_handicap_indices[event_name]
+
+        except KeyError:
+            raise SeasonViewReadDataResourceNotFoundError(
+                f"Event handicap for event {event_name} cannot be found for {self.player}."
+            )
+
 
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
     """Collection of SeasonViewReadPlayer for each player in a season."""
 
-    def __init__(self, players: list[SeasonViewReadPlayer]) -> None:
+    def __init__(
+        self,
+        players: list[SeasonViewReadPlayer],
+        are_finale_hcps_available: bool,
+    ) -> None:
         """Constructs a SeasonVieReadPlayersInstance from a list of SeasonViewReadPlayer."""
+        self._are_finale_hcps_available = are_finale_hcps_available
+
         player_names = [player.name for player in players]
         dedup_player_names = set(player_names)
 
@@ -43,8 +58,18 @@ class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
         super().__init__(players_dict)
 
     @property
+    def are_finale_hcps_available(self) -> bool:
+        return self._are_finale_hcps_available
+
+    @property
     def player_names(self) -> list[str]:
         return list(self.keys())
+
+    def finale_handicaps_by_player(self) -> dict[str, float]:
+        if not self.are_finale_hcps_available:
+            raise SeasonViewReadDataResourceNotFoundError("Finale handicaps are not available.")
+
+        return {player_name: player.event_handicap_index("Finale") for player_name, player in self.items()}
 
     def __getitem__(self, player_name: str) -> SeasonViewReadPlayer:
         if player_name in self.keys():
@@ -98,3 +123,10 @@ class SeasonViewReadData(NamedTuple):
     @property
     def event_names(self) -> list[str]:
         return self.events.event_names
+
+    @property
+    def are_finale_hcps_available(self) -> bool:
+        return self.players.are_finale_hcps_available
+
+    def finale_handicaps_by_player(self) -> dict[str, float]:
+        return self.players.finale_handicaps_by_player()

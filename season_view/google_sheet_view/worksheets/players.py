@@ -23,10 +23,14 @@ class PlayersWorksheet:
 
     def read(self) -> read_data.SeasonViewReadPlayers:
         raw_data = self.worksheet_controller.to_df(header_row=2)
-        raw_data.columns = pd.Index([col.lower() for col in raw_data.columns])
         self._verify_columns_case_insensitive(raw_data)
 
+        headers_lower = [col.lower() for col in raw_data.columns]
+        raw_data.columns = pd.Index(headers_lower)
         raw_data.set_index(keys=PLAYER_COLUMN.lower(), inplace=True)
+
+        are_finale_hcps_available = "finale" in headers_lower
+        events = self.events + ["Finale"] if are_finale_hcps_available else self.events
 
         _players: list[read_data.SeasonViewReadPlayer] = []
         for player_name, player_data in raw_data.iterrows():
@@ -37,12 +41,15 @@ class PlayersWorksheet:
                         gender=player.PlayerGender(player_data[GENDER_COLUMN.lower()]),
                     ),
                     event_handicap_indices=read_data.SeasonViewEventHandicapIndices(
-                        {event: player_data[event.lower()] for event in self.events}
+                        {event: player_data[event.lower()] for event in events}
                     ),
                 )
             )
 
-        return read_data.SeasonViewReadPlayers(players=_players)
+        return read_data.SeasonViewReadPlayers(
+            players=_players,
+            are_finale_hcps_available=are_finale_hcps_available,
+        )
 
     def _verify_columns_case_insensitive(self, raw_data: pd.DataFrame) -> None:
         required_columns = set(item.lower() for item in self.events + [PLAYER_COLUMN, GENDER_COLUMN])
