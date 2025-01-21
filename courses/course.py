@@ -27,16 +27,24 @@ class Course(pydantic.BaseModel):
     name: str
     # TODO: The hole pars and tees need to be gender-specific. It probably calls for an intermediate
     # class to hold the hole pars and tees by gender.
-    hole_pars: dict[int, int]
-    tees: dict[str, TeeInfo]
+    hole_pars_: dict[int, int] = pydantic.Field(alias="hole_pars")
+    tees_: dict[str, TeeInfo] = pydantic.Field(alias="tees")
 
     @property
     def par(self) -> int:
-        return sum(self.hole_pars.values())
+        return sum(self.hole_pars_.values())
+
+    @property
+    def hole_pars(self) -> dict[int, int]:
+        return self.hole_pars_
+
+    @property
+    def tees(self) -> dict[str, TeeInfo]:
+        return self.tees_
 
     def hole_par(self, hole_num: int) -> int:
         try:
-            return self.hole_pars[hole_num]
+            return self.hole_pars_[hole_num]
         except KeyError:
             raise CourseError(f"Hole number {hole_num} does not exist for course {self.name}")
 
@@ -44,9 +52,9 @@ class Course(pydantic.BaseModel):
         try:
             return self.tees[tee_name]
         except KeyError as exc:
-            available_tees = list(self.tees.keys())
+            availabletees_ = list(self.tees.keys())
             raise KeyError(
-                f"Tee named '{tee_name}' not found for course: {self.name}. Available " f"tees: {available_tees}"
+                f"Tee named '{tee_name}' not found for course: {self.name}. Available " f"tees: {availabletees_}"
             ) from exc
 
     def course_handicap(self, tee: str, player_hcp_index: float) -> int:
@@ -69,9 +77,9 @@ class Course(pydantic.BaseModel):
         tee_info = self.get_tee_info(tee_name=tee)
         return round((113 / tee_info.slope) * (gross_strokes - tee_info.rating), 1)
 
-    @pydantic.field_validator("hole_pars")
+    @pydantic.field_validator("hole_pars_")
     @classmethod
-    def check_hole_pars(cls, hole_pars: dict[int, int]) -> dict[int, int]:
+    def check_hole_pars_(cls, hole_pars: dict[int, int]) -> dict[int, int]:
         hole_numbers = list(hole_pars.keys())
         expected_hole_numbers = list(range(1, 19))
         if hole_numbers != expected_hole_numbers:
