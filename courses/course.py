@@ -8,12 +8,17 @@ class CourseError(Exception):
     """Exception to be raised when a course file cannot be loaded."""
 
 
-def load_course_file(file_path: pathlib.Path) -> "Course":
-    try:
-        return pydantic_yaml.parse_yaml_file_as(Course, file_path)
+MIN_COURSE_RATING = 60.0
+MAX_COURSE_RATING = 80.0
+MIN_COURSE_SLOPE = 55
+MAX_COURSE_SLOPE = 155
 
-    except ValueError as exc:
-        raise CourseError(f"Unable to load course file at {file_path}.") from exc
+
+class TeeInfo(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
+
+    rating: float = pydantic.Field(ge=MIN_COURSE_RATING, le=MAX_COURSE_RATING)
+    slope: int = pydantic.Field(ge=MIN_COURSE_SLOPE, le=MAX_COURSE_SLOPE)
 
 
 class Course(pydantic.BaseModel):
@@ -23,7 +28,7 @@ class Course(pydantic.BaseModel):
     # TODO: The hole pars and tees need to be gender-specific. It probably calls for an intermediate
     # class to hold the hole pars and tees by gender.
     hole_pars: dict[int, int]
-    tees: dict[str, "TeeInfo"]
+    tees: dict[str, TeeInfo]
 
     @property
     def par(self) -> int:
@@ -35,7 +40,7 @@ class Course(pydantic.BaseModel):
         except KeyError:
             raise CourseError(f"Hole number {hole_num} does not exist for course {self.name}")
 
-    def get_tee_info(self, tee_name: str) -> "TeeInfo":
+    def get_tee_info(self, tee_name: str) -> TeeInfo:
         try:
             return self.tees[tee_name]
         except KeyError as exc:
@@ -79,14 +84,9 @@ class Course(pydantic.BaseModel):
         return hole_pars
 
 
-MIN_COURSE_RATING = 60.0
-MAX_COURSE_RATING = 80.0
-MIN_COURSE_SLOPE = 55
-MAX_COURSE_SLOPE = 155
+def load_course_file(file_path: pathlib.Path) -> Course:
+    try:
+        return pydantic_yaml.parse_yaml_file_as(Course, file_path)
 
-
-class TeeInfo(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
-
-    rating: float = pydantic.Field(ge=MIN_COURSE_RATING, le=MAX_COURSE_RATING)
-    slope: int = pydantic.Field(ge=MIN_COURSE_SLOPE, le=MAX_COURSE_SLOPE)
+    except ValueError as exc:
+        raise CourseError(f"Unable to load course file at {file_path}.") from exc
