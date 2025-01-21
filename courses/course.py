@@ -20,6 +20,8 @@ class Course(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str
+    # TODO: The hole pars and tees need to be gender-specific. It probably calls for an intermediate
+    # class to hold the hole pars and tees by gender.
     hole_pars: dict[int, int]
     tees: dict[str, "TeeInfo"]
 

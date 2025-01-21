@@ -38,6 +38,11 @@ class PlayerIndividualResultGenerator:
         adjusted_scorecard = self._adjust_scorecard_for_max_hole_strokes()
         self._note_below_par_holes(adjusted_scorecard)
 
+        # TODO: This needs to be a playing handicap which accounts for a difference in pars
+        # between players (tees). For example Harding Park 18 is a par 4 for men and a par 5 for women.
+        # Need to determine the lowest par of all tees being used in event. If current player's tee
+        # has a higher par, they receive that offset in strokes (to the lowest-par player).
+        # See rule 6.2b at https://www.usga.org/handicapping/roh/Content/rules/6%202%20Playing%20Handicap%20Calculation.htm
         course_handicap = self._course.course_handicap(
             tee=self._tee,
             player_hcp_index=self._input.handicap_index,
