@@ -21,10 +21,10 @@
     18: 4,
   },
   tees: {
-    black: {rating: 75.1, slope: 136, distance: 7297},
-    blue: {rating: 73.4, slope: 131, distance: 6897},
-    white: {rating: 71.0, slope: 125, distance: 6371},
-    gold: {rating: 68.9, slope: 121, distance: 5922},
-    red: {rating: 67.5, slope: 118, distance: 5587},
+    black: {rating: 75.1, slope: 136},
+    blue: {rating: 73.4, slope: 131},
+    white: {rating: 71.0, slope: 125},
+    gold: {rating: 68.9, slope: 121},
+    red: {rating: 67.5, slope: 118},
   }
 }

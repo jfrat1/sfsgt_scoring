@@ -21,9 +21,9 @@
     18: 5,
   },
   tees: {
-    black: {rating: 73.6, slope: 137, distance: 6984},  # Sovereign
-    purple: {rating: 71.8, slope: 131, distance: 6568},  # Imperial
-    green: {rating: 70.3, slope: 124, distance: 6157},  # Double Magnum
-    white: {rating: 68.9, slope: 122, distance: 5219},  # Magnum
+    black: {rating: 73.6, slope: 137},  # Sovereign
+    purple: {rating: 71.8, slope: 131},  # Imperial
+    green: {rating: 70.3, slope: 124},  # Double Magnum
+    white: {rating: 68.9, slope: 122},  # Magnum
   }
 }

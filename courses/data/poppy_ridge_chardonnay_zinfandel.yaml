@@ -23,9 +23,9 @@
     18: 4,
   },
   tees: {
-    black: {rating: 74.3, slope: 136, distance: 7048},
-    blue: {rating: 72.4, slope: 132, distance: 6613},
-    white: {rating: 70.2, slope: 128, distance: 6134},
+    black: {rating: 74.3, slope: 136},
+    blue: {rating: 72.4, slope: 132},
+    white: {rating: 70.2, slope: 128},
   }
 }
 

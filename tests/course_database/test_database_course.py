@@ -31,9 +31,9 @@ DEFAULT_COURSE_DATA_YAML = """
     18: 5,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -67,9 +67,9 @@ COURSE_DATA_YAML_MISSING_HOLE_NUMBERS = """
     4: 3,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -106,9 +106,9 @@ COURSE_DATA_YAML_TOO_MANY_HOLE_NUMBERS = """
     19: 4,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -144,9 +144,9 @@ COURSE_DATA_YAML_HOLE_1_HAS_PAR_6 = """
     18: 5,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -182,9 +182,9 @@ COURSE_DATA_YAML_HOLE_1_HAS_PAR_2 = """
     18: 5,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -204,7 +204,6 @@ def test_get_tee_info_nominal() -> None:
         assert isinstance(tee_info, course.TeeInfo)
         assert tee_info.rating == 69.6
         assert tee_info.slope == 119
-        assert tee_info.distance == 6110
 
 
 def test_get_tee_info_cant_find_tee_name_raises_error() -> None:

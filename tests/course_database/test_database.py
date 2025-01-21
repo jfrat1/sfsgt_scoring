@@ -31,9 +31,9 @@ BAYLANDS_COURSE_DATA_YAML = """
     18: 5,
   },
   tees: {
-    black: {rating: 72.2, slope: 125, distance: 6680},
-    blue: {rating: 69.6, slope: 119, distance: 6110},
-    white: {rating: 66.8, slope: 110, distance: 5776},
+    black: {rating: 72.2, slope: 125},
+    blue: {rating: 69.6, slope: 119},
+    white: {rating: 66.8, slope: 110},
   }
 }
 """
@@ -62,9 +62,9 @@ PRESIDIO_COURSE_DATA_YAML = """
     18: 5,
   },
   tees: {
-    black: {rating: 72.6, slope: 135, distance: 6481},
-    white: {rating: 71.1, slope: 132, distance: 6103},
-    blue: {rating: 69.5, slope: 129, distance: 5746},
+    black: {rating: 72.6, slope: 135},
+    white: {rating: 71.1, slope: 132},
+    blue: {rating: 69.5, slope: 129},
   }
 }
 """

@@ -88,4 +88,3 @@ class TeeInfo(pydantic.BaseModel):
 
     rating: float = pydantic.Field(ge=MIN_COURSE_RATING, le=MAX_COURSE_RATING)
     slope: int = pydantic.Field(ge=MIN_COURSE_SLOPE, le=MAX_COURSE_SLOPE)
-    distance: int
