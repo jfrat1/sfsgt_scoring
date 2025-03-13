@@ -21,7 +21,7 @@ from sfsgt_scoring import (
 from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 SERVICE_ACCOUNT_CREDENTIALS_FILE = (
-    pathlib.Path(__file__).parent.parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
+    pathlib.Path(__file__).parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
 )
 
 
@@ -67,6 +67,7 @@ def run_dev_mode_app(season_name: str) -> None:
 
     model = season_model.ConcreteSeasonModel()
 
+    print(SERVICE_ACCOUNT_CREDENTIALS_FILE)
     gspread_client = gspread.service_account(filename=SERVICE_ACCOUNT_CREDENTIALS_FILE)
     google_sheet_controller = google_sheet.ConcreteGoogleSheetController(
         gspread_client=gspread_client,
