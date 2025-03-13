@@ -10,30 +10,15 @@ from courses import course
 DEFAULT_COURSE_DATA_YAML = """
 {
   name: baylands,
-  hole_pars: {
-    1: 5,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-  },
-  tees: {
+  hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+  mens_tees: {
     black: {rating: 72.2, slope: 125},
     blue: {rating: 69.6, slope: 119},
     white: {rating: 66.8, slope: 110},
+  },
+  womens_tees: {
+    white: {rating: 71.9, slope: 122},
+    green: {rating: 68.1, slope: 113},
   }
 }
 """
@@ -57,65 +42,34 @@ def test_load_course() -> None:
         assert course_obj.name == "baylands"
 
 
-COURSE_DATA_YAML_MISSING_HOLE_NUMBERS = """
+COURSE_DATA_YAML_MISSING_HOLE_PARS = """
 {
   name: baylands,
-  hole_pars: {
-    1: 5,
-    2: 4,
-    3: 5,
-    4: 3,
-  },
-  tees: {
-    black: {rating: 72.2, slope: 125},
-    blue: {rating: 69.6, slope: 119},
-    white: {rating: 66.8, slope: 110},
-  }
+  hole_pars: [5, 4, 5, 3],
+  mens_tees: {},
+  womens_tees: {}
 }
 """
 
 
 def test_load_course_missing_holes_raises_error() -> None:
-    with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_MISSING_HOLE_NUMBERS) as course_file:
+    with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_MISSING_HOLE_PARS) as course_file:
         with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
 
-COURSE_DATA_YAML_TOO_MANY_HOLE_NUMBERS = """
+COURSE_DATA_YAML_19_HOLE_PARS = """
 {
   name: baylands,
-  hole_pars: {
-    1: 5,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-    19: 4,
-  },
-  tees: {
-    black: {rating: 72.2, slope: 125},
-    blue: {rating: 69.6, slope: 119},
-    white: {rating: 66.8, slope: 110},
-  }
+  hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5, 3],
+  mens_tees: {},
+  womens_tees: {}
 }
 """
 
 
 def test_load_course_too_many_holes_raises_error() -> None:
-    with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_TOO_MANY_HOLE_NUMBERS) as course_file:
+    with temp_course_yaml_file(yaml_data=COURSE_DATA_YAML_19_HOLE_PARS) as course_file:
         with pytest.raises(course.CourseError):
             course.load_course_file(course_file)
 
@@ -123,31 +77,9 @@ def test_load_course_too_many_holes_raises_error() -> None:
 COURSE_DATA_YAML_HOLE_1_HAS_PAR_6 = """
 {
   name: baylands,
-  hole_pars: {
-    1: 6,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-  },
-  tees: {
-    black: {rating: 72.2, slope: 125},
-    blue: {rating: 69.6, slope: 119},
-    white: {rating: 66.8, slope: 110},
-  }
+  hole_pars: [6, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+  mens_tees: {},
+  womens_tees: {}
 }
 """
 
@@ -161,31 +93,8 @@ def test_load_course_hole_has_par_6_raises_error() -> None:
 COURSE_DATA_YAML_HOLE_1_HAS_PAR_2 = """
 {
   name: baylands,
-  hole_pars: {
-    1: 2,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-  },
-  tees: {
-    black: {rating: 72.2, slope: 125},
-    blue: {rating: 69.6, slope: 119},
-    white: {rating: 66.8, slope: 110},
-  }
+  hole_pars: [2, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+  tees: {}
 }
 """
 
@@ -217,3 +126,10 @@ def test_par_property() -> None:
     with temp_course_yaml_file() as course_file:
         course_obj = course.load_course_file(course_file)
         assert course_obj.par == 72
+
+
+def test_hole_par() -> None:
+    with temp_course_yaml_file() as course_file:
+        course_obj = course.load_course_file(course_file)
+        assert course_obj.hole_par(1) == 5
+        assert course_obj.hole_par(16) == 4

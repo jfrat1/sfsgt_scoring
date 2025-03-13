@@ -48,7 +48,7 @@ class ConcreteCourseProvider(CourseProvider):
 
 def build_concrete_course_provider_from_folder(courses_dir: pathlib.Path) -> ConcreteCourseProvider:
     courses: list[Course] = []
-    for course_file in courses_dir.glob("*"):
+    for course_file in courses_dir.glob("*.yaml"):
         try:
             course_ = load_course_file(course_file)
             courses.append(course_)

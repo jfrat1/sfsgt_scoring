@@ -1,29 +1,14 @@
-{
-  name: chardonnay,
-  hole_pars: {
-    1: 4,
-    2: 4,
-    3: 3,
-    4: 5,
-    5: 3,
-    6: 4,
-    7: 5,
-    8: 3,
-    9: 5,
-    10: 5,
-    11: 4,
-    12: 3,
-    13: 4,
-    14: 3,
-    15: 5,
-    16: 3,
-    17: 4,
-    18: 5,
-  },
-  tees: {
-    black: {rating: 73.6, slope: 137},  # Sovereign
-    purple: {rating: 71.8, slope: 131},  # Imperial
-    green: {rating: 70.3, slope: 124},  # Double Magnum
-    white: {rating: 68.9, slope: 122},  # Magnum
-  }
-}
+name: chardonnay
+hole_pars: [4, 4, 3, 5, 3, 4, 5, 3, 5, 5, 4, 3, 4, 3, 5, 3, 4, 5]
+mens_tees:
+  bottle: {rating: 65.3, slope: 115}
+  double mag./imperial: {rating: 71.1, slope: 130}
+  double magnum: {rating: 70.2, slope: 127}
+  imperial: {rating: 71.9, slope: 132}
+  magnum: {rating: 68.7, slope: 124}
+  sovereign: {rating: 73.9, slope: 135}
+womens_tees:
+  bottle: {rating: 69.9, slope: 124}
+  double magnum: {rating: 75.3, slope: 136}
+  imperial: {rating: 77.3, slope: 140}
+  magnum: {rating: 74.0, slope: 131}

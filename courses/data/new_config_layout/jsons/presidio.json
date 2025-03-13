@@ -1,0 +1,64 @@
+{
+  "name": "presidio",
+  "hole_pars": [],
+  "mens_tees": {
+    "black": {
+      "rating": 72.5,
+      "slope": 136
+    },
+    "black/white combo": {
+      "rating": 71.4,
+      "slope": 134
+    },
+    "white": {
+      "rating": 71.0,
+      "slope": 133
+    },
+    "white/blue combo": {
+      "rating": 70.0,
+      "slope": 129
+    },
+    "blue": {
+      "rating": 69.4,
+      "slope": 128
+    },
+    "blue/red combo": {
+      "rating": 66.4,
+      "slope": 125
+    },
+    "red": {
+      "rating": 64.8,
+      "slope": 121
+    }
+  },
+  "womens_tees": {
+    "black": {
+      "rating": 79.0,
+      "slope": 137
+    },
+    "black/white combo": {
+      "rating": 77.7,
+      "slope": 135
+    },
+    "white": {
+      "rating": 77.0,
+      "slope": 133
+    },
+    "white/blue combo": {
+      "rating": 75.7,
+      "slope": 130
+    },
+    "blue": {
+      "rating": 75.0,
+      "slope": 129
+    },
+    "blue/red combo": {
+      "rating": 72.4,
+      "slope": 124
+    },
+    "red": {
+      "rating": 69.9,
+      "slope": 122
+    }
+  }
+}

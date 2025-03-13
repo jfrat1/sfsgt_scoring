@@ -1,28 +1,15 @@
-{
-  name: baylands,
-  hole_pars: {
-    1: 5,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-  },
-  tees: {
-    black: {rating: 72.2, slope: 125},
-    blue: {rating: 69.6, slope: 119},
-    white: {rating: 66.8, slope: 110},
-  }
-}
+name: baylands
+hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5]
+mens_tees:
+  black: {rating: 72.4, slope: 127}
+  blue: {rating: 69.7, slope: 121}
+  blue/white combo: {rating: 68.2, slope: 116}
+  green: {rating: 63.2, slope: 108}
+  white: {rating: 66.8, slope: 113}
+  white/green combo: {rating: 65.7, slope: 110}
+womens_tees:
+  blue: {rating: 75.1, slope: 131}
+  blue/white combo: {rating: 73.4, slope: 126}
+  green: {rating: 68.1, slope: 113}
+  white: {rating: 71.9, slope: 122}
+  white/green combo: {rating: 70.3, slope: 121}

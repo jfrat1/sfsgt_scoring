@@ -10,62 +10,26 @@ from courses import provider
 BAYLANDS_COURSE_DATA_YAML = """
 {
   name: baylands,
-  hole_pars: {
-    1: 5,
-    2: 4,
-    3: 5,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 3,
-    9: 5,
-    10: 4,
-    11: 4,
-    12: 3,
-    13: 5,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 3,
-    18: 5,
-  },
-  tees: {
+  hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+  mens_tees: {
     black: {rating: 72.2, slope: 125},
     blue: {rating: 69.6, slope: 119},
     white: {rating: 66.8, slope: 110},
-  }
+  },
+  womens_tees: {},
 }
 """
 
 PRESIDIO_COURSE_DATA_YAML = """
 {
   name: presidio,
-  hole_pars: {
-    1: 4,
-    2: 5,
-    3: 4,
-    4: 3,
-    5: 4,
-    6: 4,
-    7: 3,
-    8: 4,
-    9: 5,
-    10: 5,
-    11: 4,
-    12: 4,
-    13: 3,
-    14: 4,
-    15: 3,
-    16: 4,
-    17: 4,
-    18: 5,
-  },
-  tees: {
+  hole_pars: [4, 5, 4, 3, 4, 4, 3, 4, 5, 5, 4, 4, 3, 4, 3, 4, 4, 5],
+  mens_tees: {
     black: {rating: 72.6, slope: 135},
     white: {rating: 71.1, slope: 132},
     blue: {rating: 69.5, slope: 129},
-  }
+  },
+  womens_tees: {},
 }
 """
 
@@ -113,7 +77,7 @@ def test_get_course_not_found_raises_error() -> None:
 
 def test_instantiate_course_with_duplicate_course_names_raises_error() -> None:
     course_files = TEST_COURSE_FILES
-    course_files["baylands_duplicate"] = BAYLANDS_COURSE_DATA_YAML
+    course_files["baylands_duplicate.yaml"] = BAYLANDS_COURSE_DATA_YAML
     with temp_course_data_dir(course_files=course_files) as courses_dir:
         with pytest.raises(provider.CourseProviderError):
             provider.build_concrete_course_provider_from_folder(courses_dir)

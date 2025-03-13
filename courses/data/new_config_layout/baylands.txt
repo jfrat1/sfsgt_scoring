@@ -1,0 +1,13 @@
+
+Tee Name	Gender	Par	Course Rating™	Bogey Rating™	Slope Rating®	Front (9)	Back (9)
+Black	M	72	72.4	96.0	127	37.1 / 130	35.3 / 124
+Blue	M	72	69.7	92.1	121	35.8 / 122	33.9 / 120
+Blue/White Combo	M	72	68.2	90.1	116	34.9 / 120	33.3 / 112
+White	M	72	66.8	88.3	113	33.9 / 117	32.9 / 109
+White/Green Combo	M	72	65.7	86.7	110	33.5 / 115	32.2 / 105
+Green	M	71	63.2	83.5	108	32.1 / 112	31.1 / 104
+Blue	F	72	75.1	106.2	131	38.5 / 136	36.6 / 126
+Blue/White Combo	F	72	73.4	103.0	126	37.7 / 132	35.7 / 120
+White	F	72	71.9	100.7	122	36.8 / 129	35.1 / 115
+White/Green Combo	F	72	70.3	98.8	121	36.0 / 128	34.3 / 114
+Green	F	72	68.1	94.9	113	34.9 / 116	33.2 / 110

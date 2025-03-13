@@ -1,0 +1,60 @@
+{
+  "name": "eagle vines",
+  "hole_pars": [],
+  "mens_tees": {
+    "black": {
+      "rating": 75.4,
+      "slope": 138
+    },
+    "blue": {
+      "rating": 73.7,
+      "slope": 135
+    },
+    "member": {
+      "rating": 72.5,
+      "slope": 132
+    },
+    "white": {
+      "rating": 71.2,
+      "slope": 127
+    },
+    "white/gold combo": {
+      "rating": 70.2,
+      "slope": 125
+    },
+    "gold": {
+      "rating": 69.1,
+      "slope": 122
+    },
+    "gold/red combo": {
+      "rating": 68.2,
+      "slope": 120
+    },
+    "red": {
+      "rating": 67.8,
+      "slope": 118
+    }
+  },
+  "womens_tees": {
+    "white": {
+      "rating": 76.7,
+      "slope": 135
+    },
+    "white/gold combo": {
+      "rating": 75.7,
+      "slope": 132
+    },
+    "gold": {
+      "rating": 74.5,
+      "slope": 130
+    },
+    "gold/red combo": {
+      "rating": 73.6,
+      "slope": 127
+    },
+    "red": {
+      "rating": 72.9,
+      "slope": 125
+    }
+  }
+}

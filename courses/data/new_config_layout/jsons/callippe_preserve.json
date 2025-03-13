@@ -1,0 +1,56 @@
+{
+  "name": "callippe preserve",
+  "hole_pars": [],
+  "mens_tees": {
+    "black": {
+      "rating": 73.3,
+      "slope": 139
+    },
+    "blue": {
+      "rating": 71.7,
+      "slope": 135
+    },
+    "blue/white combo": {
+      "rating": 70.7,
+      "slope": 132
+    },
+    "white": {
+      "rating": 69.9,
+      "slope": 129
+    },
+    "yellow": {
+      "rating": 68.0,
+      "slope": 121
+    },
+    "red": {
+      "rating": 64.4,
+      "slope": 111
+    }
+  },
+  "womens_tees": {
+    "blue": {
+      "rating": 77.2,
+      "slope": 139
+    },
+    "blue/white combo": {
+      "rating": 76.0,
+      "slope": 137
+    },
+    "white": {
+      "rating": 75.1,
+      "slope": 136
+    },
+    "yellow": {
+      "rating": 72.6,
+      "slope": 132
+    },
+    "yellow/red": {
+      "rating": 71.0,
+      "slope": 127
+    },
+    "red": {
+      "rating": 68.9,
+      "slope": 119
+    }
+  }
+}

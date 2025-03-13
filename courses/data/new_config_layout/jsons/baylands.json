@@ -1,0 +1,52 @@
+{
+  "name": "baylands",
+  "hole_pars": [],
+  "mens_tees": {
+    "black": {
+      "rating": 72.4,
+      "slope": 127
+    },
+    "blue": {
+      "rating": 69.7,
+      "slope": 121
+    },
+    "blue/white combo": {
+      "rating": 68.2,
+      "slope": 116
+    },
+    "white": {
+      "rating": 66.8,
+      "slope": 113
+    },
+    "white/green combo": {
+      "rating": 65.7,
+      "slope": 110
+    },
+    "green": {
+      "rating": 63.2,
+      "slope": 108
+    }
+  },
+  "womens_tees": {
+    "blue": {
+      "rating": 75.1,
+      "slope": 131
+    },
+    "blue/white combo": {
+      "rating": 73.4,
+      "slope": 126
+    },
+    "white": {
+      "rating": 71.9,
+      "slope": 122
+    },
+    "white/green combo": {
+      "rating": 70.3,
+      "slope": 121
+    },
+    "green": {
+      "rating": 68.1,
+      "slope": 113
+    }
+  }
+}

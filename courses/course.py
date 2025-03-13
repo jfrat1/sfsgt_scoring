@@ -27,24 +27,27 @@ class Course(pydantic.BaseModel):
     name: str
     # TODO: The hole pars and tees need to be gender-specific. It probably calls for an intermediate
     # class to hold the hole pars and tees by gender.
-    hole_pars_: dict[int, int] = pydantic.Field(alias="hole_pars")
-    tees_: dict[str, TeeInfo] = pydantic.Field(alias="tees")
+    hole_pars_: list[int] = pydantic.Field(alias="hole_pars")
+    mens_tees_: dict[str, TeeInfo] = pydantic.Field(alias="mens_tees")
+    womens_tees_: dict[str, TeeInfo] = pydantic.Field(alias="womens_tees")
 
     @property
     def par(self) -> int:
-        return sum(self.hole_pars_.values())
+        return sum(self.hole_pars_)
 
     @property
     def hole_pars(self) -> dict[int, int]:
-        return self.hole_pars_
+        return {idx + 1: par for idx, par in enumerate(self.hole_pars_)}
 
     @property
     def tees(self) -> dict[str, TeeInfo]:
-        return self.tees_
+        # TODO: Implement a gender-specific tee getter
+        return self.mens_tees_
 
     def hole_par(self, hole_num: int) -> int:
         try:
-            return self.hole_pars_[hole_num]
+            hole_idx = hole_num - 1
+            return self.hole_pars_[hole_idx]
         except KeyError:
             raise CourseError(f"Hole number {hole_num} does not exist for course {self.name}")
 
@@ -79,15 +82,13 @@ class Course(pydantic.BaseModel):
 
     @pydantic.field_validator("hole_pars_")
     @classmethod
-    def check_hole_pars_(cls, hole_pars: dict[int, int]) -> dict[int, int]:
-        hole_numbers = list(hole_pars.keys())
-        expected_hole_numbers = list(range(1, 19))
-        if hole_numbers != expected_hole_numbers:
-            raise ValueError("Keys in hole_pars dict must be hole numbers 1 through 18.")
+    def check_hole_pars_(cls, hole_pars: list[int]) -> list[int]:
+        if num_holes := len(hole_pars) != 18:
+            raise ValueError(f"There must be exactly 18 hole pars defined in a course. Found {num_holes}.")
 
-        for hole, par in hole_pars.items():
+        for idx, par in enumerate(hole_pars):
             if par not in (3, 4, 5):
-                raise ValueError(f"Par values must be one of 3, 4, or 5. Found {par} for hole {hole}")
+                raise ValueError(f"Par values must be one of 3, 4, or 5. Found {par} for hole {idx + 1}")
 
         return hole_pars
 

@@ -1,0 +1,48 @@
+{
+  "name": "chardonnay",
+  "hole_pars": [],
+  "mens_tees": {
+    "sovereign": {
+      "rating": 73.9,
+      "slope": 135
+    },
+    "imperial": {
+      "rating": 71.9,
+      "slope": 132
+    },
+    "double mag./imperial": {
+      "rating": 71.1,
+      "slope": 130
+    },
+    "double magnum": {
+      "rating": 70.2,
+      "slope": 127
+    },
+    "magnum": {
+      "rating": 68.7,
+      "slope": 124
+    },
+    "bottle": {
+      "rating": 65.3,
+      "slope": 115
+    }
+  },
+  "womens_tees": {
+    "imperial": {
+      "rating": 77.3,
+      "slope": 140
+    },
+    "double magnum": {
+      "rating": 75.3,
+      "slope": 136
+    },
+    "magnum": {
+      "rating": 74.0,
+      "slope": 131
+    },
+    "bottle": {
+      "rating": 69.9,
+      "slope": 124
+    }
+  }
+}

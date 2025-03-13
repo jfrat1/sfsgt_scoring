@@ -1,0 +1,11 @@
+Tee Name	Gender	Par	Course Rating™	Bogey Rating™	Slope Rating®	Front (9)	Back (9)	 	CH
+Sovereign	M	72	73.9	99.0	135	37.1 / 138	36.8 / 132
+Imperial	M	72	71.9	96.5	132	36.2 / 134	35.7 / 130
+Double Mag./Imperial	M	72	71.1	95.3	130	35.9 / 131	35.2 / 129
+Double Magnum	M	72	70.2	93.8	127	35.4 / 126	34.8 / 128
+Magnum	M	72	68.7	91.8	124	34.5 / 122	34.2 / 126
+Bottle	M	71	65.3	86.7	115	32.8 / 113	32.5 / 117
+Imperial	F	72	77.3	110.3	140	38.9 / 141	38.4 / 139
+Double Magnum	F	72	75.3	107.7	136	37.7 / 136	37.6 / 136
+Magnum	F	72	74.0	104.9	131	36.8 / 131	37.2 / 131
+Bottle	F	72	69.9	99.2	124	35.1 / 123	34.8 / 125

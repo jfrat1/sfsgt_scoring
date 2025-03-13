@@ -1,0 +1,25 @@
+{
+  name: "baylands",
+  mens_spec: {
+    # hole num  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
+    hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+    total_par: 72,
+    tees:
+      {
+        black: { rating: 72.2, slope: 125, par: 72},
+        blue: { rating: 69.6, slope: 119 },
+        white: { rating: 66.8, slope: 110 },
+      },
+  },
+  womens_spec: {
+    # hole num  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
+    hole_pars: [5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 3, 4, 3, 5],
+    total_par: 72,
+    tees:
+      {
+        black: { rating: 72.2, slope: 125 },
+        blue: { rating: 69.6, slope: 119 },
+        white: { rating: 66.8, slope: 110 },
+      },
+  }
+}
