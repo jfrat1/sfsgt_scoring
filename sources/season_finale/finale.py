@@ -21,9 +21,9 @@ class FinaleData:
         self._players = players
 
     def get_player(self, player_name: str) -> FinalePlayerDescriptor:
-        for player in self._players:
-            if player.name == player_name:
-                return player
+        for player_ in self._players:
+            if player_.name == player_name:
+                return player_
 
         raise KeyError(f"Player {player_name} cannot be found in finale data.")
 

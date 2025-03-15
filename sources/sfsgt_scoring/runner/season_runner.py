@@ -398,8 +398,8 @@ class SeasonRunner:
         finale_handicaps: FinaleHandicaps,
     ) -> season_spreadsheet.worksheet.FinaleHandicapsWriteData:
         sheet_finale_handicaps: dict[str, season_spreadsheet.worksheet.FinaleHandicap] = {}
-        for player, player_handicap in finale_handicaps.items():
-            sheet_finale_handicaps[player] = season_spreadsheet.worksheet.FinaleHandicap(
+        for player_, player_handicap in finale_handicaps.items():
+            sheet_finale_handicaps[player_] = season_spreadsheet.worksheet.FinaleHandicap(
                 ghin_handicap=player_handicap.ghin_handicap,
                 season_handicap=player_handicap.season_handicap,
                 finale_handicap=player_handicap.finale_handicap,
