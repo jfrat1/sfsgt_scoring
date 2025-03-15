@@ -1,7 +1,8 @@
 {
     // These settings require the Python extension
     "python.analysis.extraPaths": [
-        "${workspaceFolder}",
+        "${workspaceFolder}/sources",
+        "${workspaceFolder}/tests",
     ],
     // These settings require the Black Formatter extension
     "black-formatter.args": [

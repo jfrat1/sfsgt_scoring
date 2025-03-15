@@ -1,9 +1,9 @@
 from typing import NamedTuple
 
 import courses
+from season_common.player import PlayerGender
 
 from .. import config, handicap
-from season_common.player import PlayerGender
 
 
 class _Matchup(NamedTuple):

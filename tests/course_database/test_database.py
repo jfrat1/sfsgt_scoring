@@ -4,7 +4,6 @@ import tempfile
 from typing import Generator
 
 import pytest
-
 from courses import provider
 
 BAYLANDS_COURSE_DATA_YAML = """

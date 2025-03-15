@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "2024 Season Test Dev Mode",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "app/run_sfsgt_scoring.py",
+            "args": [
+                "--season",
+                "2024_refactor_dev_test",
+                "--dev-mode",
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}

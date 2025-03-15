@@ -6,7 +6,7 @@ import season_model
 import season_view
 from season_common import player, scorecard
 from season_controller.delegate import view_to_model
-from tests.testing_utils import score_generator
+from testing_utils import score_generator
 
 
 def build_test_player() -> player.Player:

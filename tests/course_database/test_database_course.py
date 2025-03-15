@@ -4,7 +4,6 @@ import tempfile
 from typing import Generator
 
 import pytest
-
 from courses import course
 from season_common import player
 
