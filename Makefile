@@ -2,7 +2,6 @@
 
 test: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 test:
-	@echo $$PYTHONPATH
 	pipenv run test
 
 format: export PYTHONPATH=${PWD}/sources:${PWD}/tests
