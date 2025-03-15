@@ -6,6 +6,7 @@ from typing import Generator
 import pytest
 
 from courses import course
+from season_common import player
 
 DEFAULT_COURSE_DATA_YAML = """
 {
@@ -105,14 +106,24 @@ def test_load_course_hole_has_par_2_raises_error() -> None:
             course.load_course_file(course_file)
 
 
-def test_get_tee_info_nominal() -> None:
+def test_get_tee_info_mens_tees() -> None:
     with temp_course_yaml_file() as course_file:
         course_obj = course.load_course_file(course_file)
-        tee_info = course_obj.get_tee_info("blue")
+        tee_info = course_obj.get_tee_info(tee_name="blue", player_gender=player.PlayerGender.MALE)
 
         assert isinstance(tee_info, course.TeeInfo)
         assert tee_info.rating == 69.6
         assert tee_info.slope == 119
+
+
+def test_get_tee_info_womens_tees() -> None:
+    with temp_course_yaml_file() as course_file:
+        course_obj = course.load_course_file(course_file)
+        tee_info = course_obj.get_tee_info(tee_name="white", player_gender=player.PlayerGender.FEMALE)
+
+        assert isinstance(tee_info, course.TeeInfo)
+        assert tee_info.rating == 71.9
+        assert tee_info.slope == 122
 
 
 def test_get_tee_info_cant_find_tee_name_raises_error() -> None:

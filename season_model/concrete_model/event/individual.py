@@ -46,6 +46,7 @@ class PlayerIndividualResultGenerator:
         course_handicap = self._course.course_handicap(
             tee=self._tee,
             player_hcp_index=self._input.handicap_index,
+            player_gender=self._input.gender,
         )
         front_9_gross_strokes = self._front_9_gross_strokes(adjusted_scorecard)
         back_9_gross_strokes = self._back_9_gross_strokes(adjusted_scorecard)
@@ -54,6 +55,7 @@ class PlayerIndividualResultGenerator:
         score_differential = self._course.scoring_differential(
             tee=self._tee,
             gross_strokes=gross_strokes,
+            player_gender=self._input.gender,
         )
 
         return SeasonModelCompleteEventPlayerIndividualResult(

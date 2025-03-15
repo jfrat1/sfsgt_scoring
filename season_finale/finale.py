@@ -1,6 +1,7 @@
 from typing import NamedTuple
 
 from courses import Course
+from season_common import player
 
 
 class FinaleDataError(Exception):
@@ -45,12 +46,12 @@ class FinaleDataGenerator:
     def generate(self) -> FinaleData:
         player_descriptors: list[FinalePlayerDescriptor] = []
 
-        for player in self._player_names:
+        for player_ in self._player_names:
             player_descriptors.append(
                 self._finale_player_descriptor(
-                    name=player,
-                    ghin_handicap=self._finale_ghin_handicaps_by_player[player],
-                    season_handicap=self._season_handicaps_by_player[player],
+                    name=player_,
+                    ghin_handicap=self._finale_ghin_handicaps_by_player[player_],
+                    season_handicap=self._season_handicaps_by_player[player_],
                 )
             )
 
@@ -96,7 +97,9 @@ class FinaleDataGenerator:
         finale_handicap = round(capped_finale_handicap, 1)
 
         # TODO: This tee needs to be passed in. Also needs to be gender-specific
-        course_handicap = self._course.course_handicap(tee="white", player_hcp_index=finale_handicap)
+        course_handicap = self._course.course_handicap(
+            tee="white", player_hcp_index=finale_handicap, player_gender=player.PlayerGender.MALE
+        )
 
         return FinalePlayerDescriptor(
             name=name,

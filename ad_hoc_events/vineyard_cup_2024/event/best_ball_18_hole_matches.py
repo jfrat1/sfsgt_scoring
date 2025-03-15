@@ -3,6 +3,7 @@ from typing import NamedTuple
 import courses
 
 from .. import config, handicap
+from season_common.player import PlayerGender
 
 
 class _Matchup(NamedTuple):
@@ -66,7 +67,7 @@ class BestBall18HoleMatches(NamedTuple):
     def display_matchups(self) -> None:
         course_provider = courses.build_default_concrete_course_provider()
         course = course_provider.get_course(course_name=self.course_name)
-        course_tee = course.get_tee_info(tee_name=self.tee_name)
+        course_tee = course.get_tee_info(tee_name=self.tee_name, player_gender=PlayerGender.MALE)
 
         handicap_calc = handicap.HandicapCalculator(
             course_rating=course_tee.rating,

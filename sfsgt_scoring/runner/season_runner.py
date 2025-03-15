@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 import courses
 import season_config
+from season_common import player
 from sfsgt_scoring import season
 from sfsgt_scoring.season import (
     event as season_event,
@@ -44,15 +45,15 @@ class FinaleHandicapCalculator:
 
     def _ghin_handicaps(self) -> dict[str, float]:
         ghin_handicaps: dict[str, float] = {}
-        for player in self._player_names:
-            ghin_handicaps[player] = self._player_handicaps[player]["FINALE"]
+        for player_ in self._player_names:
+            ghin_handicaps[player_] = self._player_handicaps[player_]["FINALE"]
 
         return ghin_handicaps
 
     def _season_handicaps(self) -> dict[str, float]:
         season_handicaps: dict[str, float] = {}
-        for player in self._player_names:
-            season_handicaps[player] = self._season_results.cumulative.players[player].season_handicap
+        for player_ in self._player_names:
+            season_handicaps[player_] = self._season_results.cumulative.players[player_].season_handicap
 
         return season_handicaps
 
@@ -62,10 +63,10 @@ class FinaleHandicapCalculator:
         season_handicaps: dict[str, float],
     ) -> FinaleHandicaps:
         finale_handicaps: dict[str, FinaleHandicap] = {}
-        for player in self._player_names:
-            finale_handicaps[player] = self._finale_player_handicap(
-                ghin_handicap=ghin_handicaps[player],
-                season_handicap=season_handicaps[player],
+        for player_ in self._player_names:
+            finale_handicaps[player_] = self._finale_player_handicap(
+                ghin_handicap=ghin_handicaps[player_],
+                season_handicap=season_handicaps[player_],
             )
 
         return FinaleHandicaps(finale_handicaps)
@@ -232,7 +233,7 @@ class SeasonRunner:
         tee_name = event_config.tees.mens_tee
 
         course_info = self.course_provider.get_course(course_name)
-        tee_info = course_info.get_tee_info(tee_name)
+        tee_info = course_info.get_tee_info(tee_name=tee_name, player_gender=player.PlayerGender.MALE)
 
         return season_event.CourseInput(
             name=event_config.course_name,
