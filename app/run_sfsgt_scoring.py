@@ -80,12 +80,7 @@ def run_dev_mode_app(season_name: str) -> None:
         sheet_controller=google_sheet_controller,
     )
 
-    # course_provider = courses.build_default_concrete_course_provider()
-    course_provider = courses.build_concrete_course_provider_from_folder(
-        pathlib.Path(
-            "/Users/jfratello/Library/Mobile Documents/com~apple~CloudDocs/Documents/Code/sfsgt_scoring/courses/data/new_config_layout/yamls"
-        )
-    )
+    course_provider = courses.build_default_concrete_course_provider()
 
     controller = season_controller.SeasonController(
         model=model,

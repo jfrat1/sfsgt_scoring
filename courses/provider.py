@@ -30,7 +30,12 @@ class ConcreteCourseProvider(CourseProvider):
             if course.name.lower() == course_name.lower():
                 return course
 
-        raise CourseProviderError(f"Could not find any courses with the name {course_name}.")
+        raise CourseProviderError(
+            f"Could not find any courses with the name {course_name}. Available courses:\n{"\n".join(self._course_names())}"
+        )
+
+    def _course_names(self) -> list[str]:
+        return [course.name for course in self.courses]
 
     def _check_duplicate_course_names(self) -> None:
         course_names = [course.name for course in self.courses]

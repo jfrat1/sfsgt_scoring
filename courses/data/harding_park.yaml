@@ -1,6 +1,8 @@
 name: harding park
 hole_pars: [4, 4, 3, 5, 4, 4, 4, 3, 5, 5, 3, 5, 4, 4, 4, 4, 3, 4]
 mens_tees:
+  # TODO: uncomment this and remove last year's ratings
+  # blue: {rating: 73.5, slope: 131}
   blue: {rating: 73.5, slope: 131}
   blue/white combo: {rating: 71.9, slope: 128}
   gold: {rating: 65.5, slope: 116}
