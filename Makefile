@@ -1,4 +1,4 @@
-.PHONY: test format lint
+.PHONY: test format lint run_2024_refactor_dev_test run_2024_refactor_prod_test
 
 test: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 test:
