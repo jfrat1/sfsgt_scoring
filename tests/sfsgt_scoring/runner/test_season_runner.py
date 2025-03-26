@@ -1,9 +1,8 @@
 from typing import NamedTuple
 from unittest import mock
 
-import pytest
-
 import courses
+import pytest
 import season_config
 from sfsgt_scoring import season
 

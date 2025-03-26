@@ -1,5 +1,4 @@
 import pytest
-
 from season_view.api import read_data
 
 

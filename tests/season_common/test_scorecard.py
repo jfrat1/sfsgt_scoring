@@ -1,5 +1,4 @@
 import pytest
-
 from season_common import scorecard
 
 

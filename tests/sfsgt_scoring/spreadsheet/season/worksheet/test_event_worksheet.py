@@ -4,7 +4,6 @@ from unittest import mock
 import pandas as pd
 import pytest
 from pandas import testing as pd_testing
-
 from sfsgt_scoring.spreadsheet import google as google_sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import event
 

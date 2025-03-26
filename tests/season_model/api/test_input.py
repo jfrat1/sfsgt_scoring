@@ -1,7 +1,6 @@
 from unittest import mock
 
 import pytest
-
 from season_model.api import input
 
 

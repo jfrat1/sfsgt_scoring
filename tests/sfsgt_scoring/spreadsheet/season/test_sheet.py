@@ -2,7 +2,6 @@ from typing import Generator, NamedTuple
 from unittest import mock
 
 import pytest
-
 from sfsgt_scoring.spreadsheet.season import sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import event, players
 

@@ -4,7 +4,6 @@ import tempfile
 from typing import Generator
 
 import pytest
-
 from season_config import config
 
 TEST_SEASON_CONFIG_YAML = """

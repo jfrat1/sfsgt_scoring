@@ -1,5 +1,4 @@
 import pytest
-
 from sfsgt_scoring.season import rank
 
 TEST_PLAYER_VALUES_NO_TIES = {

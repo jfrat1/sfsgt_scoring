@@ -1,5 +1,4 @@
 import pytest
-
 from sfsgt_scoring.season import event, season
 
 POPPY_RIDGE_EVENT_INPUT = event.EventInput(

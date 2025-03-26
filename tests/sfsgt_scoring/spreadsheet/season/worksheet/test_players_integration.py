@@ -1,5 +1,4 @@
 import pytest
-
 from sfsgt_scoring.spreadsheet import google
 from sfsgt_scoring.spreadsheet.season.worksheet import players
 

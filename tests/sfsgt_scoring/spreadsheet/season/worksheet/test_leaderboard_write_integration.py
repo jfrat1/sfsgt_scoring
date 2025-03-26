@@ -1,7 +1,6 @@
 import copy
 
 import pytest
-
 from sfsgt_scoring.spreadsheet import google as google_sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import leaderboard
 

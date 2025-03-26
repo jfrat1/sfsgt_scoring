@@ -1,6 +1,5 @@
 import pandas as pd
 from pandas import testing as pd_testing
-
 from sfsgt_scoring.spreadsheet.season.worksheet import dataframe
 
 

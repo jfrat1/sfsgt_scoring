@@ -1,5 +1,4 @@
 import pytest
-
 import season_config
 from sfsgt_scoring.spreadsheet.season import sheet
 from sfsgt_scoring.spreadsheet.season.worksheet import event, players

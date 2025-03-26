@@ -1,5 +1,4 @@
 import pytest
-
 from sfsgt_scoring.season.event import inputs
 
 

@@ -1,5 +1,4 @@
 import pytest
-
 from season_model.api.result import notable_holes
 
 
