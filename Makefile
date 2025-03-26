@@ -1,4 +1,4 @@
-.PHONY: test format lint run_2024_refactor_dev_test run_2024_refactor_prod_test
+.PHONY: test format lint run_2024_refactor_dev_test run_2024_refactor_prod_test run_2025
 
 test: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 test:
@@ -22,4 +22,5 @@ run_2024_refactor_prod_test:
 	pipenv run scoring_cli --season=2024_refactor_prod_test
 
 run_2025: export PYTHONPATH=${PWD}/sources
-    pipenv run scoring_cli --season=2025
+run_2025:
+	pipenv run scoring_cli --season=2025 --dev-mode

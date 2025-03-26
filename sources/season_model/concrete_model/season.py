@@ -93,13 +93,13 @@ class SeasonOverallResultsGenerator:
                 num_events_completed += 1
                 score_differentials.append(player_event_results.score_differential)
 
-            num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
-            num_net_strokes_top_fives += 1 if player_event_results.net_score_rank.is_top_five() else 0
-            num_net_strokes_top_tens += 1 if player_event_results.net_score_rank.is_top_ten() else 0
+                num_net_strokes_wins += 1 if player_event_results.net_score_rank.is_win() else 0
+                num_net_strokes_top_fives += 1 if player_event_results.net_score_rank.is_top_five() else 0
+                num_net_strokes_top_tens += 1 if player_event_results.net_score_rank.is_top_ten() else 0
 
-            num_event_wins += 1 if player_event_results.event_rank.is_win() else 0
-            num_event_top_fives += 1 if player_event_results.event_rank.is_top_five() else 0
-            num_event_top_tens += 1 if player_event_results.event_rank.is_top_ten() else 0
+                num_event_wins += 1 if player_event_results.event_rank.is_win() else 0
+                num_event_top_fives += 1 if player_event_results.event_rank.is_top_five() else 0
+                num_event_top_tens += 1 if player_event_results.event_rank.is_top_ten() else 0
 
         season_handicap = SeasonHandicapCalculator(score_differentials=score_differentials).calculate()
 
