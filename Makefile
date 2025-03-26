@@ -20,3 +20,6 @@ run_2024_refactor_dev_test:
 run_2024_refactor_prod_test: export PYTHONPATH=${PWD}/sources
 run_2024_refactor_prod_test:
 	pipenv run scoring_cli --season=2024_refactor_prod_test
+
+run_2025: export PYTHONPATH=${PWD}/sources
+    pipenv run scoring_cli --season=2025
