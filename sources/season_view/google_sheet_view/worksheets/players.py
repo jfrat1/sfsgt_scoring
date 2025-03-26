@@ -45,7 +45,7 @@ class PlayersWorksheetData:
         self._are_finale_handicaps_available = FINALE_COLUMN.lower() in self._available_columns_lower
 
         if self._are_finale_handicaps_available:
-            self._events.append(FINALE_COLUMN.lower())
+            self._events.append(FINALE_COLUMN)
 
         self._verify_available_columns()
         self._cleanse_raw_data()

@@ -39,7 +39,7 @@ class EventResultGenerator:
         individual_results: dict[str, SeasonModelEventPlayerIndividualResult] = {}
         for player in self._input.player_names:
             player_input = self._input.player(player)
-            player_tee = self._input.tees.tee_for_player(gender=player_input.gender)
+            player_tee = self._input.tee_for_player(gender=player_input.gender)
 
             individual_results[player] = PlayerIndividualResultGenerator(
                 input=player_input,

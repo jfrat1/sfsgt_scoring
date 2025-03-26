@@ -231,7 +231,9 @@ class SeasonRunner:
         course_name = event_config.course_name
         # TODO: This rendition of the app assumes that there's only 1 tee.
         # We default to the mens tee for now, but a refactor is underway.
-        tee_name = event_config.mens_tee
+        tee_name: str | None = event_config.mens_tee
+        if tee_name is None:
+            raise ValueError(f"Mens tees are not configured for event {event_config.event_name}.")
 
         course_info = self.course_provider.get_course(course_name)
         tee_info = course_info.get_tee_info(tee_name=tee_name, player_gender=player.PlayerGender.MALE)

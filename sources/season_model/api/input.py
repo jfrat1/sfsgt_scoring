@@ -15,6 +15,10 @@ class SeasonModeInputError(Exception):
     pass
 
 
+class SeasonModelEventTeeError(Exception):
+    """Exception to be raised for errors while handling event tees."""
+
+
 class SeasonModelEventType(enum.Enum):
     STANDARD = enum.auto()
     MAJOR = enum.auto()
@@ -47,15 +51,27 @@ class SeasonModelEventPlayerInput(NamedTuple):
 
 
 class SeasonModelEventTees(NamedTuple):
-    mens_tee: str
-    womens_tee: str
+    mens_tee: str | None
+    womens_tee: str | None
+
+    def some_mens_tee(self) -> str:
+        if self.mens_tee is None:
+            raise SeasonModelEventTeeError("Mens tees are not defined.")
+
+        return self.mens_tee
+
+    def some_womens_tee(self) -> str:
+        if self.womens_tee is None:
+            raise SeasonModelEventTeeError("Womens tees are not defined.")
+
+        return self.womens_tee
 
     def tee_for_player(self, gender: PlayerGender) -> str:
         match gender:
             case PlayerGender.MALE:
-                return self.mens_tee
+                return self.some_mens_tee()
             case PlayerGender.FEMALE:
-                return self.womens_tee
+                return self.some_womens_tee()
 
 
 class SeasonModelEventInput(NamedTuple):
@@ -75,6 +91,14 @@ class SeasonModelEventInput(NamedTuple):
                 return _player
 
         raise KeyError(f"Player `{player_name} cannot be found.")
+
+    def tee_for_player(self, gender: PlayerGender) -> str:
+        try:
+            return self.tees.tee_for_player(gender=gender)
+        except SeasonModelEventTeeError as e:
+            raise SeasonModelEventTeeError(
+                f"An error was encountered while getting tee config for event {self.event_name}"
+            ) from e
 
 
 class SeasonModelEventInputs:
