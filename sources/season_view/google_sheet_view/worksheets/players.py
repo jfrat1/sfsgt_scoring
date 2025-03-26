@@ -72,8 +72,8 @@ class PlayersWorksheetData:
         for player_name, player_data in self._raw_data.iterrows():
             player_gender = (
                 player.PlayerGender(player_data[GENDER_COLUMN.lower()])
-                if self._are_finale_handicaps_available
-                else player.PlayerGender.MALE
+                if self._are_genders_available
+                else player.PlayerGender.MALE  # Assume all players are male if there's no gender column.
             )
             _players.append(
                 read_data.SeasonViewReadPlayer(
