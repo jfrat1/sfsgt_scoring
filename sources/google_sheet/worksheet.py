@@ -4,7 +4,8 @@ from typing import Any, Iterable, Literal, NamedTuple, Optional
 import gspread
 import pandas as pd
 from gspread import utils as gspread_utils
-from sfsgt_scoring.spreadsheet import sheet_utils
+
+from google_sheet import utils as sheet_utils
 
 CellValueType = str | float | int
 CellValues = list[list[CellValueType]]
