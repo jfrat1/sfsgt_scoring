@@ -1,5 +1,5 @@
 import pytest
-from sfsgt_scoring.season import rank
+from season_common import rank
 
 TEST_PLAYER_VALUES_NO_TIES = {
     "Player_1": 10,
@@ -61,9 +61,9 @@ def test_rank_order_is_ascending() -> None:
 
 
 def test_rank_ascending_no_ties() -> None:
-    rank_ = rank.Rank()
+    rank_mgr = rank.RankManager()
     assert (
-        rank_.player_ranks_from_values(
+        rank_mgr.player_ranks_from_values(
             player_values=TEST_PLAYER_VALUES_NO_TIES,
             rank_order=rank.RankOrder.ASCENDING,
         )
@@ -72,9 +72,9 @@ def test_rank_ascending_no_ties() -> None:
 
 
 def test_rank_descending_no_ties() -> None:
-    rank_ = rank.Rank()
+    rank_mgr = rank.RankManager()
     assert (
-        rank_.player_ranks_from_values(
+        rank_mgr.player_ranks_from_values(
             player_values=TEST_PLAYER_VALUES_NO_TIES,
             rank_order=rank.RankOrder.DESCENDING,
         )
@@ -83,9 +83,9 @@ def test_rank_descending_no_ties() -> None:
 
 
 def test_rank_ascending_with_ties() -> None:
-    rank_ = rank.Rank()
+    rank_mgr = rank.RankManager()
     assert (
-        rank_.player_ranks_from_values(
+        rank_mgr.player_ranks_from_values(
             player_values=TEST_PLAYER_VALUES_WITH_TIES,
             rank_order=rank.RankOrder.ASCENDING,
         )
@@ -94,9 +94,9 @@ def test_rank_ascending_with_ties() -> None:
 
 
 def test_rank_descending_with_ties() -> None:
-    rank_ = rank.Rank()
+    rank_mgr = rank.RankManager()
     assert (
-        rank_.player_ranks_from_values(
+        rank_mgr.player_ranks_from_values(
             player_values=TEST_PLAYER_VALUES_WITH_TIES,
             rank_order=rank.RankOrder.DESCENDING,
         )
@@ -105,12 +105,12 @@ def test_rank_descending_with_ties() -> None:
 
 
 def test_player_ranks_from_values_empty_values_returns_empty() -> None:
-    rank_ = rank.Rank()
+    rank_mgr = rank.RankManager()
 
     empty_dict: dict[str, int] = {}
 
     assert (
-        rank_.player_ranks_from_values(
+        rank_mgr.player_ranks_from_values(
             player_values=empty_dict,
             rank_order=rank.RankOrder.DESCENDING,
         )
