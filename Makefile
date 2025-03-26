@@ -12,6 +12,9 @@ lint: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 lint:
 	pipenv run check
 
+run_2024: export PYTHONPATH=${PWD}/sources
+run_2024:
+	pipenv run scoring_cli --season=2024
 
 run_2024_refactor_dev_test: export PYTHONPATH=${PWD}/sources
 run_2024_refactor_dev_test:
