@@ -70,11 +70,16 @@ class PlayersWorksheetData:
         _players: list[read_data.SeasonViewReadPlayer] = []
 
         for player_name, player_data in self._raw_data.iterrows():
+            player_gender = (
+                player.PlayerGender(player_data[GENDER_COLUMN.lower()])
+                if self._are_finale_handicaps_available
+                else player.PlayerGender.MALE
+            )
             _players.append(
                 read_data.SeasonViewReadPlayer(
                     player=player.Player(
                         name=str(player_name),
-                        gender=player.PlayerGender(player_data[GENDER_COLUMN.lower()]),
+                        gender=player_gender,
                     ),
                     event_handicap_indices=read_data.SeasonViewEventHandicapIndices(
                         {event: player_data[event.lower()] for event in self._events}

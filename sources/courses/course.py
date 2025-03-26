@@ -48,7 +48,6 @@ class Course(pydantic.BaseModel):
                 return self.mens_tees_
             case _:
                 raise CourseError(f"Tees are not defined for player gender: {player_gender}.")
-        return self.mens_tees_
 
     def hole_par(self, hole_num: int) -> int:
         try:
