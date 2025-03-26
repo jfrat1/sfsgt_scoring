@@ -14,26 +14,10 @@ import season_config
 import season_controller
 import season_model
 import season_view
-from sfsgt_scoring import (
-    runner,
-)
-from sfsgt_scoring.spreadsheet import season as season_spreadsheet
 
 SERVICE_ACCOUNT_CREDENTIALS_FILE = (
     pathlib.Path(__file__).parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
 )
-
-
-def run_prod_mode_app(season_name: str) -> None:
-    season_cfg = season_config.load_season_config(season_name)
-    sheet = season_spreadsheet.SeasonSheet()
-    course_provider = courses.build_default_concrete_course_provider()
-    season_runner = runner.SeasonRunner(
-        config=season_cfg,
-        sheet=sheet,
-        course_provider=course_provider,
-    )
-    season_runner.run()
 
 
 class GoogleSheetViewConfigGenerator:
@@ -61,7 +45,7 @@ class GoogleSheetViewConfigGenerator:
         )
 
 
-def run_dev_mode_app(season_name: str) -> None:
+def run_prod_mode_app(season_name: str) -> None:
     season_cfg = season_config.load_season_config(season_name)
 
     model = season_model.ConcreteSeasonModel()
@@ -91,6 +75,10 @@ def run_dev_mode_app(season_name: str) -> None:
     print(f"Running season `{season_name}` in dev mode.")
 
     controller.run_season()
+
+
+def run_dev_mode_app(season_name: str) -> None:
+    raise NotImplementedError("Dev mode app is not available at this time.")
 
 
 @click.command()

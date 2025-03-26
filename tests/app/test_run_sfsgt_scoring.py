@@ -1,35 +1,5 @@
-from unittest import mock
-
-from click import testing as click_testing
-
 from app import run_sfsgt_scoring
-
-
-@mock.patch.object(run_sfsgt_scoring.courses, "build_default_concrete_course_provider", autospec=True)
-@mock.patch.object(run_sfsgt_scoring.season_spreadsheet, "SeasonSheet")
-@mock.patch.object(run_sfsgt_scoring.runner, "SeasonRunner", autospec=True)
-@mock.patch.object(run_sfsgt_scoring.season_config, "load_season_config", autospec=True)
-def test_cli_nominal(
-    spy_load_season_config: mock.MagicMock,
-    spy_season_runner: mock.MagicMock,
-    spy_season_sheet: mock.MagicMock,
-    spy_concrete_course_builder: mock.MagicMock,
-) -> None:
-    stub_season_config = mock.MagicMock(spec=run_sfsgt_scoring.season_config.SeasonConfig)
-    spy_load_season_config.return_value = stub_season_config
-
-    test_args = ["--season", "test_season_name"]
-    result = invoke_cli(test_args)
-    check_cli_pass(result)
-
-    spy_load_season_config.assert_called_once_with("test_season_name")
-    spy_season_sheet.assert_called_once_with()
-    spy_concrete_course_builder.assert_called_once_with()
-    spy_season_runner.assert_called_once_with(
-        config=spy_load_season_config.return_value,
-        sheet=spy_season_sheet.return_value,
-        course_provider=spy_concrete_course_builder.return_value,
-    )
+from click import testing as click_testing
 
 
 def test_cli_missing_season_fails() -> None:
