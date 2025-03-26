@@ -16,14 +16,10 @@ run_2024: export PYTHONPATH=${PWD}/sources
 run_2024:
 	pipenv run scoring_cli --season=2024
 
-run_2024_refactor_dev_test: export PYTHONPATH=${PWD}/sources
-run_2024_refactor_dev_test:
-	pipenv run scoring_cli --dev-mode --season=2024_refactor_dev_test
-
-run_2024_refactor_prod_test: export PYTHONPATH=${PWD}/sources
-run_2024_refactor_prod_test:
-	pipenv run scoring_cli --season=2024_refactor_prod_test
+run_2024_test: export PYTHONPATH=${PWD}/sources
+run_2024_test:
+	pipenv run scoring_cli --season=2024_test
 
 run_2025: export PYTHONPATH=${PWD}/sources
 run_2025:
-	pipenv run scoring_cli --season=2025 --dev-mode
+	pipenv run scoring_cli --season=2025
