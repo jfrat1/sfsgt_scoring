@@ -72,7 +72,7 @@ def run_prod_mode_app(season_name: str) -> None:
         course_provider=course_provider,
     )
 
-    print(f"Running season `{season_name}` in dev mode.")
+    print(f"Running season `{season_name}`.")
 
     controller.run_season()
 

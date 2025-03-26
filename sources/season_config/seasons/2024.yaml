@@ -13,7 +13,6 @@ events: {
     course_name: poppy ridge zinfandel/chardonnay construction,
     tees: {
       mens_tee: white,
-      womens_tee: n/a,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
@@ -24,7 +23,6 @@ events: {
     course_name: presidio,
     tees: {
       mens_tee: blue,
-      womens_tee: n/a,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
@@ -35,7 +33,6 @@ events: {
     course_name: harding park,
     tees: {
       mens_tee: blue,
-      womens_tee: n/a,
     },
     type: major,
     scorecard_sheet_start_cell: B8,
@@ -46,7 +43,6 @@ events: {
     course_name: baylands,
     tees: {
       mens_tee: white,
-      womens_tee: n/a,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
@@ -57,7 +53,6 @@ events: {
     course_name: callippe preserve,
     tees: {
       mens_tee: white,
-      womens_tee: n/a,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
