@@ -19,6 +19,10 @@ class SeasonConfigGetEventError(Exception):
     """Exception to be raised when an error is encountered while getting an event by name."""
 
 
+class SeasonConfigError(Exception):
+    """Exception to be raised for any other season config error."""
+
+
 def load_season_config(season: str) -> "SeasonConfig":
     """Load a season configuration from a prespecified directory containing config YAML files.
 
@@ -131,8 +135,22 @@ class SeasonConfig(pydantic.BaseModel):
 class EventTeeConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid")
 
-    mens_tee: str
-    womens_tee: str
+    mens_tee_: str | None = pydantic.Field(alias="mens_tee", default=None)
+    womens_tee_: str | None = pydantic.Field(alias="womens_tee", default=None)
+
+    @property
+    def mens_tee(self) -> str:
+        if self.mens_tee_ is None:
+            raise SeasonConfigError("Men's tees are not defined for this course.")
+
+        return self.mens_tee_
+
+    @property
+    def womens_tee(self) -> str:
+        if self.womens_tee_ is None:
+            raise SeasonConfigError("Women's tees are not defined for this course.")
+
+        return self.womens_tee_
 
 
 class EventType(enum.Enum):
@@ -149,3 +167,17 @@ class EventConfig(pydantic.BaseModel):
     tees: EventTeeConfig
     type: EventType
     scorecard_sheet_start_cell: str
+
+    @property
+    def mens_tee(self) -> str:
+        try:
+            return self.tees.mens_tee
+        except SeasonConfigError:
+            raise SeasonConfigError(f"Men's tees are not defined for course {self.course_name}")
+
+    @property
+    def womens_tee(self) -> str:
+        try:
+            return self.tees.womens_tee
+        except SeasonConfigError:
+            raise SeasonConfigError(f"Women's tees are not defined for course {self.course_name}")
