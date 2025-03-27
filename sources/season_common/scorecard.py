@@ -36,7 +36,7 @@ class IncompleteScorecard(Scorecard, class_utils.Singleton):
     def scores(self) -> dict[int, int]:
         raise IncompleteScorecardCallError("Scores cannot be retrieved from incomplete scorecards.")
 
-    def hole_strokes(self, hole_num):
+    def hole_strokes(self, hole_num: int):
         raise IncompleteScorecardCallError("Scores cannot be retrieved from incomplete scorecards.")
 
 

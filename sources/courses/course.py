@@ -9,17 +9,17 @@ class CourseError(Exception):
     """Exception to be raised when a course file cannot be loaded."""
 
 
-MIN_COURSE_RATING = 60.0
-MAX_COURSE_RATING = 80.0
-MIN_COURSE_SLOPE = 55
-MAX_COURSE_SLOPE = 155
+MIN_TEE_RATING = 60.0
+MAX_TEE_RATING = 80.0
+MIN_TEE_SLOPE = 55
+MAX_TEE_SLOPE = 155
 
 
 class TeeInfo(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
-    rating: float = pydantic.Field(ge=MIN_COURSE_RATING, le=MAX_COURSE_RATING)
-    slope: int = pydantic.Field(ge=MIN_COURSE_SLOPE, le=MAX_COURSE_SLOPE)
+    rating: float = pydantic.Field(ge=MIN_TEE_RATING, le=MAX_TEE_RATING)
+    slope: int = pydantic.Field(ge=MIN_TEE_SLOPE, le=MAX_TEE_SLOPE)
 
 
 class Course(pydantic.BaseModel):

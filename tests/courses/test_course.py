@@ -3,6 +3,7 @@ import pathlib
 import tempfile
 from typing import Generator
 
+import pydantic
 import pytest
 from courses import course
 from season_common import player
@@ -143,3 +144,39 @@ def test_hole_par() -> None:
         course_obj = course.load_course_file(course_file)
         assert course_obj.hole_par(1) == 5
         assert course_obj.hole_par(16) == 4
+
+
+NOMINAL_TEE_RATING = (course.MIN_TEE_RATING + course.MAX_TEE_RATING) / 2
+NOMINAL_TEE_SLOPE = int((course.MIN_TEE_SLOPE + course.MAX_TEE_SLOPE) / 2)
+
+
+def test_tee_info_rating_too_low_raises_error() -> None:
+    with pytest.raises(pydantic.ValidationError):
+        course.TeeInfo(
+            rating=course.MIN_TEE_RATING - 1.0,
+            slope=NOMINAL_TEE_SLOPE,
+        )
+
+
+def test_tee_info_rating_too_high_raises_error() -> None:
+    with pytest.raises(pydantic.ValidationError):
+        course.TeeInfo(
+            rating=course.MAX_TEE_RATING + 1.0,
+            slope=NOMINAL_TEE_SLOPE,
+        )
+
+
+def test_tee_info_slope_too_low_raises_error() -> None:
+    with pytest.raises(pydantic.ValidationError):
+        course.TeeInfo(
+            rating=NOMINAL_TEE_RATING,
+            slope=course.MIN_TEE_SLOPE - 1,
+        )
+
+
+def test_tee_info_slope_too_high_raises_error() -> None:
+    with pytest.raises(pydantic.ValidationError):
+        course.TeeInfo(
+            rating=NOMINAL_TEE_RATING,
+            slope=course.MAX_TEE_SLOPE + 1,
+        )
