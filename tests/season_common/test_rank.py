@@ -197,13 +197,13 @@ def test_rank_value_is_top_ten() -> None:
     assert not rank.RankValue(12).is_top_ten()
 
 
-def assert_no_rank_value_is_not_win() -> None:
+def test_no_rank_value_is_not_win() -> None:
     assert not rank.NoRankValue().is_win()
 
 
-def assert_no_rank_value_is_not_top_five() -> None:
+def test_no_rank_value_is_not_top_five() -> None:
     assert not rank.NoRankValue().is_top_five()
 
 
-def assert_no_rank_value_is_not_top_ten() -> None:
+def test_no_rank_value_is_not_top_ten() -> None:
     assert not rank.NoRankValue().is_top_ten()
