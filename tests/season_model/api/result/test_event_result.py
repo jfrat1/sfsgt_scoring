@@ -1,14 +1,13 @@
 import pytest
-
-from season_model.api.result.notable_holes import NotableHoles, NotableHoleType, NotableHoleDuplicationError
+from season_common import rank
 from season_model.api.result.event_result import (
     DisallowedApiCallError,
-    SeasonModelEventPlayerResult,
-    SeasonModelEventPlayerAggregateResult,
     SeasonModelCompleteEventPlayerIndividualResult,
+    SeasonModelEventPlayerAggregateResult,
+    SeasonModelEventPlayerResult,
     SeasonModelIncompleteEventPlayerInividualResult,
 )
-from season_common import rank
+from season_model.api.result.notable_holes import NotableHoles, NotableHoleType
 
 
 def test_incomplete_player_event_result_singleton_implementation() -> None:

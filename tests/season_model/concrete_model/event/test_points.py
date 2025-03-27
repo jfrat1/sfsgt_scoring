@@ -1,5 +1,4 @@
 import pytest
-
 from season_model.api.input import SeasonModelEventType
 from season_model.concrete_model.event import points
 

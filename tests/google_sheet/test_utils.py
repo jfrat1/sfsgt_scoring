@@ -1,7 +1,6 @@
 import pandas as pd
-from pandas import testing as pd_testing
-
 from google_sheet import utils as sheet_utils
+from pandas import testing as pd_testing
 
 
 def test_is_cell_a1_notation_true() -> None:
