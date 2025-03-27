@@ -1,4 +1,4 @@
-from sfsgt_scoring.spreadsheet import sheet_utils
+from google_sheet import utils as sheet_utils
 
 
 def test_is_cell_a1_notation_true() -> None:

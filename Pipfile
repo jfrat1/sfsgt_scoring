@@ -6,7 +6,7 @@ name = "pypi"
 [scripts]
 check = "sh scripts/lint_check.sh"
 fix = "sh scripts/lint_fix.sh"
-test = "pytest --cov --cov-report=html -k 'not integration' tests/"
+test = "pytest --cov --cov-report=html --cov-branch -k 'not integration' tests/"
 scoring_cli = "python sources/app/run_sfsgt_scoring.py"
 
 [packages]
