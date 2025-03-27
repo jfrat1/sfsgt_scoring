@@ -25,7 +25,7 @@ class PlayerIndividualResultGenerator:
         self._course = course
         self._tee = tee
 
-        # Initialize a multable instance to store notable holes.
+        # Initialize a mutable instance to store notable holes.
         self._notable_holes = NotableHoles()
 
     def generate(self) -> SeasonModelEventPlayerIndividualResult:
