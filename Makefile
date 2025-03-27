@@ -1,5 +1,9 @@
 .PHONY: test format lint run_2024_refactor_dev_test run_2024_refactor_prod_test run_2025
 
+python: export PYTHONPATH=${PWD}/sources:${PWD}/tests
+python:
+	pipenv run python
+
 test: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 test:
 	pipenv run test

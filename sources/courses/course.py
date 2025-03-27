@@ -40,6 +40,10 @@ class Course(pydantic.BaseModel):
     def hole_pars(self) -> dict[int, int]:
         return {idx + 1: par for idx, par in enumerate(self.hole_pars_)}
 
+    @property
+    def total_par(self) -> int:
+        return sum(self.hole_pars_)
+
     def tees(self, player_gender: player.PlayerGender) -> dict[str, TeeInfo]:
         match player_gender:
             case player.PlayerGender.FEMALE:
