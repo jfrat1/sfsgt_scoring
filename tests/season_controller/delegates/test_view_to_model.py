@@ -20,7 +20,7 @@ def build_test_player_scorecard() -> scorecard.Scorecard:
     return scorecard.CompleteScorecard(
         scores=score_generator.SimpleHoleScoreGenerator(
             course=score_generator.ScoreGeneratorCourse.BAYLANDS,
-            strategy=score_generator.ScoreGeneratorStrategy.BOGIE_GOLF,
+            strategy=score_generator.SimpleHoleScoreGeneratorStrategy.BOGIE_GOLF,
         ).generate()
     )
 

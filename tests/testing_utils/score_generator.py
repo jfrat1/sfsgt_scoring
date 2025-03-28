@@ -11,10 +11,9 @@ class ScoreGeneratorCourse(enum.Enum):
     PRESIDIO = "presidio"
 
 
-class ScoreGeneratorStrategy(enum.Enum):
+class SimpleHoleScoreGeneratorStrategy(enum.Enum):
     EVEN_PAR = enum.auto()
     BOGIE_GOLF = enum.auto()
-    SMART_GENERATION = enum.auto()
 
 
 class HoleScoreGenerator(abc.ABC):
@@ -22,7 +21,8 @@ class HoleScoreGenerator(abc.ABC):
     def generate(self) -> dict[int, int]:
         pass
 
-    def _get_course(self, course: ScoreGeneratorCourse) -> courses.Course:
+    def get_course(self, course: ScoreGeneratorCourse) -> courses.Course:
+        """Get a Course object for a ScoreGeneratorCourse."""
         return courses.build_default_concrete_course_provider().get_course(course.value)
 
 
@@ -30,18 +30,18 @@ class SimpleHoleScoreGenerator(HoleScoreGenerator):
     def __init__(
         self,
         course: ScoreGeneratorCourse,
-        strategy: ScoreGeneratorStrategy,
+        strategy: SimpleHoleScoreGeneratorStrategy,
     ) -> None:
         self.course = course
         self.strategy = strategy
 
     def generate(self) -> dict[int, int]:
-        course = self._get_course(self.course)
+        course = self.get_course(self.course)
 
         match self.strategy:
-            case ScoreGeneratorStrategy.EVEN_PAR:
+            case SimpleHoleScoreGeneratorStrategy.EVEN_PAR:
                 return course.hole_pars
-            case ScoreGeneratorStrategy.BOGIE_GOLF:
+            case SimpleHoleScoreGeneratorStrategy.BOGIE_GOLF:
                 return {hole_num: hole_par + 1 for hole_num, hole_par in course.hole_pars.items()}
             case _:
                 return {}
@@ -51,7 +51,7 @@ class MaxScoreType(enum.Enum):
     DOUBLE_PAR_PLUS_TWO = enum.auto()
 
 
-class SmartHoleScoreGenerationConfig:
+class SmartHoleScoreGeneratorConfig:
     def __init__(
         self,
         playing_handicap: int,
@@ -100,13 +100,13 @@ class SmartHoleScoreGenerator(HoleScoreGenerator):
     def __init__(
         self,
         course: ScoreGeneratorCourse,
-        config: SmartHoleScoreGenerationConfig,
+        config: SmartHoleScoreGeneratorConfig,
     ) -> None:
         self.course = course
         self.config = config
 
     def generate(self) -> dict[int, int]:
-        course = self._get_course(self.course)
+        course = self.get_course(self.course)
 
         core = SmartHoleScoreGeneratorCore(course, self.config)
         return core.generate()
@@ -117,7 +117,7 @@ class SmartHoleScoreGeneratorError(Exception):
 
 
 class SmartHoleScoreGeneratorCore:
-    def __init__(self, course: courses.Course, verified_config: SmartHoleScoreGenerationConfig) -> None:
+    def __init__(self, course: courses.Course, verified_config: SmartHoleScoreGeneratorConfig) -> None:
         self.course = course
         self.config = verified_config
 
