@@ -23,11 +23,11 @@ class EventAggregateResultsGenerator:
         individual_results: dict[str, SeasonModelEventPlayerIndividualResult],
         event_type: SeasonModelEventType,
     ) -> None:
-        self._complete_results = self._group_results_with_class_type(
+        self._complete_results = self._filter_results_with_class_type(
             player_results=individual_results,
             class_type=SeasonModelCompleteEventPlayerIndividualResult,
         )
-        self._incomplete_results = self._group_results_with_class_type(
+        self._incomplete_results = self._filter_results_with_class_type(
             player_results=individual_results,
             class_type=SeasonModelIncompleteEventPlayerInividualResult,
         )
@@ -37,7 +37,7 @@ class EventAggregateResultsGenerator:
         self._rank_manager = RankManager()
         self._points_manager = Points(event_type)
 
-    def _group_results_with_class_type(
+    def _filter_results_with_class_type(
         self,
         player_results: dict[str, SeasonModelEventPlayerIndividualResult],
         class_type: type[T],
