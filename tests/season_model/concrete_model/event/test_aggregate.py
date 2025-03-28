@@ -1,12 +1,12 @@
-from season_common.rank import NoRankValue, Rank, RankValue
+from season_common.rank import NoRankValue, RankValue
 from season_model.api.input import SeasonModelEventType
 from season_model.api.result import (
     NotableHoles,
     NotableHoleType,
     SeasonModelCompleteEventPlayerIndividualResult,
-    SeasonModelIncompleteEventPlayerInividualResult,
     SeasonModelEventPlayerAggregateResult,
     SeasonModelEventPlayerIndividualResult,
+    SeasonModelIncompleteEventPlayerInividualResult,
 )
 from season_model.concrete_model.event.aggregate import EventAggregateResultsGenerator
 
