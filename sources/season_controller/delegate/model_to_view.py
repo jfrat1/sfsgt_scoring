@@ -76,6 +76,7 @@ class SeasonModelToViewDelegate(NamedTuple):
                 birdie_holes=event_player_result.notable_holes.birdie_holes(),
                 eagle_holes=event_player_result.notable_holes.eagle_holes(),
                 albatross_holes=event_player_result.notable_holes.albatross_holes(),
+                over_max_holes=event_player_result.notable_holes.over_max_holes(),
             )
         else:
             return season_view.SeasonViewWritePlayerIncompleteEvent(

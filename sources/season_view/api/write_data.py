@@ -115,6 +115,11 @@ class SeasonViewWritePlayerEvent(abc.ABC):
     def albatross_holes(self) -> list[int]:
         pass
 
+    @property
+    @abc.abstractmethod
+    def over_max_holes(self) -> list[int]:
+        pass
+
 
 class SeasonViewIncompleteEventAccessError(Exception):
     pass
@@ -193,11 +198,15 @@ class SeasonViewWritePlayerIncompleteEvent(SeasonViewWritePlayerEvent):
 
     @property
     def eagle_holes(self) -> list[int]:
-        raise SeasonViewIncompleteEventAccessError("Acces to birdie_holes is not allowed for incomplete events.")
+        raise SeasonViewIncompleteEventAccessError("Acces to eagle_holes is not allowed for incomplete events.")
 
     @property
     def albatross_holes(self) -> list[int]:
-        raise SeasonViewIncompleteEventAccessError("Acces to birdie_holes is not allowed for incomplete events.")
+        raise SeasonViewIncompleteEventAccessError("Acces to albatross_holes is not allowed for incomplete events.")
+
+    @property
+    def over_max_holes(self) -> list[int]:
+        raise SeasonViewIncompleteEventAccessError("Acces to over_max_holes is not allowed for incomplete events.")
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SeasonViewWritePlayerIncompleteEvent):
@@ -230,6 +239,7 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
         birdie_holes: list[int],
         eagle_holes: list[int],
         albatross_holes: list[int],
+        over_max_holes: list[int],
     ) -> None:
         self._name = name
         self._front_9_strokes = front_9_strokes
@@ -246,6 +256,7 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
         self._birdie_holes = birdie_holes
         self._eagle_holes = eagle_holes
         self._albatross_holes = albatross_holes
+        self._over_max_holes = over_max_holes
 
     @property
     def is_complete_event(self) -> bool:
@@ -311,6 +322,10 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
     def albatross_holes(self) -> list[int]:
         return self._albatross_holes
 
+    @property
+    def over_max_holes(self) -> list[int]:
+        return self._over_max_holes
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SeasonViewWritePlayerCompleteEvent):
             return NotImplemented
@@ -331,6 +346,7 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
             and self._birdie_holes == other._birdie_holes
             and self._eagle_holes == other._eagle_holes
             and self._albatross_holes == other._albatross_holes
+            and self._over_max_holes == other._over_max_holes
         )
 
 

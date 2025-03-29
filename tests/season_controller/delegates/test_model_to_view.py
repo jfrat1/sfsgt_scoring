@@ -99,6 +99,7 @@ def build_test_season_view_write_data() -> season_view.SeasonViewWriteData:
                         birdie_holes=[],
                         eagle_holes=[],
                         albatross_holes=[],
+                        over_max_holes=[],
                     )
                 ],
             )
