@@ -11,11 +11,12 @@ scoring_cli = "python sources/app/run_sfsgt_scoring.py"
 
 [packages]
 click = "*"
-gspread = "*"
 numpy = "*"
 pandas = "*"
 pydantic = "*"
 pydantic-yaml = "*"
+gspread = "*"
+gspread-formatting = "*"
 
 [dev-packages]
 ipdb = "*"
