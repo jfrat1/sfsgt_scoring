@@ -278,7 +278,18 @@ class EventWorksheetWriter:
         self._worksheet_controller.write_multiple_ranges(write_ranges)
 
     def _sort(self) -> None:
-        pass
+        # Sort the full range of data that we manage in the sheet.
+        sort_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.PLAYER,
+            end_col_offset=EventWorksheetColumnOffsets.EVENT_RANK,
+        )
+
+        sort_spec = google_sheet.SortSpec(
+            column=self._column_letter_for_offset(EventWorksheetColumnOffsets.EVENT_RANK),
+            order=google_sheet.SortOrder.ASCENDING,
+        )
+
+        self._worksheet_controller.sort_range(specs=[sort_spec], range_name=sort_range)
 
     def _format(self) -> None:
         pass
