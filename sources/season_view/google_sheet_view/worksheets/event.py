@@ -8,9 +8,10 @@ from season_common import scorecard
 
 from season_view.api import read_data, write_data
 
-ENABLE_WRITER_FORMATTING = False
+FTR_WRITER_FORMATTING_ENABLED = False
+FTR_SAMPLE_BACKGROUND_COLOR_ENABLED = False
 
-STANDARD_HOLE_CELL_FORMAT = google_sheet.CellFormat(
+BACKGROUND_HOLE_CELL_FORMAT = google_sheet.CellFormat(
     backgroundColor=google_sheet.ColorRgb(
         red=252,
         green=245,
@@ -275,7 +276,7 @@ class EventWorksheetWriter:
         # Not quite ready for primetime yet.
         # The background would be set to the same color for all worksheet, but
         # the current event worksheets don't all have the same look.
-        if ENABLE_WRITER_FORMATTING:
+        if FTR_WRITER_FORMATTING_ENABLED:
             self._format()
 
     def _write_data(self) -> None:
@@ -441,7 +442,7 @@ class EventWorksheetWriter:
             end_col_offset=EventWorksheetColumnOffsets.HOLE_18,
         )
         range_formats = [
-            google_sheet.RangeFormat(range=holes_range, format=STANDARD_HOLE_CELL_FORMAT)
+            google_sheet.RangeFormat(range=holes_range, format=BACKGROUND_HOLE_CELL_FORMAT)
             for holes_range in [front_nine_holes_range, back_nine_holes_range]
         ]
         self._worksheet_controller.format_multiple_ranges(range_formats=range_formats)
