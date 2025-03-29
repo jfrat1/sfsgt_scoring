@@ -73,6 +73,9 @@ class SeasonModelToViewDelegate(NamedTuple):
                 net_points=event_player_result.net_score_points,
                 event_points=event_player_result.event_points,
                 event_rank=event_player_result.event_rank.rank(),
+                birdie_holes=event_player_result.notable_holes.birdie_holes(),
+                eagle_holes=event_player_result.notable_holes.eagle_holes(),
+                albatross_holes=event_player_result.notable_holes.albatross_holes(),
             )
         else:
             return season_view.SeasonViewWritePlayerIncompleteEvent(

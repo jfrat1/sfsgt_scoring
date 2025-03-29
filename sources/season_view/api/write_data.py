@@ -100,6 +100,21 @@ class SeasonViewWritePlayerEvent(abc.ABC):
     def event_rank(self) -> int:
         pass
 
+    @property
+    @abc.abstractmethod
+    def birdie_holes(self) -> list[int]:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def eagle_holes(self) -> list[int]:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def albatross_holes(self) -> list[int]:
+        pass
+
 
 class SeasonViewIncompleteEventAccessError(Exception):
     pass
@@ -172,6 +187,18 @@ class SeasonViewWritePlayerIncompleteEvent(SeasonViewWritePlayerEvent):
     def event_rank(self) -> int:
         return self._event_rank
 
+    @property
+    def birdie_holes(self) -> list[int]:
+        raise SeasonViewIncompleteEventAccessError("Acces to birdie_holes is not allowed for incomplete events.")
+
+    @property
+    def eagle_holes(self) -> list[int]:
+        raise SeasonViewIncompleteEventAccessError("Acces to birdie_holes is not allowed for incomplete events.")
+
+    @property
+    def albatross_holes(self) -> list[int]:
+        raise SeasonViewIncompleteEventAccessError("Acces to birdie_holes is not allowed for incomplete events.")
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SeasonViewWritePlayerIncompleteEvent):
             return NotImplemented
@@ -200,6 +227,9 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
         net_points: float,
         event_points: float,
         event_rank: int,
+        birdie_holes: list[int],
+        eagle_holes: list[int],
+        albatross_holes: list[int],
     ) -> None:
         self._name = name
         self._front_9_strokes = front_9_strokes
@@ -213,6 +243,9 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
         self._net_points = net_points
         self._event_points = event_points
         self._event_rank = event_rank
+        self._birdie_holes = birdie_holes
+        self._eagle_holes = eagle_holes
+        self._albatross_holes = albatross_holes
 
     @property
     def is_complete_event(self) -> bool:
@@ -266,6 +299,18 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
     def event_rank(self) -> int:
         return self._event_rank
 
+    @property
+    def birdie_holes(self) -> list[int]:
+        return self._birdie_holes
+
+    @property
+    def eagle_holes(self) -> list[int]:
+        return self._eagle_holes
+
+    @property
+    def albatross_holes(self) -> list[int]:
+        return self._albatross_holes
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SeasonViewWritePlayerCompleteEvent):
             return NotImplemented
@@ -283,6 +328,9 @@ class SeasonViewWritePlayerCompleteEvent(SeasonViewWritePlayerEvent):
             and self._net_points == other._net_points
             and self._event_points == other._event_points
             and self._event_rank == other._event_rank
+            and self._birdie_holes == other._birdie_holes
+            and self._eagle_holes == other._eagle_holes
+            and self._albatross_holes == other._albatross_holes
         )
 
 

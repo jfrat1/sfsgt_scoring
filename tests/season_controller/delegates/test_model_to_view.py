@@ -96,6 +96,9 @@ def build_test_season_view_write_data() -> season_view.SeasonViewWriteData:
                         net_points=45.0,
                         event_points=95.0,
                         event_rank=1,
+                        birdie_holes=[],
+                        eagle_holes=[],
+                        albatross_holes=[],
                     )
                 ],
             )
