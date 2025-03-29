@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from season_common import player, scorecard
 
@@ -97,6 +97,13 @@ class SeasonViewReadEvent:
             raise SeasonViewReadDataResourceNotFoundError(
                 f"Can't locate player '{player}' in Season View data for event {self.event_name}"
             )
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, SeasonViewReadEvent):
+            return NotImplemented
+
+        else:
+            return self.event_name == other.event_name and self._player_scorecards == other._player_scorecards
 
 
 class SeasonViewReadEvents(dict[str, SeasonViewReadEvent]):

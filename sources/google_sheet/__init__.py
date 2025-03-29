@@ -10,4 +10,6 @@ from .worksheet import (
     GoogleWorksheet,
     RangeFormat,
     RangeValues,
+    SortOrder,
+    SortSpec,
 )

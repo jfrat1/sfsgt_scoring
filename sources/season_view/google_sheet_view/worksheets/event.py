@@ -265,12 +265,23 @@ class EventWorksheetWriter:
         self._players_ordered_at_read_time = players_ordered_at_read_time
 
     def write(self) -> None:
+        self._write_data()
+        self._sort()
+        self._format()
+
+    def _write_data(self) -> None:
         write_ranges = [
             self._player_names_write_range(),
             self._front_nine_write_range(data=self._data),
             self._back_nine_and_event_results_write_range(data=self._data),
         ]
         self._worksheet_controller.write_multiple_ranges(write_ranges)
+
+    def _sort(self) -> None:
+        pass
+
+    def _format(self) -> None:
+        pass
 
     def _write_scorecard_data(self, write_data: write_data.SeasonViewWriteEvent):
         first_write_range = self._front_nine_write_range(write_data)
