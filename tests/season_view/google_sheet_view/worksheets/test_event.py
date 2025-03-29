@@ -312,6 +312,8 @@ def test_reader_read_with_empty_scores_for_all_players() -> None:
 
 def test_writer_write() -> None:
     spy_google_worksheet = google_worksheet_double()
+    spy_google_worksheet.column_range_values.return_value = STUB_PLAYERS
+
     writer = create_event_worksheet_writer(google_worksheet=spy_google_worksheet)
 
     writer.write()
@@ -354,6 +356,9 @@ def test_writer_write() -> None:
         specs=[expected_sort_spec],
         range_name=expected_sort_range,
     )
+
+    # TODO: This is a work in progress and shouldn't be called yet
+    spy_google_worksheet.format_multiple_ranges.assert_not_called()
 
 
 def test_writer_player_names_write_range() -> None:

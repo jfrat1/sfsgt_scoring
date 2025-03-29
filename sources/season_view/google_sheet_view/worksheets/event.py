@@ -8,6 +8,8 @@ from season_common import scorecard
 
 from season_view.api import read_data, write_data
 
+ENABLE_WRITER_FORMATTING = False
+
 STANDARD_HOLE_CELL_FORMAT = google_sheet.CellFormat(
     backgroundColor=google_sheet.ColorRgb(
         red=252,
@@ -33,6 +35,8 @@ EAGLE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
 )
 
 
+# Enum defining the worksheet column headers as a column-offset from the
+# "scorecard start cell", which is the cell containing the first player's name.
 class EventWorksheetColumnOffsets(enum.Enum):
     PLAYER = 0
     HOLE_1 = 1
@@ -267,7 +271,12 @@ class EventWorksheetWriter:
     def write(self) -> None:
         self._write_data()
         self._sort()
-        self._format()
+
+        # Not quite ready for primetime yet.
+        # The background would be set to the same color for all worksheet, but
+        # the current event worksheets don't all have the same look.
+        if ENABLE_WRITER_FORMATTING:
+            self._format()
 
     def _write_data(self) -> None:
         write_ranges = [
@@ -292,7 +301,15 @@ class EventWorksheetWriter:
         self._worksheet_controller.sort_range(specs=[sort_spec], range_name=sort_range)
 
     def _format(self) -> None:
-        pass
+        player_rows = self._player_name_to_ws_row_map()
+
+        self._set_hole_cells_to_standard_background()
+        self._set_birdie_hole_cells_background(
+            player_rows=player_rows,
+        )
+        self._set_eagle_hole_cells_background(
+            player_rows=player_rows,
+        )
 
     def _write_scorecard_data(self, write_data: write_data.SeasonViewWriteEvent):
         first_write_range = self._front_nine_write_range(write_data)
@@ -399,3 +416,60 @@ class EventWorksheetWriter:
 
     def _num_players(self) -> int:
         return len(self._players_ordered_at_read_time)
+
+    def _player_name_to_ws_row_map(self) -> dict[str, int]:
+        """A dictionary mapping player names to worksheet rows as they are currently in the worksheet."""
+        column = self._column_letter_for_offset(EventWorksheetColumnOffsets.PLAYER)
+        first_row = self._first_player_row()
+        last_row = self._last_player_row()
+        player_names = self._worksheet_controller.column_range_values(
+            column=column,
+            first_row=first_row,
+            last_row=last_row,
+        )
+
+        name_row_map = {player_name: first_row + idx for idx, player_name in enumerate(player_names)}
+        return name_row_map
+
+    def _set_hole_cells_to_standard_background(self) -> None:
+        front_nine_holes_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.HOLE_1,
+            end_col_offset=EventWorksheetColumnOffsets.HOLE_9,
+        )
+        back_nine_holes_range = self._range_for_columns(
+            start_col_offset=EventWorksheetColumnOffsets.HOLE_10,
+            end_col_offset=EventWorksheetColumnOffsets.HOLE_18,
+        )
+        range_formats = [
+            google_sheet.RangeFormat(range=holes_range, format=STANDARD_HOLE_CELL_FORMAT)
+            for holes_range in [front_nine_holes_range, back_nine_holes_range]
+        ]
+        self._worksheet_controller.format_multiple_ranges(range_formats=range_formats)
+
+    def _set_birdie_hole_cells_background(
+        self,
+        player_rows: dict[str, int],
+    ) -> None:
+        formats: list[google_sheet.RangeFormat] = []
+
+        for player in self._data.players:
+            for hole in player.birdie_holes:
+                row = player_rows[player.name]
+                col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
+                formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT))
+
+        self._worksheet_controller.format_multiple_ranges(range_formats=formats)
+
+    def _set_eagle_hole_cells_background(
+        self,
+        player_rows: dict[str, int],
+    ) -> None:
+        formats: list[google_sheet.RangeFormat] = []
+
+        for player in self._data.players:
+            for hole in player.eagle_holes:
+                row = player_rows[player.name]
+                col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
+                formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT))
+
+        self._worksheet_controller.format_multiple_ranges(range_formats=formats)
