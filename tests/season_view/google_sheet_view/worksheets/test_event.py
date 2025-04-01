@@ -3,24 +3,21 @@ from unittest import mock
 
 import pandas as pd
 import pytest
+from google_sheet import GoogleWorksheet, RangeValues, SortOrder, SortSpec
 from pandas import testing as pd_testing
-
-from google_sheet import GoogleWorksheet, RangeValues, RangeFormat, SortSpec, SortOrder
-from season_common.scorecard import CompleteScorecard, IncompleteScorecard, Scorecard
+from season_common.scorecard import CompleteScorecard, IncompleteScorecard
 from season_view.api.read_data import SeasonViewReadEvent
 from season_view.api.write_data import (
     SeasonViewWriteEvent,
-    SeasonViewWritePlayerEvent,
     SeasonViewWritePlayerCompleteEvent,
-    SeasonViewWritePlayerIncompleteEvent,
 )
 from season_view.google_sheet_view.worksheets import event
 from season_view.google_sheet_view.worksheets.event import (
     EventWorksheet,
     EventWorksheetColumnOffsets,
+    EventWorksheetError,
     EventWorksheetReader,
     EventWorksheetWriter,
-    EventWorksheetError,
 )
 
 STUB_EVENT = "Fake Event"
