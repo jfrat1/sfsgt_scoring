@@ -11,16 +11,8 @@ from season_view.api import read_data, write_data
 FTR_WRITER_FORMATTING_ENABLED = False
 FTR_SAMPLE_BACKGROUND_COLOR_ENABLED = False
 
-BACKGROUND_HOLE_CELL_FORMAT = google_sheet.CellFormat(
-    backgroundColor=google_sheet.ColorRgb(
-        red=252,
-        green=245,
-        blue=243,
-    ),
-)
-
 BIRDIE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
-    backgroundColor=google_sheet.ColorRgb(
+    background_color=google_sheet.ColorRgb(
         red=217,
         green=234,
         blue=211,
@@ -28,7 +20,7 @@ BIRDIE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
 )
 
 EAGLE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
-    backgroundColor=google_sheet.ColorRgb(
+    background_color=google_sheet.ColorRgb(
         red=255,
         green=187,
         blue=137,
@@ -273,9 +265,6 @@ class EventWorksheetWriter:
         self._write_data()
         self._sort()
 
-        # Not quite ready for primetime yet.
-        # The background would be set to the same color for all worksheet, but
-        # the current event worksheets don't all have the same look.
         if FTR_WRITER_FORMATTING_ENABLED:
             self._format()
 
@@ -441,8 +430,12 @@ class EventWorksheetWriter:
             start_col_offset=EventWorksheetColumnOffsets.HOLE_10,
             end_col_offset=EventWorksheetColumnOffsets.HOLE_18,
         )
+
+        # Reference the scorecard start cell as the default background format for scorecard cells
+        background_format = self._worksheet_controller.cell_format(self._scorecard_start_cell)
+
         range_formats = [
-            google_sheet.RangeFormat(range=holes_range, format=BACKGROUND_HOLE_CELL_FORMAT)
+            google_sheet.RangeFormat(range=holes_range, format=background_format)
             for holes_range in [front_nine_holes_range, back_nine_holes_range]
         ]
         self._worksheet_controller.format_multiple_ranges(range_formats=range_formats)

@@ -1,7 +1,8 @@
 import enum
-from typing import Any, Iterable, Literal, NamedTuple, Optional
+from typing import Any, Iterable, Literal, NamedTuple, Optional, Self
 
 import gspread
+import gspread_formatting
 import pandas as pd
 from gspread import utils as gspread_utils
 
@@ -25,6 +26,9 @@ class RgbValueOutOfRangeError(Exception):
 class ColorRgb:
     """Color as reg, green, blue values. Values must be integers in the interval [0, 255]."""
 
+    min_rgb_int = 0
+    max_rgb_int = 255
+
     def __init__(self, red: int, green: int, blue: int) -> None:
         self._verify_rgb_value("red", red)
         self._verify_rgb_value("green", green)
@@ -34,8 +38,24 @@ class ColorRgb:
         self.green = green
         self.blue = blue
 
+    def as_google_api_dict(self) -> dict[str, float]:
+        return {
+            "red": self._rgb_int_to_float(self.red),
+            "green": self._rgb_int_to_float(self.green),
+            "blue": self._rgb_int_to_float(self.blue),
+        }
+
+    @classmethod
+    def from_color(cls, color: gspread_formatting.Color) -> Self:
+        """Create a ColorRgb from a Color object. Convert float RGB values to integer RGB values."""
+        return cls(
+            red=round(color.red * cls.max_rgb_int),
+            green=round(color.green * cls.max_rgb_int),
+            blue=round(color.blue * cls.max_rgb_int),
+        )
+
     def _is_in_rgb_range(self, rgb_val: int) -> bool:
-        return rgb_val >= 0 and rgb_val <= 255
+        return rgb_val >= self.min_rgb_int and rgb_val <= self.max_rgb_int
 
     def _verify_rgb_value(self, rgb_name: str, rgb_val: int) -> None:
         if not self._is_in_rgb_range(rgb_val):
@@ -44,14 +64,7 @@ class ColorRgb:
             )
 
     def _rgb_int_to_float(self, rgb_int: int) -> float:
-        return rgb_int / 255
-
-    def as_google_api_dict(self) -> dict[str, float]:
-        return {
-            "red": self._rgb_int_to_float(self.red),
-            "green": self._rgb_int_to_float(self.green),
-            "blue": self._rgb_int_to_float(self.blue),
-        }
+        return rgb_int / self.max_rgb_int
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, ColorRgb):
@@ -61,12 +74,12 @@ class ColorRgb:
 
 
 class CellFormat(NamedTuple):
-    backgroundColor: Optional[ColorRgb] = None
+    background_color: Optional[ColorRgb] = None
 
     def as_google_api_dict(self) -> dict[str, dict[str, dict[str, float]]]:
         api_json = {}
-        if self.backgroundColor is not None:
-            api_json["backgroundColorStyle"] = {"rgbColor": self.backgroundColor.as_google_api_dict()}
+        if self.background_color is not None:
+            api_json["backgroundColorStyle"] = {"rgbColor": self.background_color.as_google_api_dict()}
 
         return api_json
 
@@ -186,3 +199,10 @@ class GoogleWorksheet:
     def format_multiple_ranges(self, range_formats: Iterable[RangeFormat]) -> None:
         formats = [format.as_google_api_cell_format() for format in range_formats]
         self.worksheet.batch_format(formats=formats)
+
+    def cell_format(self, cell: str) -> CellFormat:
+        if not sheet_utils.is_cell_a1_notation(cell):
+            raise ValueError(f"Cell must be in A1 notation: {cell}.")
+
+        format_raw = gspread_formatting.get_user_entered_format(worksheet=self.worksheet, label=cell)
+        return CellFormat(background_color=ColorRgb.from_color(format_raw.backgroundColor))
