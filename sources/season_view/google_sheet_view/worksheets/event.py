@@ -420,6 +420,7 @@ class EventWorksheetWriter:
         return name_row_map
 
     def _hole_cell_background_reset_formats(self) -> list[google_sheet.RangeFormat]:
+        """A list of RangeFormat objects which will reset all player hole scores to the standars background color."""
         front_nine_holes_range = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.HOLE_1,
             end_col_offset=EventWorksheetColumnOffsets.HOLE_9,
@@ -438,6 +439,7 @@ class EventWorksheetWriter:
         ]
 
     def _birdie_cell_background_formats(self, player_rows: dict[str, int]) -> list[google_sheet.RangeFormat]:
+        """A list of RangeFormat objects which will set birdie holes to a specified background color."""
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:
@@ -450,6 +452,7 @@ class EventWorksheetWriter:
         return formats
 
     def _eagle_cell_background_formats(self, player_rows: dict[str, int]) -> list[google_sheet.RangeFormat]:
+        """A list of RangeFormat objects which will set eagle holes to a specified background color."""
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:

@@ -354,8 +354,8 @@ def test_writer_write() -> None:
         range_name=expected_sort_range,
     )
 
-    # TODO: This is a work in progress and shouldn't be called yet
-    spy_google_worksheet.format_multiple_ranges.assert_not_called()
+    # TODO: This assertion could be made more precise
+    spy_google_worksheet.format_multiple_ranges.assert_called_once()
 
 
 def test_writer_player_names_write_range() -> None:
