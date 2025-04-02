@@ -292,13 +292,12 @@ class EventWorksheetWriter:
     def _format(self) -> None:
         player_rows = self._player_name_to_ws_row_map()
 
-        self._set_hole_cells_to_standard_background()
-        self._set_birdie_hole_cells_background(
-            player_rows=player_rows,
-        )
-        self._set_eagle_hole_cells_background(
-            player_rows=player_rows,
-        )
+        formats = self._hole_cell_background_reset_formats()
+        formats.extend(self._birdie_cell_background_formats(player_rows))
+        formats.extend(self._eagle_cell_background_formats(player_rows))
+
+        if len(formats) > 0:
+            self._worksheet_controller.format_multiple_ranges(formats)
 
     def _write_scorecard_data(self, write_data: write_data.SeasonViewWriteEvent):
         first_write_range = self._front_nine_write_range(write_data)
@@ -420,7 +419,7 @@ class EventWorksheetWriter:
         name_row_map = {player_name: first_row + idx for idx, player_name in enumerate(player_names)}
         return name_row_map
 
-    def _set_hole_cells_to_standard_background(self) -> None:
+    def _hole_cell_background_reset_formats(self) -> list[google_sheet.RangeFormat]:
         front_nine_holes_range = self._range_for_columns(
             start_col_offset=EventWorksheetColumnOffsets.HOLE_1,
             end_col_offset=EventWorksheetColumnOffsets.HOLE_9,
@@ -433,16 +432,12 @@ class EventWorksheetWriter:
         # Reference the scorecard start cell as the default background format for scorecard cells
         background_format = self._worksheet_controller.cell_format(self._scorecard_start_cell)
 
-        range_formats = [
+        return [
             google_sheet.RangeFormat(range=holes_range, format=background_format)
             for holes_range in [front_nine_holes_range, back_nine_holes_range]
         ]
-        self._worksheet_controller.format_multiple_ranges(range_formats=range_formats)
 
-    def _set_birdie_hole_cells_background(
-        self,
-        player_rows: dict[str, int],
-    ) -> None:
+    def _birdie_cell_background_formats(self, player_rows: dict[str, int]) -> list[google_sheet.RangeFormat]:
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:
@@ -452,13 +447,9 @@ class EventWorksheetWriter:
                     col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
                     formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT))
 
-        if len(formats) > 0:
-            self._worksheet_controller.format_multiple_ranges(range_formats=formats)
+        return formats
 
-    def _set_eagle_hole_cells_background(
-        self,
-        player_rows: dict[str, int],
-    ) -> None:
+    def _eagle_cell_background_formats(self, player_rows: dict[str, int]) -> list[google_sheet.RangeFormat]:
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:
@@ -468,5 +459,4 @@ class EventWorksheetWriter:
                     col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
                     formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT))
 
-        if len(formats) > 0:
-            self._worksheet_controller.format_multiple_ranges(range_formats=formats)
+        return formats
