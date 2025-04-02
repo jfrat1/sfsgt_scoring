@@ -8,8 +8,7 @@ from season_common import scorecard
 
 from season_view.api import read_data, write_data
 
-FTR_WRITER_FORMATTING_ENABLED = False
-FTR_SAMPLE_BACKGROUND_COLOR_ENABLED = False
+FTR_WRITER_FORMATTING_ENABLED = True
 
 BIRDIE_HOLE_CELL_FORMAT = google_sheet.CellFormat(
     background_color=google_sheet.ColorRgb(
@@ -447,12 +446,14 @@ class EventWorksheetWriter:
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:
-            for hole in player.birdie_holes:
-                row = player_rows[player.name]
-                col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
-                formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT))
+            if player.is_complete_event:
+                for hole in player.birdie_holes:
+                    row = player_rows[player.name]
+                    col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
+                    formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=BIRDIE_HOLE_CELL_FORMAT))
 
-        self._worksheet_controller.format_multiple_ranges(range_formats=formats)
+        if len(formats) > 0:
+            self._worksheet_controller.format_multiple_ranges(range_formats=formats)
 
     def _set_eagle_hole_cells_background(
         self,
@@ -461,9 +462,11 @@ class EventWorksheetWriter:
         formats: list[google_sheet.RangeFormat] = []
 
         for player in self._data.players:
-            for hole in player.eagle_holes:
-                row = player_rows[player.name]
-                col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
-                formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT))
+            if player.is_complete_event:
+                for hole in player.eagle_holes:
+                    row = player_rows[player.name]
+                    col = self._column_letter_for_offset(EventWorksheetColumnOffsets[f"HOLE_{hole}"])
+                    formats.append(google_sheet.RangeFormat(range=f"{col}{row}", format=EAGLE_HOLE_CELL_FORMAT))
 
-        self._worksheet_controller.format_multiple_ranges(range_formats=formats)
+        if len(formats) > 0:
+            self._worksheet_controller.format_multiple_ranges(range_formats=formats)

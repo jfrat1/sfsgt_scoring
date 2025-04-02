@@ -204,5 +204,5 @@ class GoogleWorksheet:
         if not sheet_utils.is_cell_a1_notation(cell):
             raise ValueError(f"Cell must be in A1 notation: {cell}.")
 
-        format_raw = gspread_formatting.get_user_entered_format(worksheet=self.worksheet, label=cell)
+        format_raw = gspread_formatting.get_effective_format(worksheet=self.worksheet, label=cell)
         return CellFormat(background_color=ColorRgb.from_color(format_raw.backgroundColor))
