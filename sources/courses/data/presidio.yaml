@@ -3,9 +3,7 @@ hole_pars: [4, 5, 4, 3, 4, 4, 3, 4, 5, 5, 4, 4, 3, 4, 3, 4, 4, 5]
 mens_tees:
   black: {rating: 72.5, slope: 136}
   black/white combo: {rating: 71.4, slope: 134}
-  # TODO: uncomment this and delete last year's ratings
-  # blue: {rating: 69.4, slope: 128}
-  blue: {rating: 69.5, slope: 129}
+  blue: {rating: 69.4, slope: 128}
   blue/red combo: {rating: 66.4, slope: 125}
   red: {rating: 64.8, slope: 121}
   white: {rating: 71.0, slope: 133}

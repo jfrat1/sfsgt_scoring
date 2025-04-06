@@ -5,9 +5,7 @@ mens_tees:
   blue: {rating: 69.7, slope: 121}
   blue/white combo: {rating: 68.2, slope: 116}
   green: {rating: 63.2, slope: 108}
-  # TODO: uncomment this and delete last year's rating
-  # white: {rating: 66.8, slope: 113}
-  white: {rating: 66.8, slope: 110}
+  white: {rating: 66.8, slope: 113}
   white/green combo: {rating: 65.7, slope: 110}
 womens_tees:
   blue: {rating: 75.1, slope: 131}
