@@ -359,7 +359,7 @@ class SeasonViewWriteEvent(NamedTuple):
             if player.name == player_name:
                 return player
 
-        raise KeyError(f"Player {player} cannot be found in write data for event {self.name}.")
+        raise KeyError(f"Player {player_name} cannot be found in write data for event {self.name}.")
 
 
 class SeasonViewWriteData(NamedTuple):
