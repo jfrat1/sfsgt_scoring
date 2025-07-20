@@ -17,26 +17,26 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8,
   },
-  # 2: {
-  #   event_name: Presidio,
-  #   sheet_name: Presidio,
-  #   course_name: presidio,
-  #   tees: {
-  #     mens_tee: blue,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
-  # 3: {
-  #   event_name: TPC Harding,
-  #   sheet_name: TPC Harding,
-  #   course_name: harding park,
-  #   tees: {
-  #     mens_tee: blue,
-  #   },
-  #   type: major,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  2: {
+    event_name: Callippe,
+    sheet_name: Callippe,
+    course_name: callippe preserve,
+    tees: {
+      mens_tee: white,
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
+  3: {
+    event_name: Poppy Hills,
+    sheet_name: Poppy Hills,
+    course_name: poppy hills,
+    tees: {
+      mens_tee: blue,
+    },
+    type: major,
+    scorecard_sheet_start_cell: B8,
+  },
   # 4: {
   #   event_name: Baylands,
   #   sheet_name: Baylands,
