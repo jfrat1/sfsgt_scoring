@@ -3,6 +3,7 @@ import pandas as pd
 from season_common import player
 
 from season_view.api import read_data
+from season_view.google_sheet_view import features
 
 HEADER_ROW = 2
 
@@ -10,8 +11,6 @@ PLAYER_COLUMN = "Golfer"
 GENDER_COLUMN = "Gender"
 FINALE_COLUMN = "Finale"
 
-# If sortable names are in the players sheet (Last, First), convert them to canonical name (First Last)
-FTR_CANONICALIZE_PLAYER_NAMES = True
 
 
 class PlayersWorksheetError(Exception):
@@ -99,7 +98,7 @@ class PlayersWorksheetData:
 
 
 def _process_raw_player_name(name_raw: str) -> str:
-    if FTR_CANONICALIZE_PLAYER_NAMES:
+    if features.FTR_CANONICALIZE_PLAYER_NAMES:
         return _canonicalize_player_name(name_raw)
     else:
         return name_raw
