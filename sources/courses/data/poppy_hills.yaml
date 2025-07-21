@@ -1,0 +1,7 @@
+name: poppy hills
+hole_pars: [4, 3, 4, 5, 4, 3, 4, 4, 5, 5, 3, 4, 4, 4, 3, 4, 3, 5]
+mens_tees:
+  blue: {rating: 71.6, slope: 134}
+  white: {rating: 69.4, slope: 129}
+womens_tees:
+  orange: {rating: 70.8, slope: 127}
