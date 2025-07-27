@@ -2,7 +2,9 @@ import enum
 from typing import Any, Iterable, Literal, NamedTuple, Optional, Self
 
 import gspread
-import gspread_formatting
+
+# gspread_formatting doesn't have type hints or stubs available
+import gspread_formatting  # type: ignore [import-untyped]
 import pandas as pd
 from gspread import utils as gspread_utils
 
@@ -188,9 +190,7 @@ class GoogleWorksheet:
 
     def sort_range(self, specs: Iterable[SortSpec], range_name: str) -> None:
         if not sheet_utils.is_range_a1_notation(range_name):
-            raise ValueError(
-                "The 'range' argument must be a valid A1 range name, e.g. 'A1:C6'.\n" f"Found: {range_name}."
-            )
+            raise ValueError(f"The 'range' argument must be a valid A1 range name, e.g. 'A1:C6'.\nFound: {range_name}.")
 
         gspread_specs = [(spec.column_idx(), spec.order.gspread_sort_order()) for spec in specs]
 
