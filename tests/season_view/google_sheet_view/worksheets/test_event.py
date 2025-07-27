@@ -563,59 +563,17 @@ def test_writer_range_for_columns_single_colum() -> None:
 class TestEventWorksheetReaderNameProcessing:
     def test_process_raw_worksheet_data_applies_name_processing_to_index(self) -> None:
         # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
         raw_data = pd.DataFrame(
             data=[
-                [
-                    "turner, stanton",
-                    "5",
-                    "4",
-                    "5",
-                    "6",
-                    "5",
-                    "6",
-                    "4",
-                    "4",
-                    "5",
-                    "",
-                    "",
-                    "6",
-                    "6",
-                    "5",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "5",
-                ],  # fmt: skip
-                [
-                    "fratello, john",
-                    "5",
-                    "7",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "",
-                    "",
-                    "7",
-                    "6",
-                    "4",
-                    "3",
-                    "5",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                ],  # fmt: skip
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["fratello, john", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
             ],
         )
+        # fmt: on
 
         # Using mock worksheet controller since we're only testing data processing, empty players list is fine
         reader = EventWorksheetReader(
@@ -641,59 +599,17 @@ class TestEventWorksheetReaderNameProcessing:
 
     def test_process_raw_worksheet_data_applies_case_transformation(self) -> None:
         # Create test data with mixed case names (only columns that are actually read)
+        # fmt: off
         raw_data = pd.DataFrame(
             data=[
-                [
-                    "STANTON TURNER",
-                    "5",
-                    "4",
-                    "5",
-                    "6",
-                    "5",
-                    "6",
-                    "4",
-                    "4",
-                    "5",
-                    "",
-                    "",
-                    "6",
-                    "6",
-                    "5",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "5",
-                ],  # fmt: skip
-                [
-                    "john fratello",
-                    "5",
-                    "7",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "",
-                    "",
-                    "7",
-                    "6",
-                    "4",
-                    "3",
-                    "5",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                ],  # fmt: skip
+                ["STANTON TURNER", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["john fratello", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
             ],
         )
+        # fmt: on
 
         # Using mock worksheet controller since we're only testing data processing, empty players list is fine
         reader = EventWorksheetReader(
@@ -715,59 +631,17 @@ class TestEventWorksheetReaderNameProcessing:
 
     def test_process_raw_worksheet_data_without_canonicalization(self) -> None:
         # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
         raw_data = pd.DataFrame(
             data=[
-                [
-                    "turner, stanton",
-                    "5",
-                    "4",
-                    "5",
-                    "6",
-                    "5",
-                    "6",
-                    "4",
-                    "4",
-                    "5",
-                    "",
-                    "",
-                    "6",
-                    "6",
-                    "5",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "5",
-                ],  # fmt: skip
-                [
-                    "fratello, john",
-                    "5",
-                    "7",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "3",
-                    "5",
-                    "6",
-                    "",
-                    "",
-                    "7",
-                    "6",
-                    "4",
-                    "3",
-                    "5",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                ],  # fmt: skip
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["fratello, john", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
             ],
         )
+        # fmt: on
 
         # Using mock worksheet controller since we're only testing data processing, empty players list is fine
         reader = EventWorksheetReader(
@@ -789,36 +663,16 @@ class TestEventWorksheetReaderNameProcessing:
 
     def test_process_raw_worksheet_data_preserves_scorecard_data_with_name_processing(self) -> None:
         # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
         raw_data = pd.DataFrame(
             data=[
-                [
-                    "turner, stanton",
-                    "5",
-                    "4",
-                    "5",
-                    "6",
-                    "5",
-                    "6",
-                    "4",
-                    "4",
-                    "5",
-                    "",
-                    "",
-                    "6",
-                    "6",
-                    "5",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "4",
-                    "5",
-                ],  # fmt: skip
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
             ],
         )
+        # fmt: on
 
         # Using mock worksheet controller since we're only testing data processing, empty players list is fine
         reader = EventWorksheetReader(
