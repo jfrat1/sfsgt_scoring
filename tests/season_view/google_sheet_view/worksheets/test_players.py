@@ -1,4 +1,4 @@
-from season_view.google_sheet_view.worksheets.players import _canonicalize_player_name
+from season_view.google_sheet_view.worksheets.utils import _canonicalize_player_name
 
 STUB_EVENTS = ["Baylands", "Corica"]
 

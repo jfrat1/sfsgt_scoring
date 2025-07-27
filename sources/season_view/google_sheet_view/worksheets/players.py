@@ -3,14 +3,13 @@ import pandas as pd
 from season_common import player
 
 from season_view.api import read_data
-from season_view.google_sheet_view import features
+from season_view.google_sheet_view.worksheets import utils
 
 HEADER_ROW = 2
 
 PLAYER_COLUMN = "Golfer"
 GENDER_COLUMN = "Gender"
 FINALE_COLUMN = "Finale"
-
 
 
 class PlayersWorksheetError(Exception):
@@ -72,7 +71,7 @@ class PlayersWorksheetData:
         _players: list[read_data.SeasonViewReadPlayer] = []
 
         for player_name_raw, player_data in self._raw_data.iterrows():
-            player_name = _process_raw_player_name(str(player_name_raw))
+            player_name = utils.process_raw_player_name(str(player_name_raw))
 
             player_gender = (
                 player.PlayerGender(player_data[GENDER_COLUMN.lower()])
@@ -95,25 +94,3 @@ class PlayersWorksheetData:
 
     def are_finale_handicaps_available(self) -> bool:
         return self._are_finale_handicaps_available
-
-
-def _process_raw_player_name(name_raw: str) -> str:
-    if features.FTR_CANONICALIZE_PLAYER_NAMES:
-        return _canonicalize_player_name(name_raw)
-    else:
-        return name_raw
-
-
-def _canonicalize_player_name(name: str) -> str:
-    if "," in name:
-        name_parts = name.split(",")
-        if len(name_parts) != 2:
-            raise ValueError(f"Player names with commas (surname first) should have only 1 comma. Got {name}")
-
-        first_name = name_parts[1].strip()
-        last_name = name_parts[0].strip()
-
-        return " ".join([first_name, last_name])
-
-    else:
-        return name

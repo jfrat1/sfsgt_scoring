@@ -7,6 +7,7 @@ from google_sheet import utils as sheet_utils
 from season_common import scorecard
 
 from season_view.api import read_data, write_data
+from season_view.google_sheet_view.worksheets import utils
 
 FTR_WRITER_FORMATTING_ENABLED = True
 
@@ -212,10 +213,17 @@ class EventWorksheetReader:
 
     def _process_raw_worksheet_data(self, worksheet_data_raw: pd.DataFrame) -> pd.DataFrame:
         worksheet_data = worksheet_data_raw.copy()
+
+        # Set column labels from configuration
         column_labels = EVENT_WORKSHEET_COLUMN_NAMES[READ_DATA_FIRST_COL_INDEX : READ_DATA_LAST_COL_INDEX + 1]
         worksheet_data.columns = pd.Index(column_labels)
+
+        # Remove columns that don't have data to read
         worksheet_data.drop(columns=["FRONT_NINE_STROKES", "PLAYER_INITIAL"], inplace=True)
+
+        # Move player names column into the index and process names to normalize them
         worksheet_data.set_index(keys="PLAYER", inplace=True)
+        worksheet_data.index = worksheet_data.index.map(utils.process_raw_player_name)
 
         return sheet_utils.numericise_all_values(worksheet_data)
 
