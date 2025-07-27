@@ -1,6 +1,5 @@
 import courses
 import season_config
-import season_finale
 import season_model
 import season_view
 
@@ -32,17 +31,18 @@ class SeasonController:
         model_results = self.model.calculate_results(model_input)
 
         if view_read_data.are_finale_hcps_available and self.config.is_finale_enabled():
-            finale_course = self.course_provider.get_course("Callippe Preserve")
+            # finale_course = self.course_provider.get_course("Callippe Preserve")
             # TODO: Several things
             #  - Players need to be passed in. Including gender.
             #  - A finale course needs to be configurable along with tees by gender.
             #  - Create a finale worksheet controller, finale write data, etc.
             #  - Consider making a delegate to convert data for the view
-            finale_data = season_finale.FinaleDataGenerator(
-                season_handicaps_by_player=model_results.season_handicaps_by_player(),
-                finale_ghin_handicaps_by_player=view_read_data.finale_handicaps_by_player(),
-                course=finale_course,
-            ).generate()
+            # finale_data = season_finale.FinaleDataGenerator(
+            #     season_handicaps_by_player=model_results.season_handicaps_by_player(),
+            #     finale_ghin_handicaps_by_player=view_read_data.finale_handicaps_by_player(),
+            #     course=finale_course,
+            # ).generate()
+            pass
 
         view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
 

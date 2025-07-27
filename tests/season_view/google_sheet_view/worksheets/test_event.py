@@ -1,5 +1,6 @@
 import copy
 from unittest import mock
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -11,9 +12,9 @@ from season_view.api.write_data import (
     SeasonViewWriteEvent,
     SeasonViewWritePlayerCompleteEvent,
 )
+from season_view.google_sheet_view.features import NameCase
 from season_view.google_sheet_view.worksheets import event
 from season_view.google_sheet_view.worksheets.event import (
-    EventWorksheet,
     EventWorksheetColumnOffsets,
     EventWorksheetError,
     EventWorksheetReader,
@@ -142,11 +143,6 @@ def google_worksheet_double(data: pd.DataFrame = STUB_WORKSHEET_DATA_RAW) -> moc
     stub_worksheet.range_to_df.return_value = data
 
     return stub_worksheet
-
-
-# TODO: write some tests for the top-level event worksheet code
-def create_event_worksheet() -> EventWorksheet:
-    pass
 
 
 def create_event_worksheet_reader(
@@ -562,3 +558,137 @@ def test_writer_range_for_columns_single_colum() -> None:
 #         "Stanton Turner": 7,
 #         "Steve Harasym": 8,
 #     }
+
+
+class TestEventWorksheetReaderNameProcessing:
+    def test_process_raw_worksheet_data_applies_name_processing_to_index(self) -> None:
+        # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
+        raw_data = pd.DataFrame(
+            data=[
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["fratello, john", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
+            ],
+            columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
+                event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
+            ],
+        )
+        # fmt: on
+
+        # Using mock worksheet controller since we're only testing data processing, empty players list is fine
+        reader = EventWorksheetReader(
+            event_name=STUB_EVENT,
+            worksheet_controller=google_worksheet_double(),
+            scorecard_start_cell=STUB_SCORECARD_START_CELL,
+            players=[],
+        )
+
+        with (
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True),
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE),
+        ):
+            processed_data = reader._process_raw_worksheet_data(raw_data)
+
+        # Check that the index has been processed (canonicalized and title-cased)
+        expected_names = ["Stanton Turner", "John Fratello"]
+        assert list(processed_data.index) == expected_names
+
+        # Check that original raw names are not in the index
+        assert "turner, stanton" not in processed_data.index
+        assert "fratello, john" not in processed_data.index
+
+    def test_process_raw_worksheet_data_applies_case_transformation(self) -> None:
+        # Create test data with mixed case names (only columns that are actually read)
+        # fmt: off
+        raw_data = pd.DataFrame(
+            data=[
+                ["STANTON TURNER", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["john fratello", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
+            ],
+            columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
+                event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
+            ],
+        )
+        # fmt: on
+
+        # Using mock worksheet controller since we're only testing data processing, empty players list is fine
+        reader = EventWorksheetReader(
+            event_name=STUB_EVENT,
+            worksheet_controller=google_worksheet_double(),
+            scorecard_start_cell=STUB_SCORECARD_START_CELL,
+            players=[],
+        )
+
+        with (
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True),
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.UPPER),
+        ):
+            processed_data = reader._process_raw_worksheet_data(raw_data)
+
+        # Check that names are converted to uppercase
+        expected_names = ["STANTON TURNER", "JOHN FRATELLO"]
+        assert list(processed_data.index) == expected_names
+
+    def test_process_raw_worksheet_data_without_canonicalization(self) -> None:
+        # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
+        raw_data = pd.DataFrame(
+            data=[
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+                ["fratello, john", "5", "7", "6", "3", "5", "6", "3", "5", "6", "", "", "7", "6", "4", "3", "5", "3", "4", "5", "6"],  # noqa: E501
+            ],
+            columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
+                event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
+            ],
+        )
+        # fmt: on
+
+        # Using mock worksheet controller since we're only testing data processing, empty players list is fine
+        reader = EventWorksheetReader(
+            event_name=STUB_EVENT,
+            worksheet_controller=google_worksheet_double(),
+            scorecard_start_cell=STUB_SCORECARD_START_CELL,
+            players=[],
+        )
+
+        with (
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", False),
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE),
+        ):
+            processed_data = reader._process_raw_worksheet_data(raw_data)
+
+        # Check that names are title-cased but not canonicalized
+        expected_names = ["Turner, Stanton", "Fratello, John"]
+        assert list(processed_data.index) == expected_names
+
+    def test_process_raw_worksheet_data_preserves_scorecard_data_with_name_processing(self) -> None:
+        # Create test data with "Last, First" format names (only columns that are actually read)
+        # fmt: off
+        raw_data = pd.DataFrame(
+            data=[
+                ["turner, stanton", "5", "4", "5", "6", "5", "6", "4", "4", "5", "", "", "6", "6", "5", "4", "4", "4", "4", "4", "5"],  # noqa: E501
+            ],
+            columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
+                event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
+            ],
+        )
+        # fmt: on
+
+        # Using mock worksheet controller since we're only testing data processing, empty players list is fine
+        reader = EventWorksheetReader(
+            event_name=STUB_EVENT,
+            worksheet_controller=google_worksheet_double(),
+            scorecard_start_cell=STUB_SCORECARD_START_CELL,
+            players=[],
+        )
+
+        with (
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True),
+            patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE),
+        ):
+            processed_data = reader._process_raw_worksheet_data(raw_data)
+
+        # Check that the scorecard data is preserved correctly
+        assert processed_data.index[0] == "Stanton Turner"
+        expected_scores = [5, 4, 5, 6, 5, 6, 4, 4, 5, 6, 6, 5, 4, 4, 4, 4, 4, 5]
+        assert list(processed_data.iloc[0]) == expected_scores
