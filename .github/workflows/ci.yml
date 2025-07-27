@@ -28,10 +28,8 @@ jobs:
       run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
     - name: Install dependencies
       run: pipenv install --dev
-    - name: Lint checks
-      run: |
-        set -e
-        pipenv run check
-        echo "Exit code $?"
     - name: Test with pytest
       run: pipenv run test
+    - name: Lint checks
+      run: pipenv run check
+
