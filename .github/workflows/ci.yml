@@ -30,6 +30,7 @@ jobs:
       run: pipenv install --dev
     - name: Lint checks
       run: |
+        set -e
         pipenv run check
         echo "Exit code $?"
     - name: Test with pytest
