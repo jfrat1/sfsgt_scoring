@@ -580,8 +580,8 @@ class TestEventWorksheetReaderNameProcessing:
         
         reader = EventWorksheetReader(event_name=STUB_EVENT)
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             processed_data = reader._process_raw_worksheet_data(raw_data)
             
         # Check that the index has been processed (canonicalized and title-cased)
@@ -605,8 +605,8 @@ class TestEventWorksheetReaderNameProcessing:
         
         reader = EventWorksheetReader(event_name=STUB_EVENT)
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.UPPER):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.UPPER):
             processed_data = reader._process_raw_worksheet_data(raw_data)
             
         # Check that names are converted to uppercase
@@ -626,8 +626,8 @@ class TestEventWorksheetReaderNameProcessing:
         
         reader = EventWorksheetReader(event_name=STUB_EVENT)
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", False), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", False), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             processed_data = reader._process_raw_worksheet_data(raw_data)
             
         # Check that names are title-cased but not canonicalized
@@ -646,8 +646,8 @@ class TestEventWorksheetReaderNameProcessing:
         
         reader = EventWorksheetReader(event_name=STUB_EVENT)
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             processed_data = reader._process_raw_worksheet_data(raw_data)
             
         # Check that the scorecard data is preserved correctly

@@ -3,7 +3,7 @@ import pandas as pd
 from season_common import player
 
 from season_view.api import read_data
-from season_view.google_sheet_view.worksheets import utils
+from season_view.google_sheet_view.worksheets import name_utils
 
 HEADER_ROW = 2
 
@@ -71,7 +71,7 @@ class PlayersWorksheetData:
         _players: list[read_data.SeasonViewReadPlayer] = []
 
         for player_name_raw, player_data in self._raw_data.iterrows():
-            player_name = utils.process_raw_player_name(str(player_name_raw))
+            player_name = name_utils.process_raw_player_name(str(player_name_raw))
 
             player_gender = (
                 player.PlayerGender(player_data[GENDER_COLUMN.lower()])

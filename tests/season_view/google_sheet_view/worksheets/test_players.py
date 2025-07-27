@@ -22,8 +22,8 @@ class TestPlayersWorksheetDataNameProcessing:
             events=STUB_EVENTS
         )
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             players = worksheet_data.read_players()
             
         player_names = [p.player_name for p in players]
@@ -44,8 +44,8 @@ class TestPlayersWorksheetDataNameProcessing:
             events=STUB_EVENTS
         )
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.UPPER):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.UPPER):
             players = worksheet_data.read_players()
             
         assert players[0].player_name == "JOHN DOE"
@@ -62,8 +62,8 @@ class TestPlayersWorksheetDataNameProcessing:
             events=STUB_EVENTS
         )
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", False), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", False), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             players = worksheet_data.read_players()
             
         assert players[0].player_name == "Doe, John"
@@ -80,8 +80,8 @@ class TestPlayersWorksheetDataNameProcessing:
             events=STUB_EVENTS
         )
         
-        with patch("season_view.google_sheet_view.worksheets.utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
-             patch("season_view.google_sheet_view.worksheets.utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
+        with patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_CANONICALIZE_PLAYER_NAMES", True), \
+             patch("season_view.google_sheet_view.worksheets.name_utils.features.FTR_PLAYER_NAME_CASE", NameCase.TITLE):
             players = worksheet_data.read_players()
             
         assert len(players) == 1
