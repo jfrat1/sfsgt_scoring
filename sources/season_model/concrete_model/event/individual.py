@@ -1,5 +1,6 @@
 from courses import Course
 from season_common.scorecard import CompleteScorecard, Scorecard
+
 from season_model.api.input import SeasonModelEventPlayerInput
 from season_model.api.result import (
     NotableHoles,

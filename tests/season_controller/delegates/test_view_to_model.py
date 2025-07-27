@@ -6,7 +6,12 @@ import season_model
 import season_view
 from season_common import player, scorecard
 from season_controller.delegate import view_to_model
-from testing_utils import score_generator
+
+from tests.testing_utils.score_generator import (
+    ScoreGeneratorCourse,
+    SimpleHoleScoreGenerator,
+    SimpleHoleScoreGeneratorStrategy,
+)
 
 
 def build_test_player() -> player.Player:
@@ -18,9 +23,9 @@ def build_test_player() -> player.Player:
 
 def build_test_player_scorecard() -> scorecard.Scorecard:
     return scorecard.CompleteScorecard(
-        scores=score_generator.SimpleHoleScoreGenerator(
-            course=score_generator.ScoreGeneratorCourse.BAYLANDS,
-            strategy=score_generator.SimpleHoleScoreGeneratorStrategy.BOGIE_GOLF,
+        scores=SimpleHoleScoreGenerator(
+            course=ScoreGeneratorCourse.BAYLANDS,
+            strategy=SimpleHoleScoreGeneratorStrategy.BOGIE_GOLF,
         ).generate()
     )
 

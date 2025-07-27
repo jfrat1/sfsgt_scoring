@@ -1,6 +1,7 @@
 from typing import TypeVar
 
 from season_common.rank import NoRankValue, Rank, RankManager, RankOrder, RankValue
+
 from season_model.api.input import SeasonModelEventType
 from season_model.api.result import (
     SeasonModelCompleteEventPlayerIndividualResult,

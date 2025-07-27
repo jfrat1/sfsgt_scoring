@@ -1,4 +1,4 @@
-from tests.testing_utils.score_generator import (
+from .score_generator import (
     ScoreGeneratorCourse,
     SmartHoleScoreGenerator,
     SmartHoleScoreGeneratorConfig,

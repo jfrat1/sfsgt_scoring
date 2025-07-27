@@ -1,4 +1,5 @@
 from season_common.rank import RankManager, RankOrder, RankValue
+
 from season_model.api.input import SeasonModelInput
 from season_model.api.model import SeasonModel
 from season_model.api.result import (

@@ -16,3 +16,4 @@ exclude = [
   "sfsgt_scoring_2023",
   "sandbox",
 ]
+namespace_packages = false
