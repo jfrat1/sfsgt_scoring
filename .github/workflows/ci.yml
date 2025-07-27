@@ -19,19 +19,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.10
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: '3.12'
         cache: 'pipenv'
     - name: Install pipenv
       run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
     - name: Install dependencies
-      run: |
-        pipenv install --dev
+      run: pipenv install --dev
     - name: Lint checks
-      run: |
-        pipenv run check
+      run: pipenv run check
     - name: Test with pytest
-      run: |
-        pipenv run test
+      run: pipenv run test
