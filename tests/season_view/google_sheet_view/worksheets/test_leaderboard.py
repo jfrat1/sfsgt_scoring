@@ -169,9 +169,9 @@ class TestLeaderboardWorksheet:
 
         # Check data format and content
         expected_values = [
-            [1, "John Doe", 150.0, 8],      # Rank 1 player
-            [2, "Jane Smith", 135.0, 6],    # Rank 2 player
-            [3, "Bob Wilson", 120.0, 4],    # Rank 3 player
+            [1, "John Doe", 150.0, 8],  # Rank 1 player
+            [2, "Jane Smith", 135.0, 6],  # Rank 2 player
+            [3, "Bob Wilson", 120.0, 4],  # Rank 3 player
         ]
         assert range_values.values == expected_values
 
@@ -219,7 +219,7 @@ class TestLeaderboardWorksheet:
         expected_values = [
             [50.0, 45.0, 55.0],  # John: Event 1, Event 2, Event 3
             [45.0, 50.0, 40.0],  # Jane
-            [40.0, 0.0, 80.0],   # Bob
+            [40.0, 0.0, 80.0],  # Bob
         ]
         assert range_values.values == expected_values
 
@@ -249,7 +249,7 @@ class TestLeaderboardWorksheet:
                 },
             ),
         ]
-        
+
         five_events_data = SeasonViewWriteLeaderboard(players=players_with_five_events)
         five_events = ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"]
         worksheet = LeaderboardWorksheet(
@@ -257,7 +257,7 @@ class TestLeaderboardWorksheet:
             worksheet_controller=mock_worksheet,
             ordered_event_names=five_events,
         )
-        
+
         sorted_players = worksheet._data.players_rank_sorted()
         range_values = worksheet._event_points_write_range(sorted_players)
 
@@ -272,7 +272,7 @@ class TestLeaderboardWorksheet:
             worksheet_controller=mock_worksheet,
             ordered_event_names=single_event,
         )
-        
+
         sorted_players = worksheet._data.players_rank_sorted()
         range_values = worksheet._event_points_write_range(sorted_players)
 
@@ -296,10 +296,10 @@ class TestLeaderboardWorksheet:
 
         # Get the argument passed to write_multiple_ranges
         call_args = mock_worksheet.write_multiple_ranges.call_args[0][0]
-        
+
         # Should have 4 range values (standings, event finishes, net strokes, event points)
         assert len(call_args) == 4
-        
+
         # Verify all ranges are RangeValues objects
         for range_value in call_args:
             assert isinstance(range_value, RangeValues)
@@ -319,13 +319,13 @@ class TestLeaderboardWorksheet:
             worksheet_controller=mock_worksheet,
             ordered_event_names=ordered_events,
         )
-        
+
         worksheet.write()
-        
+
         # Should still call write_multiple_ranges (with empty ranges)
         mock_worksheet.write_multiple_ranges.assert_called_once()
         call_args = mock_worksheet.write_multiple_ranges.call_args[0][0]
-        
+
         # All ranges should have empty values
         for range_value in call_args:
             assert range_value.values == []
@@ -365,20 +365,20 @@ class TestLeaderboardWorksheet:
                 event_points={"Event 1": 200.0},
             ),
         ]
-        
+
         # Test that standings range has players in rank order
         standings_range = leaderboard_worksheet._standings_write_range(unsorted_players)
-        
+
         # First row should be rank 3 player (as passed), second should be rank 1
         assert standings_range.values[0][0] == 3  # Third Place player rank
         assert standings_range.values[0][1] == "Third Place"
-        assert standings_range.values[1][0] == 1  # First Place player rank  
+        assert standings_range.values[1][0] == 1  # First Place player rank
         assert standings_range.values[1][1] == "First Place"
 
         # But when we use the sorted data from the leaderboard data itself
         sorted_players = leaderboard_worksheet._data.players_rank_sorted()
         sorted_standings = leaderboard_worksheet._standings_write_range(sorted_players)
-        
+
         # Should be in rank order: John (1), Jane (2), Bob (3)
         assert sorted_standings.values[0][1] == "John Doe"
         assert sorted_standings.values[1][1] == "Jane Smith"

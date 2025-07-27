@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import NamedTuple
 
 import google_sheet
@@ -13,10 +14,41 @@ class GoogleSheetSeasonViewEventConfig(NamedTuple):
     scorecard_start_cell: str
 
 
-class GoogleSheetSeasonViewConfig(NamedTuple):
+@dataclass(frozen=True)
+class GoogleSheetSeasonViewConfig:
     leaderboard_worksheet_name: str
     players_worksheet_name: str
     event_worksheet_configs: list[GoogleSheetSeasonViewEventConfig]
+
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        self._validate_unique_event_names()
+        self._validate_unique_worksheet_names()
+        self._validate_no_worksheet_name_conflicts()
+
+    def _validate_unique_event_names(self) -> None:
+        """Validate that all event names are unique."""
+        event_names = [event.event_name for event in self.event_worksheet_configs]
+        duplicate_event_names = [name for name in event_names if event_names.count(name) > 1]
+        if duplicate_event_names:
+            unique_duplicates = list(set(duplicate_event_names))
+            raise ValueError(f"Configuration contains duplicate event names: {unique_duplicates}")
+
+    def _validate_unique_worksheet_names(self) -> None:
+        """Validate that all event worksheet names are unique."""
+        event_worksheet_names = [event.worksheet_name for event in self.event_worksheet_configs]
+        duplicate_worksheet_names = [name for name in event_worksheet_names if event_worksheet_names.count(name) > 1]
+        if duplicate_worksheet_names:
+            unique_duplicates = list(set(duplicate_worksheet_names))
+            raise ValueError(f"Configuration contains duplicate worksheet names: {unique_duplicates}")
+
+    def _validate_no_worksheet_name_conflicts(self) -> None:
+        """Validate that event worksheet names don't conflict with reserved worksheet names."""
+        event_worksheet_names = [event.worksheet_name for event in self.event_worksheet_configs]
+        reserved_worksheet_names = {self.leaderboard_worksheet_name, self.players_worksheet_name}
+        conflicting_worksheets = [name for name in event_worksheet_names if name in reserved_worksheet_names]
+        if conflicting_worksheets:
+            raise ValueError(f"Event worksheet name conflicts with reserved worksheet names: {conflicting_worksheets}")
 
     def worksheet_names(self) -> list[str]:
         event_worksheet_names = {event.worksheet_name for event in self.event_worksheet_configs}
