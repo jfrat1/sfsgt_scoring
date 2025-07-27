@@ -29,6 +29,8 @@ jobs:
     - name: Install dependencies
       run: pipenv install --dev
     - name: Lint checks
-      run: pipenv run check
+      run: |
+        pipenv run check
+        echo "Exit code $?"
     - name: Test with pytest
       run: pipenv run test
