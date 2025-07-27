@@ -587,7 +587,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "4",
                     "5",
-                ],
+                ],  # fmt: skip
                 [
                     "fratello, john",
                     "5",
@@ -610,7 +610,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "5",
                     "6",
-                ],
+                ],  # fmt: skip
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
@@ -665,7 +665,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "4",
                     "5",
-                ],
+                ],  # fmt: skip
                 [
                     "john fratello",
                     "5",
@@ -688,7 +688,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "5",
                     "6",
-                ],
+                ],  # fmt: skip
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
@@ -739,7 +739,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "4",
                     "5",
-                ],
+                ],  # fmt: skip
                 [
                     "fratello, john",
                     "5",
@@ -762,7 +762,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "5",
                     "6",
-                ],
+                ],  # fmt: skip
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
@@ -813,7 +813,7 @@ class TestEventWorksheetReaderNameProcessing:
                     "4",
                     "4",
                     "5",
-                ],
+                ],  # fmt: skip
             ],
             columns=event.EVENT_WORKSHEET_COLUMN_NAMES[
                 event.READ_DATA_FIRST_COL_INDEX : event.READ_DATA_LAST_COL_INDEX + 1
