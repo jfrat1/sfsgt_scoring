@@ -1,3 +1,4 @@
+import math
 from unittest.mock import patch
 
 import pandas as pd
@@ -76,3 +77,27 @@ class TestPlayersWorksheetDataNameProcessing:
         assert player_data.player.gender == player.PlayerGender.MALE
         assert player_data.event_handicap_indices["Baylands"] == 15.2
         assert player_data.event_handicap_indices["Corica"] == 14.8
+
+    def test_read_players_inserts_nan_for_empty_handicap_values(self) -> None:
+        raw_data = pd.DataFrame(
+            {
+                "Golfer": ["John Doe", "Jane Smith"],
+                "Gender": ["Male", "Female"],
+                "Baylands": [15.2, ""],
+                "Corica": ["", 17.9],
+            }
+        )
+
+        players = PlayersWorksheetData(raw_data=raw_data, events=STUB_EVENTS).read_players()
+
+        assert len(players) == 2
+
+        john = players[0]
+        assert john.name() == "John Doe"
+        assert john.event_handicap_indices["Baylands"] == 15.2
+        assert math.isnan(john.event_handicap_indices["Corica"])
+
+        jane = players[1]
+        assert jane.name() == "Jane Smith"
+        assert math.isnan(jane.event_handicap_indices["Baylands"])
+        assert jane.event_handicap_indices["Corica"] == 17.9

@@ -84,13 +84,23 @@ class PlayersWorksheetData:
                         name=player_name,
                         gender=player_gender,
                     ),
-                    event_handicap_indices=read_data.SeasonViewEventHandicapIndices(
-                        {event: player_data[event.lower()] for event in self._events}
-                    ),
+                    event_handicap_indices=self.player_handicaps(player_data_raw=player_data),
                 )
             )
 
         return _players
+
+    def player_handicaps(self, player_data_raw: pd.Series) -> read_data.SeasonViewEventHandicapIndices:
+        events_lower = [event.lower() for event in self._events]
+
+        # Extract the event handicap columns from the raw player data
+        handicaps_raw = player_data_raw[events_lower]
+
+        # Convert the handicap data to numeric. Values that can't be converted to a numeric will be
+        # set to NaN.
+        handicaps = pd.to_numeric(handicaps_raw, errors="coerce")
+
+        return read_data.SeasonViewEventHandicapIndices({event: handicaps[event.lower()] for event in self._events})
 
     def are_finale_handicaps_available(self) -> bool:
         return self._are_finale_handicaps_available
