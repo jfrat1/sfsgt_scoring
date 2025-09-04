@@ -1,6 +1,11 @@
+import math
 from typing import Any, NamedTuple
 
 from season_common import player, scorecard
+
+
+class SeasonViewReadDataInitError(Exception):
+    pass
 
 
 class SeasonViewReadDataResourceNotFoundError(Exception):
@@ -9,6 +14,18 @@ class SeasonViewReadDataResourceNotFoundError(Exception):
 
 class SeasonViewEventHandicapIndices(dict[str, float]):
     """Collection of handicaps for a single player each event in a season."""
+
+    def __init__(self, handicaps: dict[str, float]) -> None:
+        """Custom initializer which will check that all values are float type and will raise an error otherwise.
+
+        This runtime check is redundant to the mypy type checks for this class, however, due to weaknesses in the
+        type information for data that's used to create this class, the runtime check is important.
+        """
+        for key, value in handicaps.items():
+            if not isinstance(value, float):
+                raise SeasonViewReadDataInitError(f"Found non-float handicap index for {key}")
+
+        super().__init__(handicaps)
 
     def __getitem__(self, event: str) -> float:
         if event in self.keys():
@@ -34,6 +51,10 @@ class SeasonViewReadPlayer(NamedTuple):
             raise SeasonViewReadDataResourceNotFoundError(
                 f"Event handicap for event {event_name} cannot be found for {self.player}."
             )
+
+    def is_handicap_available(self, event_name: str) -> bool:
+        event_index = self.event_handicap_index(event_name=event_name)
+        return isinstance(event_index, float) and not math.isnan(event_index)
 
 
 class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
@@ -70,6 +91,10 @@ class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
             raise SeasonViewReadDataResourceNotFoundError("Finale handicaps are not available.")
 
         return {player_name: player.event_handicap_index("Finale") for player_name, player in self.items()}
+
+    def is_handicap_available(self, player_name: str, event_name: str) -> bool:
+        player = self[player_name]
+        return player.is_handicap_available(event_name)
 
     def __getitem__(self, player_name: str) -> SeasonViewReadPlayer:
         if player_name in self.keys():
