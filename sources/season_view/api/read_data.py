@@ -156,6 +156,9 @@ class SeasonViewReadData(NamedTuple):
     def event_names(self) -> list[str]:
         return self.events.event_names
 
+    def is_handicap_available(self, player_name: str, event_name: str) -> bool:
+        return self.players.is_handicap_available(player_name=player_name, event_name=event_name)
+
     @property
     def are_finale_hcps_available(self) -> bool:
         return self.players.are_finale_hcps_available

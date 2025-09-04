@@ -4,6 +4,7 @@ import season_model
 import season_view
 
 from season_controller import delegate
+from season_controller.read_data_normalizer import SeasonReadDataNormalizer
 
 
 class SeasonController:
@@ -21,9 +22,10 @@ class SeasonController:
 
     def run_season(self) -> None:
         view_read_data = self.view.read_season()
+        read_data_normalized = SeasonReadDataNormalizer(read_data=view_read_data, log_normalizations=True).normalize()
 
         model_input = delegate.SeasonViewToModelDelegate(
-            view_read_data=view_read_data,
+            view_read_data=read_data_normalized,
             course_provider=self.course_provider,
             config=self.config,
         ).generate_model_input()
