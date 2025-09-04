@@ -37,16 +37,16 @@ events: {
     type: major,
     scorecard_sheet_start_cell: B8,
   },
-  # 4: {
-  #   event_name: Baylands,
-  #   sheet_name: Baylands,
-  #   course_name: baylands,
-  #   tees: {
-  #     mens_tee: white,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  4: {
+    event_name: Presidio,
+    sheet_name: Presidio,
+    course_name: presidio,
+    tees: {
+      mens_tee: white,
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
   # 5: {
   #   event_name: Callippe,
   #   sheet_name: Callippe,
