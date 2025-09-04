@@ -11,6 +11,10 @@ from season_model.api.result import (
 )
 
 
+class PlayerResultError(Exception):
+    pass
+
+
 class PlayerIndividualResultGenerator:
     _FRONT_9_HOLES = tuple(hole for hole in range(1, 10))
     _BACK_9_HOLES = tuple(hole for hole in range(10, 19))
@@ -32,8 +36,11 @@ class PlayerIndividualResultGenerator:
     def generate(self) -> SeasonModelEventPlayerIndividualResult:
         if not self._input.is_complete_score:
             return SeasonModelIncompleteEventPlayerInividualResult()
-
-        return self._complete_score_result()
+        try:
+            return self._complete_score_result()
+        except Exception as err:
+            player = self._input.player.name
+            raise PlayerResultError(f"Error while processing result for player {player}") from err
 
     def _complete_score_result(self) -> SeasonModelCompleteEventPlayerIndividualResult:
         adjusted_scorecard = self._adjust_scorecard_for_max_hole_strokes()
