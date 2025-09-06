@@ -1,3 +1,5 @@
+import logging
+
 import courses
 import season_config
 import season_model
@@ -5,6 +7,8 @@ import season_view
 
 from season_controller import delegate
 from season_controller.read_data_normalizer import SeasonReadDataNormalizer
+
+logger = logging.getLogger(__name__)
 
 
 class SeasonController:
@@ -21,8 +25,9 @@ class SeasonController:
         self.course_provider = course_provider
 
     def run_season(self) -> None:
+        logger.info("📚 Reading season data")
         view_read_data = self.view.read_season()
-        read_data_normalized = SeasonReadDataNormalizer(read_data=view_read_data, log_normalizations=True).normalize()
+        read_data_normalized = SeasonReadDataNormalizer(read_data=view_read_data).normalize()
 
         model_input = delegate.SeasonViewToModelDelegate(
             view_read_data=read_data_normalized,
@@ -30,6 +35,7 @@ class SeasonController:
             config=self.config,
         ).generate_model_input()
 
+        logger.info("🏌️‍♂️ Grinding")
         model_results = self.model.calculate_results(model_input)
 
         if view_read_data.are_finale_hcps_available and self.config.is_finale_enabled():
@@ -48,4 +54,5 @@ class SeasonController:
 
         view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
 
+        logger.info("✍️ Writing results")
         self.view.write_season(view_write_data)

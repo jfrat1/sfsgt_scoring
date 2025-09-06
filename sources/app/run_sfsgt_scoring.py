@@ -4,7 +4,10 @@ This should be used as the main entry point for executing season scoring
 in a production context.
 """
 
+import json
+import logging
 import pathlib
+from logging import config as logging_config
 
 import click
 import courses
@@ -15,9 +18,14 @@ import season_controller
 import season_model
 import season_view
 
+# Get a reference to the root logger
+logger = logging.getLogger()
+
 SERVICE_ACCOUNT_CREDENTIALS_FILE = (
     pathlib.Path(__file__).parent.parent.parent / "google_cloud_creds" / "sfsgt-credentials.json"
 )
+
+LOGGING_CONFIG_FILE = pathlib.Path(__file__).parent / "logging_config.json"
 
 
 class GoogleSheetViewConfigGenerator:
@@ -45,12 +53,20 @@ class GoogleSheetViewConfigGenerator:
         )
 
 
+def setup_logging() -> None:
+    config_raw = LOGGING_CONFIG_FILE.read_text()
+    config = json.loads(config_raw)
+
+    logging_config.dictConfig(config)
+
+
 def run_prod_mode_app(season_name: str) -> None:
+    logger.debug(f"Loading config for {season_name}")
     season_cfg = season_config.load_season_config(season_name)
 
     model = season_model.ConcreteSeasonModel()
 
-    print(SERVICE_ACCOUNT_CREDENTIALS_FILE)
+    logger.debug(f"Creating gspread client with service account credentials from {SERVICE_ACCOUNT_CREDENTIALS_FILE}")
     gspread_client = gspread.service_account(filename=SERVICE_ACCOUNT_CREDENTIALS_FILE)
     google_sheet_controller = google_sheet.ConcreteGoogleSheetController(
         gspread_client=gspread_client,
@@ -72,8 +88,7 @@ def run_prod_mode_app(season_name: str) -> None:
         course_provider=course_provider,
     )
 
-    print(f"Running season `{season_name}`.")
-
+    logger.debug("Running season controller")
     controller.run_season()
 
 
@@ -91,9 +106,13 @@ def run_dev_mode_app(season_name: str) -> None:
     help="Use development mode. Behavior may vary, see source code for details.",
 )
 def cli(season_name: str, is_dev_mode: bool) -> None:
+    setup_logging()
+
     if is_dev_mode:
+        logger.info(f"Running dev mode for season {season_name}")
         run_dev_mode_app(season_name=season_name)
     else:
+        logger.info(f"🏃🏽‍♀️ Running season {season_name}")
         run_prod_mode_app(season_name=season_name)
 
 

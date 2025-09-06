@@ -1,3 +1,5 @@
+import logging
+
 from season_common.scorecard import (
     IncompleteScorecard,
     Scorecard,
@@ -8,11 +10,12 @@ from season_view import (
     SeasonViewReadEvents,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class SeasonReadDataNormalizer:
-    def __init__(self, read_data: SeasonViewReadData, log_normalizations: bool = False) -> None:
+    def __init__(self, read_data: SeasonViewReadData) -> None:
         self._read_data = read_data
-        self._logs_enabled = log_normalizations
 
     def normalize(self) -> SeasonViewReadData:
         normalized_events: list[SeasonViewReadEvent] = []
@@ -36,14 +39,10 @@ class SeasonReadDataNormalizer:
         scorecard = event.player_scorecard(player=player)
         if scorecard.is_complete_score():
             if not self._read_data.is_handicap_available(player_name=player, event_name=event.event_name):
-                self._log(
-                    f"Found a complete scorecard for {player} in event {event.event_name}, but no handicap was "
+                logger.warning(
+                    f"⚠️ Found a complete scorecard for {player} in the {event.event_name} event, but no handicap was "
                     "found. This score will be skipped."
                 )
                 return IncompleteScorecard()
 
         return scorecard
-
-    def _log(self, message: str) -> None:
-        if self._logs_enabled:
-            print(message)
