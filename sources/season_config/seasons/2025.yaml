@@ -47,14 +47,14 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8,
   },
-  # 5: {
-  #   event_name: Callippe,
-  #   sheet_name: Callippe,
-  #   course_name: callippe preserve,
-  #   tees: {
-  #     mens_tee: white,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  5: {
+    event_name: Corica,
+    sheet_name: Corica,
+    course_name: corica park north,
+    tees: {
+      mens_tee: blue,
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
 }
