@@ -2,6 +2,8 @@ from typing import NamedTuple
 
 from courses import Course
 from season_common import player
+from season_config import EventTeeConfig
+from season_view import SeasonViewReadPlayers
 
 
 class FinaleDataError(Exception):
@@ -31,22 +33,25 @@ class FinaleData:
 class FinaleDataGenerator:
     def __init__(
         self,
+        players: SeasonViewReadPlayers,
         season_handicaps_by_player: dict[str, float],
         finale_ghin_handicaps_by_player: dict[str, float],
         course: Course,
+        tees: EventTeeConfig,
     ) -> None:
+        self._players = players
         self._season_handicaps_by_player = season_handicaps_by_player
         self._finale_ghin_handicaps_by_player = finale_ghin_handicaps_by_player
 
         self._verify_input_consistency()
-        self._player_names = self._season_handicaps_by_player.keys()
 
         self._course = course
+        self._tees = tees
 
     def generate(self) -> FinaleData:
         player_descriptors: list[FinalePlayerDescriptor] = []
 
-        for player_ in self._player_names:
+        for player_ in self._players.player_names:
             player_descriptors.append(
                 self._finale_player_descriptor(
                     name=player_,

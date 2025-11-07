@@ -4,7 +4,11 @@ players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
 finale_handicaps_sheet: {
   enabled: false,
-  sheet_name: Finale Handicaps
+  sheet_name: Finale Handicaps,
+  course_name: "",
+  tees: {
+    mens_tee: ""
+  }
 }
 events: {
   1: {

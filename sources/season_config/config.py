@@ -51,6 +51,8 @@ class FinaleSheetConfig(pydantic.BaseModel):
 
     enabled: bool
     sheet_name: str
+    course_name: str
+    tees: "EventTeeConfig"
 
 
 class SeasonConfig(pydantic.BaseModel):
@@ -84,6 +86,14 @@ class SeasonConfig(pydantic.BaseModel):
 
     def is_finale_enabled(self) -> bool:
         return self.finale_handicaps_sheet.enabled
+
+    @property
+    def finale_course(self) -> str:
+        return self.finale_handicaps_sheet.sheet_name
+
+    @property
+    def finale_tees(self) -> "EventTeeConfig":
+        return self.finale_handicaps_sheet.tees
 
     @pydantic.field_validator("events")
     @classmethod

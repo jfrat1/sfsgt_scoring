@@ -2,16 +2,26 @@ from typing import NamedTuple
 
 import season_model
 import season_view
+from season_finale import FinaleData
+from season_view.api.write_data import SeasonViewWriteFinaleData
 
 
 class SeasonModelToViewDelegate(NamedTuple):
     model_results: season_model.SeasonModelResults
+    finale_data: FinaleData | None
 
     def generate_view_write_data(self) -> season_view.SeasonViewWriteData:
         event_names = self.model_results.event_names()
+
+        finale_write_data = (
+            SeasonFinaleModelToViewDelegate.generate_view_write_data(self.finale_data)
+            if self.finale_data is not None
+            else None
+        )
         return season_view.SeasonViewWriteData(
             leaderboard=self._leaderboard(),
             events=[self._event(event_name) for event_name in event_names],
+            finale=finale_write_data,
         )
 
     def _leaderboard(self) -> season_view.SeasonViewWriteLeaderboard:
@@ -86,3 +96,9 @@ class SeasonModelToViewDelegate(NamedTuple):
                 event_points=event_player_result.event_points,
                 event_rank=event_player_result.event_rank.rank(),
             )
+
+
+class SeasonFinaleModelToViewDelegate:
+    @staticmethod
+    def generate_view_write_data(finale_data: FinaleData) -> SeasonViewWriteFinaleData:
+        pass

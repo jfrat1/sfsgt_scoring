@@ -2,8 +2,10 @@ import logging
 
 import courses
 import season_config
+import season_finale
 import season_model
 import season_view
+from courses.provider import CourseProviderError
 
 from season_controller import delegate
 from season_controller.read_data_normalizer import SeasonReadDataNormalizer
@@ -38,21 +40,43 @@ class SeasonController:
         logger.info("🏌️‍♂️ Grinding")
         model_results = self.model.calculate_results(model_input)
 
-        if view_read_data.are_finale_hcps_available and self.config.is_finale_enabled():
-            # finale_course = self.course_provider.get_course("Callippe Preserve")
-            # TODO: Several things
-            #  - Players need to be passed in. Including gender.
-            #  - A finale course needs to be configurable along with tees by gender.
-            #  - Create a finale worksheet controller, finale write data, etc.
-            #  - Consider making a delegate to convert data for the view
-            # finale_data = season_finale.FinaleDataGenerator(
-            #     season_handicaps_by_player=model_results.season_handicaps_by_player(),
-            #     finale_ghin_handicaps_by_player=view_read_data.finale_handicaps_by_player(),
-            #     course=finale_course,
-            # ).generate()
-            pass
+        finale_data = None
+        if self.config.is_finale_enabled():
+            if view_read_data.are_finale_hcps_available:
+                finale_course = self.get_finale_course()
+                if finale_course is not None:
+                    # TODO: Several things
+                    #  - Create a finale worksheet controller, finale write data, etc.
+                    finale_data = season_finale.FinaleDataGenerator(
+                        players=view_read_data.players,
+                        season_handicaps_by_player=model_results.season_handicaps_by_player(),
+                        finale_ghin_handicaps_by_player=view_read_data.finale_handicaps_by_player(),
+                        course=finale_course,
+                        tees=self.config.finale_tees,
+                    ).generate()
+                    pass
+            else:
+                logger.warning(
+                    "Calculations for the finale are configured to run, but finale handicaps are not available in the "
+                    "sheet. Calculations and sheet updates will be skipped."
+                )
 
-        view_write_data = delegate.SeasonModelToViewDelegate(model_results).generate_view_write_data()
+        view_write_data = delegate.SeasonModelToViewDelegate(model_results, finale_data).generate_view_write_data()
 
-        logger.info("✍️ Writing results")
+        logger.info("👩🏾‍💻 Writing results")
         self.view.write_season(view_write_data)
+
+    def get_finale_course(self) -> courses.Course | None:
+        finale_course_name = self.config.finale_course
+
+        try:
+            return self.course_provider.get_course(finale_course_name)
+        except CourseProviderError:
+            # Report the error to the user and then swallow it
+            logger.error(
+                f"The configured finale course named {finale_course_name} could not be found by the course "
+                "provider. Finale calculations will be skipped."
+            )
+            return
+
+    # def finale_data(self, view_read_data: )

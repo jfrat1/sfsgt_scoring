@@ -1,0 +1,16 @@
+name: cinnabar mountain/canyon
+# TODO: fill in these hole pars
+hole_pars: []
+mens_tees:
+  hawk: {rating: 72.7, slope: 140}
+  cinnabar: {rating: 70.4, slope: 136}
+  cinnabar/quicksilver combo: {rating: 68.3, slope: 133}
+  quicksilver: {rating: 67.4, slope: 127}
+  quicksilver/oak combo: {rating: 64.9, slope: 112}
+  oak: {rating: 71.0, slope: 133}
+womens_tees:
+  cinnabar: {rating: 76.0, slope: 145}
+  cinnabar/quicksilver combo: {rating: 74.0, slope: 141}
+  quicksilver: {rating: 72.6, slope: 135}
+  quicksilver/oak combo: {rating: 70.5, slope: 127}
+  oak: {rating: 69.4, slope: 123}

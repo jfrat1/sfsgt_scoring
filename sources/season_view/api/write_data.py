@@ -362,13 +362,26 @@ class SeasonViewWriteEvent(NamedTuple):
         raise KeyError(f"Player {player_name} cannot be found in write data for event {self.name}.")
 
 
+class SeasonViewWriteFinalePlayer(NamedTuple):
+    name: str
+    ghin_handicap_index: float
+    season_handicap_index: float
+    finale_handicap_index: float
+    finale_course_handicap: float
+
+
+class SeasonViewWriteFinaleData(NamedTuple):
+    players: list[SeasonViewWriteFinalePlayer]
+
+
 class SeasonViewWriteData(NamedTuple):
     leaderboard: SeasonViewWriteLeaderboard
     events: list[SeasonViewWriteEvent]
+    finale: SeasonViewWriteFinaleData | None
 
     def get_event(self, event_name: str) -> SeasonViewWriteEvent:
         for event in self.events:
             if event.name == event_name:
                 return event
 
-        raise KeyError(f"Event {event} cannot be found in season write data.")
+        raise KeyError(f"Event {event_name} cannot be found in season write data.")
