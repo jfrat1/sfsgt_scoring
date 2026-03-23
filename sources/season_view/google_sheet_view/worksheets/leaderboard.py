@@ -6,7 +6,10 @@ from google_sheet import utils as sheet_utils
 from season_view.api.write_data import SeasonViewWriteLeaderboard, SeasonViewWriteLeaderboardPlayer
 
 
-class LeaderboardColumns(enum.Enum):
+# Leaderboard columns that were used in 2025 and prior years.
+# We changed them in 2026. I'm leaving this here in case we need to test
+# something with the old sheet.
+class LeaderboardColumns2025(enum.Enum):
     SEASON_RANK = "B"
     PLAYER_NAME = "C"
     SEASON_POINTS = "D"
@@ -19,6 +22,27 @@ class LeaderboardColumns(enum.Enum):
     NET_STROKES_TOP_FIVES = "M"
     NET_STROKES_TOP_TENS = "N"
     FIRST_EVENT = "P"
+
+    def __str__(self) -> str:
+        return self.value
+
+    def __add__(self, other: str) -> str:
+        return str(self) + other
+
+
+class LeaderboardColumns(enum.Enum):
+    SEASON_RANK = "B"
+    PLAYER_NAME = "C"
+    SEASON_POINTS = "D"
+    EVENTS_PLAYED = "E"
+    FIRST_EVENT = "G"
+    EVENT_WINS = "M"
+    EVENT_TOP_FIVES = "N"
+    EVENT_TOP_TENS = "O"
+    NET_STROKES_WINS = "Q"
+    NET_STROKES_TOP_FIVES = "R"
+    NET_STROKES_TOP_TENS = "S"
+    NUM_BIRDIES = "U"
 
     def __str__(self) -> str:
         return self.value
@@ -50,9 +74,10 @@ class LeaderboardWorksheet:
 
         write_ranges = [
             self._standings_write_range(sorted_player_data),
+            self._event_points_write_range(sorted_player_data),
             self._event_finishes_write_range(sorted_player_data),
             self._net_strokes_finishes_write_range(sorted_player_data),
-            self._event_points_write_range(sorted_player_data),
+            self._notable_holes_write_range(sorted_player_data),
         ]
         self._worksheet_controller.write_multiple_ranges(write_ranges)
 
@@ -61,7 +86,7 @@ class LeaderboardWorksheet:
         sorted_player_data: list[SeasonViewWriteLeaderboardPlayer],
     ) -> google_sheet.RangeValues:
         range_start = LeaderboardColumns.SEASON_RANK + str(self._first_player_row())
-        range_end = LeaderboardColumns.NUM_BIRDIES + str(self._last_player_row())
+        range_end = LeaderboardColumns.EVENTS_PLAYED + str(self._last_player_row())
         range_name = f"{range_start}:{range_end}"
 
         values: list[list[google_sheet.CellValueType]] = []
@@ -70,7 +95,7 @@ class LeaderboardWorksheet:
                 player_data.season_rank,
                 player_data.name,
                 player_data.season_points,
-                player_data.birdies,
+                player_data.events_played,
             ]
             values.append(value)
 
@@ -79,17 +104,36 @@ class LeaderboardWorksheet:
             values=values,
         )
 
+    def _event_points_write_range(
+        self, sorted_player_data: list[SeasonViewWriteLeaderboardPlayer]
+    ) -> google_sheet.RangeValues:
+        start_col = str(LeaderboardColumns.FIRST_EVENT)
+        start_col_idx = sheet_utils.column_letter_to_idx(start_col)
+        end_col_idx = start_col_idx + len(self._ordered_event_names) - 1
+
+        range_start = LeaderboardColumns.FIRST_EVENT + str(self._first_player_row())
+        range_end = sheet_utils.column_idx_to_letter(end_col_idx) + str(self._last_player_row())
+        range_name = f"{range_start}:{range_end}"
+
+        values: list[list[google_sheet.CellValueType]] = []
+        for data in sorted_player_data:
+            value: list[google_sheet.CellValueType] = [
+                data.event_points[event_name] for event_name in self._ordered_event_names
+            ]
+            values.append(value)
+
+        return google_sheet.RangeValues(range=range_name, values=values)
+
     def _event_finishes_write_range(
         self, sorted_player_data: list[SeasonViewWriteLeaderboardPlayer]
     ) -> google_sheet.RangeValues:
-        range_start = LeaderboardColumns.EVENTS_PLAYED + str(self._first_player_row())
+        range_start = LeaderboardColumns.EVENT_WINS + str(self._first_player_row())
         range_end = LeaderboardColumns.EVENT_TOP_TENS + str(self._last_player_row())
         range_name = f"{range_start}:{range_end}"
 
         values: list[list[google_sheet.CellValueType]] = []
         for data in sorted_player_data:
             value: list[google_sheet.CellValueType] = [
-                data.events_played,
                 data.event_wins,
                 data.event_top_fives,
                 data.event_top_tens,
@@ -122,25 +166,24 @@ class LeaderboardWorksheet:
             values=values,
         )
 
-    def _event_points_write_range(
+    def _notable_holes_write_range(
         self, sorted_player_data: list[SeasonViewWriteLeaderboardPlayer]
     ) -> google_sheet.RangeValues:
-        start_col = str(LeaderboardColumns.FIRST_EVENT)
-        start_col_idx = sheet_utils.column_letter_to_idx(start_col)
-        end_col_idx = start_col_idx + len(self._ordered_event_names) - 1
-
-        range_start = LeaderboardColumns.FIRST_EVENT + str(self._first_player_row())
-        range_end = sheet_utils.column_idx_to_letter(end_col_idx) + str(self._last_player_row())
+        range_start = LeaderboardColumns.NUM_BIRDIES + str(self._first_player_row())
+        range_end = LeaderboardColumns.NUM_BIRDIES + str(self._last_player_row())
         range_name = f"{range_start}:{range_end}"
 
         values: list[list[google_sheet.CellValueType]] = []
         for data in sorted_player_data:
             value: list[google_sheet.CellValueType] = [
-                data.event_points[event_name] for event_name in self._ordered_event_names
+                data.birdies,
             ]
             values.append(value)
 
-        return google_sheet.RangeValues(range=range_name, values=values)
+        return google_sheet.RangeValues(
+            range=range_name,
+            values=values,
+        )
 
     def _first_player_row(self) -> int:
         return FIRST_PLAYER_ROW
