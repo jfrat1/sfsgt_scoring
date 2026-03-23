@@ -14,11 +14,20 @@ class GoogleSheetSeasonViewEventConfig(NamedTuple):
     scorecard_start_cell: str
 
 
+class GoogleSheetSeasonViewFinaleConfig(NamedTuple):
+    workshet_name: str
+    player_names_range: str
+    season_handicap_column: str
+    finale_handicap_index_column: str
+    course_handicap_column: str
+
+
 @dataclass(frozen=True)
 class GoogleSheetSeasonViewConfig:
     leaderboard_worksheet_name: str
     players_worksheet_name: str
     event_worksheet_configs: list[GoogleSheetSeasonViewEventConfig]
+    finale_config: GoogleSheetSeasonViewFinaleConfig | None
 
     def __post_init__(self):
         """Validate configuration after initialization."""
@@ -51,13 +60,16 @@ class GoogleSheetSeasonViewConfig:
             raise ValueError(f"Event worksheet name conflicts with reserved worksheet names: {conflicting_worksheets}")
 
     def worksheet_names(self) -> list[str]:
+        season_worksheet_names = [
+            self.players_worksheet_name,
+            self.leaderboard_worksheet_name,
+        ]
+        if self.finale_config is not None:
+            season_worksheet_names.append(self.finale_config.workshet_name)
+
         event_worksheet_names = {event.worksheet_name for event in self.event_worksheet_configs}
-        return list(
-            {
-                self.players_worksheet_name,
-                self.leaderboard_worksheet_name,
-            }.union(event_worksheet_names)
-        )
+
+        return list(set(season_worksheet_names).union(event_worksheet_names))
 
     @property
     def event_names(self) -> list[str]:
@@ -125,6 +137,16 @@ class GoogleSheetSeasonView(view.SeasonView):
             worksheet_controller=leaderboard_worksheet_controller,
             ordered_event_names=self._config.ordered_event_names,
         ).write()
+
+        if (self._config.finale_config is not None) and (data.finale is not None):
+            finale_worksheet_controller = self._sheet_controller.worksheet(self._config.finale_config.workshet_name)
+            worksheets.FinaleWorksheet(
+                worksheet_controller=finale_worksheet_controller,
+                player_names_range=self._config.finale_config.player_names_range,
+                course_handicap_column=self._config.finale_config.course_handicap_column,
+                finale_handicap_index_column=self._config.finale_config.finale_handicap_index_column,
+                season_handicap_column=self._config.finale_config.season_handicap_column,
+            ).write(data=data.finale)
 
     def _verify_available_worksheets(self) -> None:
         required_worksheets = set(self._config.worksheet_names())

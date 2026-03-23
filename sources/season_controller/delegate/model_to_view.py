@@ -3,7 +3,7 @@ from typing import NamedTuple
 import season_model
 import season_view
 from season_finale import FinaleData
-from season_view.api.write_data import SeasonViewWriteFinaleData
+from season_view.api.write_data import SeasonViewWriteFinaleData, SeasonViewWriteFinalePlayer
 
 
 class SeasonModelToViewDelegate(NamedTuple):
@@ -101,4 +101,17 @@ class SeasonModelToViewDelegate(NamedTuple):
 class SeasonFinaleModelToViewDelegate:
     @staticmethod
     def generate_view_write_data(finale_data: FinaleData) -> SeasonViewWriteFinaleData:
-        pass
+        view_players: list[SeasonViewWriteFinalePlayer] = []
+        for player in finale_data.players():
+            finale_player = finale_data.get_player(player)
+            view_players.append(
+                SeasonViewWriteFinalePlayer(
+                    name=player,
+                    ghin_handicap_index=finale_player.ghin_handicap_index,
+                    season_handicap_index=finale_player.season_handicap_index,
+                    finale_handicap_index=finale_player.finale_handicap_index,
+                    finale_course_handicap=finale_player.finale_course_handicap,
+                )
+            )
+
+        return SeasonViewWriteFinaleData(players=view_players)

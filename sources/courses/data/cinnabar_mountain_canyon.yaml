@@ -1,6 +1,6 @@
 name: cinnabar mountain/canyon
 # TODO: fill in these hole pars
-hole_pars: []
+hole_pars: [5, 3, 4, 4, 4, 3, 5, 4, 4, 4, 4, 4, 4, 3, 5, 4, 3, 5]
 mens_tees:
   hawk: {rating: 72.7, slope: 140}
   cinnabar: {rating: 70.4, slope: 136}

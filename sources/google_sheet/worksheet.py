@@ -10,7 +10,7 @@ from gspread import utils as gspread_utils
 
 from google_sheet import utils as sheet_utils
 
-CellValueType = str | float | int
+CellValueType = str | float | int | None
 CellValues = list[list[CellValueType]]
 
 

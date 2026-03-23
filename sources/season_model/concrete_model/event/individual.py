@@ -99,7 +99,7 @@ class PlayerIndividualResultGenerator:
     def _back_9_gross_strokes(self, adjusted_strokes: Scorecard):
         return sum(strokes for hole_num, strokes in adjusted_strokes.scores().items() if hole_num in self._BACK_9_HOLES)
 
-    def _double_par_plus_two(_, par: int) -> int:
+    def _double_par_plus_two(self, par: int) -> int:
         return 2 * par + 2
 
     def _note_below_par_holes(self, adjusted_strokes: Scorecard) -> None:

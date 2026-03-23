@@ -367,11 +367,20 @@ class SeasonViewWriteFinalePlayer(NamedTuple):
     ghin_handicap_index: float
     season_handicap_index: float
     finale_handicap_index: float
-    finale_course_handicap: float
+    finale_course_handicap: int | None
 
 
 class SeasonViewWriteFinaleData(NamedTuple):
     players: list[SeasonViewWriteFinalePlayer]
+
+    def get_player(self, name: str) -> SeasonViewWriteFinalePlayer:
+        candidates = [player for player in self.players if player.name == name]
+
+        if len(candidates) == 0:
+            raise IndexError(f"No player named {name} in SeasonViewWriteFinaleData")
+
+        ## TODO: Raise a different error if more than 1 player gets found
+        return candidates[0]
 
 
 class SeasonViewWriteData(NamedTuple):

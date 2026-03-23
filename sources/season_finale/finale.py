@@ -1,3 +1,4 @@
+import math
 from typing import NamedTuple
 
 from courses import Course
@@ -15,7 +16,7 @@ class FinalePlayerDescriptor(NamedTuple):
     ghin_handicap_index: float
     season_handicap_index: float
     finale_handicap_index: float
-    finale_course_handicap: int
+    finale_course_handicap: int | None
 
 
 class FinaleData:
@@ -28,6 +29,9 @@ class FinaleData:
                 return player_
 
         raise KeyError(f"Player {player_name} cannot be found in finale data.")
+
+    def players(self) -> list[str]:
+        return [player.name for player in self._players]
 
 
 class FinaleDataGenerator:
@@ -75,10 +79,10 @@ class FinaleDataGenerator:
         ghin_handicap: float,
         season_handicap: float,
     ) -> FinalePlayerDescriptor:
-        MIN_GHIN_RATIO = 0.95
-        MAX_GHIN_RATIO = 1.05
-        MAX_STROKE_OFFSET = 0.5
-        MAX_FINALE_HANDICAP = 19.0
+        MIN_GHIN_RATIO = 0.90
+        MAX_GHIN_RATIO = 1.10
+        MAX_STROKE_OFFSET = 0.75
+        MAX_FINALE_HANDICAP = 18.0
 
         min_finale_handicap = min(
             ghin_handicap * MIN_GHIN_RATIO,
@@ -101,10 +105,16 @@ class FinaleDataGenerator:
         # Round to 1 decimal place
         finale_handicap = round(capped_finale_handicap, 1)
 
-        # TODO: This tee needs to be passed in. Also needs to be gender-specific
-        course_handicap = self._course.course_handicap(
-            tee="white", player_hcp_index=finale_handicap, player_gender=player.PlayerGender.MALE
-        )
+        # TODO: The tee needs to be gender-specific and we should do something better to handle the nullability.
+        # Maybe it just shouldn't be nullable in the config.
+        tee = self._tees.mens_tee or ""
+
+        # Set the course handicap to None if the player's handicap index is NaN
+        course_handicap = None
+        if not math.isnan(finale_handicap):
+            course_handicap = self._course.course_handicap(
+                tee=tee, player_hcp_index=finale_handicap, player_gender=player.PlayerGender.MALE
+            )
 
         return FinalePlayerDescriptor(
             name=name,

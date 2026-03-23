@@ -37,10 +37,22 @@ class GoogleSheetViewConfigGenerator:
         event_configs = [
             self._generate_event_config(event_num, event_name) for event_num, event_name in ordered_event_names.items()
         ]
+
+        finale_view_config = None
+        if (finale_config := self._season_cfg.finale_handicaps_sheet) is not None and finale_config.enabled:
+            finale_view_config = season_view.GoogleSheetSeasonViewFinaleConfig(
+                workshet_name=finale_config.sheet_name,
+                player_names_range=finale_config.player_names_range,
+                season_handicap_column=finale_config.season_handicap_column,
+                finale_handicap_index_column=finale_config.finale_handicap_index_column,
+                course_handicap_column=finale_config.course_handicap_column,
+            )
+
         return season_view.GoogleSheetSeasonViewConfig(
             players_worksheet_name=self._season_cfg.players_sheet_name,
             leaderboard_worksheet_name=self._season_cfg.leaderboard_sheet_name,
             event_worksheet_configs=event_configs,
+            finale_config=finale_view_config,
         )
 
     def _generate_event_config(self, event_num: int, event_name: str) -> season_view.GoogleSheetSeasonViewEventConfig:

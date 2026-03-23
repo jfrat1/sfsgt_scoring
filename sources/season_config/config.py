@@ -50,7 +50,13 @@ class FinaleSheetConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(frozen=True, extra="forbid", strict=True)
 
     enabled: bool
+
     sheet_name: str
+    player_names_range: str
+    season_handicap_column: str
+    finale_handicap_index_column: str
+    course_handicap_column: str
+
     course_name: str
     tees: "EventTeeConfig"
 
@@ -88,8 +94,12 @@ class SeasonConfig(pydantic.BaseModel):
         return self.finale_handicaps_sheet.enabled
 
     @property
-    def finale_course(self) -> str:
+    def finale_sheet(self) -> str:
         return self.finale_handicaps_sheet.sheet_name
+
+    @property
+    def finale_course(self) -> str:
+        return self.finale_handicaps_sheet.course_name
 
     @property
     def finale_tees(self) -> "EventTeeConfig":

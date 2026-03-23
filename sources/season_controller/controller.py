@@ -45,8 +45,6 @@ class SeasonController:
             if view_read_data.are_finale_hcps_available:
                 finale_course = self.get_finale_course()
                 if finale_course is not None:
-                    # TODO: Several things
-                    #  - Create a finale worksheet controller, finale write data, etc.
                     finale_data = season_finale.FinaleDataGenerator(
                         players=view_read_data.players,
                         season_handicaps_by_player=model_results.season_handicaps_by_player(),
@@ -54,7 +52,7 @@ class SeasonController:
                         course=finale_course,
                         tees=self.config.finale_tees,
                     ).generate()
-                    pass
+
             else:
                 logger.warning(
                     "Calculations for the finale are configured to run, but finale handicaps are not available in the "
