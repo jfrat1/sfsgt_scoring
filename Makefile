@@ -32,3 +32,8 @@ run_2025:
 run_2026: export PYTHONPATH=${PWD}/sources
 run_2026:
 	pipenv run scoring_cli --season=2026
+
+
+run_2026_test: export PYTHONPATH=${PWD}/sources
+run_2026_test:
+	pipenv run scoring_cli --season=2026_test
