@@ -92,6 +92,9 @@ class SeasonViewReadPlayers(dict[str, SeasonViewReadPlayer]):
 
         return {player_name: player.event_handicap_index("Finale") for player_name, player in self.items()}
 
+    def is_player_available(self, player_name: str) -> bool:
+        return player_name in self.keys()
+
     def is_handicap_available(self, player_name: str, event_name: str) -> bool:
         player = self[player_name]
         return player.is_handicap_available(event_name)

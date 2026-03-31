@@ -112,6 +112,8 @@ class GoogleSheetSeasonView(view.SeasonView):
         self._event_worksheets = self._generate_event_worksheets(players_data.player_names)
         events_data = self._read_event_worksheets()
 
+        self._verify_season_read_data(players=players_data, events=events_data)
+
         return read_data.SeasonViewReadData(
             players=players_data,
             events=events_data,
@@ -187,3 +189,26 @@ class GoogleSheetSeasonView(view.SeasonView):
             events_data[event] = self._event_worksheets[event].read()
 
         return read_data.SeasonViewReadEvents(events_data)
+
+    def _verify_season_read_data(
+        self,
+        players: read_data.SeasonViewReadPlayers,
+        events: read_data.SeasonViewReadEvents,
+    ) -> None:
+        for event_name, event_data in events.items():
+            print(f"Processing event {event_name}")
+            for player_name in event_data.player_names:
+                print(f"  Processing player {player_name}")
+                if not players.is_player_available(player_name=player_name):
+                    raise ValueError(
+                        f"Player {player_name} in event {event_name} does not exist in the Handicaps sheet."
+                    )
+
+                has_complete_scorecard = event_data.player_scorecard(player=player_name).is_complete_score()
+                has_event_handicap = players.is_handicap_available(player_name=player_name, event_name=event_name)
+                if has_complete_scorecard and not has_event_handicap:
+                    raise ValueError(
+                        f"Player {player_name} has a complete scorecard for event {event_name}, but does not have a handicap defined for that event."
+                    )
+
+        pass
