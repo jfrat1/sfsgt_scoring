@@ -196,7 +196,6 @@ class GoogleSheetSeasonView(view.SeasonView):
         events: read_data.SeasonViewReadEvents,
     ) -> None:
         for event_name, event_data in events.items():
-            print(f"Processing event {event_name}")
             for player_name in event_data.player_names:
                 if not players.is_player_available(player_name=player_name):
                     raise ValueError(
