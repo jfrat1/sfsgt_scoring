@@ -22,6 +22,7 @@ events: {
     course_name: corica park north,
     tees: {
       mens_tee: blue,
+      womens_tee: gold,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
