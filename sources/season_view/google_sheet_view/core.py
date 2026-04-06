@@ -198,7 +198,6 @@ class GoogleSheetSeasonView(view.SeasonView):
         for event_name, event_data in events.items():
             print(f"Processing event {event_name}")
             for player_name in event_data.player_names:
-                print(f"  Processing player {player_name}")
                 if not players.is_player_available(player_name=player_name):
                     raise ValueError(
                         f"Player {player_name} in event {event_name} does not exist in the Handicaps sheet."
