@@ -112,7 +112,7 @@ class GoogleSheetSeasonView(view.SeasonView):
         self._event_worksheets = self._generate_event_worksheets(players_data.player_names)
         events_data = self._read_event_worksheets()
 
-        self._verify_season_read_data(players=players_data, events=events_data)
+        _verify_season_read_data(players=players_data, events=events_data)
 
         return read_data.SeasonViewReadData(
             players=players_data,
@@ -190,23 +190,50 @@ class GoogleSheetSeasonView(view.SeasonView):
 
         return read_data.SeasonViewReadEvents(events_data)
 
-    def _verify_season_read_data(
-        self,
-        players: read_data.SeasonViewReadPlayers,
-        events: read_data.SeasonViewReadEvents,
-    ) -> None:
-        for event_name, event_data in events.items():
-            for player_name in event_data.player_names:
-                if not players.is_player_available(player_name=player_name):
-                    raise ValueError(
-                        f"Player {player_name} in event {event_name} does not exist in the Handicaps sheet."
-                    )
 
-                has_complete_scorecard = event_data.player_scorecard(player=player_name).is_complete_score()
-                has_event_handicap = players.is_handicap_available(player_name=player_name, event_name=event_name)
-                if has_complete_scorecard and not has_event_handicap:
-                    raise ValueError(
-                        f"Player {player_name} has a complete scorecard for event {event_name}, but does not have a handicap defined for that event."
-                    )
+class PlayerEventError(NamedTuple):
+    player: str
+    event: str
 
-        pass
+
+class VerificationErrors(NamedTuple):
+    players_not_in_handicaps_sheet: list[PlayerEventError] = []
+    complete_scorecards_without_handicap: list[PlayerEventError] = []
+
+    def any_errors(self) -> bool:
+        return len(self.players_not_in_handicaps_sheet) > 0 or len(self.complete_scorecards_without_handicap) > 0
+
+
+def _verify_season_read_data(players: read_data.SeasonViewReadPlayers, events: read_data.SeasonViewReadEvents) -> None:
+    errors = VerificationErrors()
+
+    for event_name, event_data in events.items():
+        for player_name in event_data.player_names:
+            if not players.is_player_available(player_name=player_name):
+                # At the time of this writing, I think this is impossible to reach because the event reader
+                # filters the players in the event for those that are in the handicaps sheet.
+                errors.players_not_in_handicaps_sheet.append(PlayerEventError(player_name, event_name))
+
+            has_complete_scorecard = event_data.player_scorecard(player=player_name).is_complete_score()
+            has_event_handicap = players.is_handicap_available(player_name=player_name, event_name=event_name)
+            if has_complete_scorecard and not has_event_handicap:
+                errors.complete_scorecards_without_handicap.append(PlayerEventError(player_name, event_name))
+
+    if errors.any_errors():
+        message = verification_error_message(errors)
+        raise ValueError(message)
+
+
+def verification_error_message(errors: VerificationErrors) -> str:
+    message = ""
+    if len(errors.players_not_in_handicaps_sheet) > 0:
+        message += "\nFound players in some events that are not in the handicaps sheet.\n"
+        for error in errors.players_not_in_handicaps_sheet:
+            message += f"  {error.event}: {error.player}\n"
+
+    if len(errors.complete_scorecards_without_handicap) > 0:
+        message += "\nFound players with complete scorecards that are not in the handicaps sheet.\n"
+        for error in errors.complete_scorecards_without_handicap:
+            message += f"  {error.event}: {error.player}\n"
+
+    return message
