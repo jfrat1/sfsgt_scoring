@@ -1,4 +1,5 @@
 import enum
+import logging
 from typing import Any
 
 import google_sheet
@@ -7,7 +8,10 @@ from google_sheet import utils as sheet_utils
 from season_common import scorecard
 
 from season_view.api import read_data, write_data
+from season_view.api.write_data import SeasonViewWritePlayerIncompleteEvent
 from season_view.google_sheet_view.worksheets import name_utils
+
+logger = logging.getLogger(__name__)
 
 FTR_WRITER_FORMATTING_ENABLED = True
 
@@ -336,8 +340,23 @@ class EventWorksheetWriter:
 
         values: list[list[google_sheet.CellValueType]] = []
         for player_name in self._players_ordered_at_read_time:
-            player_data = data.get_player(player_name)
-            is_complete = player_data.is_complete_event
+            # TODO: This is gross. It's in the back nine function too. Lift it to the caller.
+            try:
+                player_data = data.get_player(player_name)
+                is_complete = player_data.is_complete_event
+            except KeyError:
+                logger.warning(
+                    f"Player {player_name} in event {data.name} doesn't exist in the players list (handicaps). They "
+                    "should be removed from the event."
+                )
+                player_data = SeasonViewWritePlayerIncompleteEvent(
+                    name=player_name,
+                    event_rank=max([d.event_rank for d in data.players]),
+                    event_points=0,
+                    gross_points=0,
+                    net_points=0,
+                )
+                is_complete = False
 
             value: list[google_sheet.CellValueType] = [
                 player_data.front_9_strokes if is_complete else "",
@@ -360,8 +379,20 @@ class EventWorksheetWriter:
 
         values: list[list[google_sheet.CellValueType]] = []
         for player_name in self._players_ordered_at_read_time:
-            player_data = data.get_player(player_name)
-            is_complete = player_data.is_complete_event
+            # TODO: This is gross. It's in the front nine function too. Lift it to the caller.
+            try:
+                player_data = data.get_player(player_name)
+                is_complete = player_data.is_complete_event
+            except KeyError:
+                # Intentionally not logging a warning here since it's done above
+                player_data = SeasonViewWritePlayerIncompleteEvent(
+                    name=player_name,
+                    event_rank=max([d.event_rank for d in data.players]),
+                    event_points=0,
+                    gross_points=0,
+                    net_points=0,
+                )
+                is_complete = False
 
             value: list[google_sheet.CellValueType] = [
                 player_data.back_9_strokes if is_complete else "",
