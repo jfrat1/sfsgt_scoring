@@ -51,6 +51,7 @@ STANDARD_EVENT_POINTS_BY_RANK = {
     48: 0.5,
     49: 0.5,
     50: 0.5,
+    51: 0.5,
 }
 
 MAJOR_EVENT_POINTS_BY_RANK = {rank: points * 2 for rank, points in STANDARD_EVENT_POINTS_BY_RANK.items()}
