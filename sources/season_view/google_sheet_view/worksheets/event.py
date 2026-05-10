@@ -162,7 +162,7 @@ class EventWorksheetReader:
                     scorecards[player] = scorecard.IncompleteScorecard()
                 else:
                     hole_scores = {
-                        int(hole_name.replace("HOLE_", "")): int(hole_score)
+                        int(hole_name.replace("HOLE_", "")): int(hole_score)  # type: ignore
                         for hole_name, hole_score in dict(player_data).items()
                     }
                     scorecards[player] = scorecard.scorecard_factory(hole_scores=hole_scores)
@@ -176,7 +176,7 @@ class EventWorksheetReader:
 
     def _set_players_ordered_at_read_time(self, read_index: pd.Index) -> None:
         # Drop empty player names. These indicate missing players in the worksheet.
-        read_index_no_empties = read_index.delete(read_index == "")
+        read_index_no_empties = read_index.delete(read_index == "")  # type: ignore
         read_players_ordered = list(read_index_no_empties)
 
         missing_players = set(self._players).difference(set(read_players_ordered))

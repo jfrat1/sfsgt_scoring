@@ -1,6 +1,6 @@
 import abc
 import enum
-from typing import Any, Literal, Union
+from typing import Any, Hashable, Literal, Union
 
 import pandas as pd
 from utils import class_utils
@@ -49,9 +49,10 @@ class RankManager:
             ascending=rank_order.is_ascending(),
             method=self._rank_tie_method.as_pandas_rank_method(),
         )
-        players_ranks_raw: dict[str, int] = ranks_ser.astype(int).to_dict()
+        players_ranks_raw: dict[Hashable, int] = ranks_ser.astype(int).to_dict()
+        players_ranks_processed: dict[str, int] = {str(k): v for k, v in players_ranks_raw.items()}
 
-        return {player: RankValue(rank) for player, rank in players_ranks_raw.items()}
+        return {player: RankValue(rank) for player, rank in players_ranks_processed.items()}
 
 
 class RankValueNotIntegerError(Exception):
