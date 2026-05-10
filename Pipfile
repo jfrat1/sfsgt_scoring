@@ -10,22 +10,22 @@ test = "pytest --cov --cov-report=html --cov-branch -s -k 'not integration' test
 scoring_cli = "python sources/app/run_sfsgt_scoring.py"
 
 [packages]
-click = "*"
-pandas = "*"
-pydantic = "*"
-pydantic-yaml = "*"
-gspread = "*"
-gspread-formatting = "*"
+click = "8.3.3"
+pandas = "3.0.2"
+pydantic = "2.13.4"
+pydantic-yaml = "1.6.0"
+gspread = "6.2.1"
+gspread-formatting = "1.2.1"
 
 [dev-packages]
 ipdb = "*"
-mypy = "*"
-pandas-stubs = "*"
-pdbpp = "*"
-pytest = "*"
-pytest-cov = "*"
-ruff = "*"
-types-openpyxl = "*"
+mypy = "2.0.0"
+pandas-stubs = "3.0.0.260204"
+pdbpp = "0.12.1"
+pytest = "9.0.3"
+pytest-cov = "7.1.0"
+ruff = "0.15.12"
+types-openpyxl = "3.1.5.20260508"
 
 [requires]
 python_version = "3.12"
