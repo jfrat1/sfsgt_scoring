@@ -96,7 +96,7 @@ class PlayerEventResult:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
+        attributes_string = ", ".join([f"{name.lstrip('_')}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -170,7 +170,7 @@ class IncompletePlayerEventInividualResult(IPlayerEventIndividualResult):
 
     def _disallowed_api_call_error(self) -> None:
         raise IncompletePlayerEventIndividualResultApiCallError(
-            "API calls cannot be made to an incomplete player event because it does not " "contain any data."
+            "API calls cannot be made to an incomplete player event because it does not contain any data."
         )
 
     @property
@@ -300,7 +300,7 @@ class PlayerEventIndividualResult(IPlayerEventIndividualResult):
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
+        attributes_string = ", ".join([f"{name.lstrip('_')}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -382,7 +382,7 @@ class NotableHoles:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
+        attributes_string = ", ".join([f"{name.lstrip('_')}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 

@@ -51,7 +51,7 @@ class HandicapIndexByEvent(dict[str, float]):
         expected_keys = sorted(events + [FINALE_COLUMN_NAME])
         if keys != expected_keys:
             raise PlayerHandicapsVerificationError(
-                "Player handicaps keys do not match events list." f"\nExpected: {expected_keys} \nFound: {keys}"
+                f"Player handicaps keys do not match events list.\nExpected: {expected_keys} \nFound: {keys}"
             )
 
 

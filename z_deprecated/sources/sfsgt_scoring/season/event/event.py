@@ -106,7 +106,7 @@ class CumulativeResults:
         if grouped_player_names != set(player_names):
             # This should not be reachable, but it's best to prove that theory.
             raise EventCumulativeResultsGroupingError(
-                "Player inividual results could not be grouped into complete and " "incomlpete results."
+                "Player inividual results could not be grouped into complete and incomlpete results."
             )
 
     def cumulative_results(self) -> dict[str, results.PlayerEventCumulativeResult]:

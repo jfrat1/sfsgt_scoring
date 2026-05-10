@@ -47,13 +47,13 @@ class CourseTeeData:
     def _verify_rating(self) -> None:
         if not (self.COURSE_RATING_MIN < self.rating < self.COURSE_RATING_MAX):
             raise CourseDataVerificationError(
-                "Course rating must be in the range: " f"[{self.COURSE_RATING_MIN}:{self.COURSE_RATING_MAX}]."
+                f"Course rating must be in the range: [{self.COURSE_RATING_MIN}:{self.COURSE_RATING_MAX}]."
             )
 
     def _verify_slope(self) -> None:
         if not (self.COURSE_SLOPE_MIN < self.slope < self.COURSE_SLOPE_MAX):
             raise CourseDataVerificationError(
-                "Course slope must be in the range: " f"[{self.COURSE_SLOPE_MIN}:{self.COURSE_SLOPE_MAX}]."
+                f"Course slope must be in the range: [{self.COURSE_SLOPE_MIN}:{self.COURSE_SLOPE_MAX}]."
             )
 
     def __eq__(self, other: Any) -> bool:

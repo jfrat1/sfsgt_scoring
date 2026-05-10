@@ -32,7 +32,7 @@ class ConcreteCourseProvider(CourseProvider):
 
         raise CourseProviderError(
             f"Could not find any courses with the name {course_name}. "
-            f"Available courses:\n{"\n".join(self._course_names())}"
+            f"Available courses:\n{'\n'.join(self._course_names())}"
         )
 
     def _course_names(self) -> list[str]:

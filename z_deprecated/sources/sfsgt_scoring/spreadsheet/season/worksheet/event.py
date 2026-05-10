@@ -263,7 +263,7 @@ class EventWorksheet:
         index = sorted(list(worksheet_data.index))
         if not index == expected_index:
             raise EventWorksheetVerificationError(
-                f"Worksheet data row labels do not match expectations." f"\nExpected: {expected_index}, \nFound:{index}"
+                f"Worksheet data row labels do not match expectations.\nExpected: {expected_index}, \nFound:{index}"
             )
 
     def _check_data_values(self, worksheet_data: pd.DataFrame) -> None:

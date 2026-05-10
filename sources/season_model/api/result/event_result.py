@@ -76,7 +76,7 @@ class SeasonModelIncompleteEventPlayerInividualResult(SeasonModelEventPlayerIndi
 
     def _disallowed_api_call_error(self) -> None:
         raise DisallowedApiCallError(
-            "API calls cannot be made to an incomplete player event because it does not " "contain any data."
+            "API calls cannot be made to an incomplete player event because it does not contain any data."
         )
 
     @property
@@ -209,7 +209,7 @@ class SeasonModelCompleteEventPlayerIndividualResult(SeasonModelEventPlayerIndiv
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
+        attributes_string = ", ".join([f"{name.lstrip('_')}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
@@ -314,7 +314,7 @@ class SeasonModelEventPlayerResult:
     def __repr__(self) -> str:
         attributes = self.__dict__
         # Attribute names need to have their prefix underscore removed.
-        attributes_string = ", ".join([f"{name.lstrip("_")}: {value}" for name, value in attributes.items()])
+        attributes_string = ", ".join([f"{name.lstrip('_')}: {value}" for name, value in attributes.items()])
         return f"{self.__class__.__name__}({attributes_string})"
 
 
