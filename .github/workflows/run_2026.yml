@@ -46,6 +46,15 @@ jobs:
         if: always()
         run: rm -f "google_cloud_creds/sfsgt-credentials.json"
 
+
+      - name: Upload debug log file
+        uses: actions/upload-artifact@v7
+        with:
+          name: Debug log
+          path: .ignore/app.log
+          if-no-files-found: warn
+          retention-days: 10
+
       # Optional future Slack/Discord notification
       - name: Notify on failure
         if: failure()
