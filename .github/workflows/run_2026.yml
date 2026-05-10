@@ -1,0 +1,51 @@
+name: Run 2026 Sheet Update
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  run-season-2026:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pipenv'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --deploy
+
+      - name: Create Google credentials file
+        run: |
+          echo '${{ secrets.SERVICE_ACCOUNT_CREDENTIALS_FILE }}' > "google_cloud_creds/sfsgt-credentials.json"
+
+      - name: Run golf automation
+        run: |
+          make run_2026
+
+      # Optional cleanup
+      - name: Remove credentials file
+        if: always()
+        run: rm -f "google_cloud_creds/sfsgt-credentials.json"
+
+      # Optional future Slack/Discord notification
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Workflow failed"
