@@ -35,11 +35,13 @@ jobs:
         run: |
           echo '${{ secrets.SERVICE_ACCOUNT_CREDENTIALS_FILE }}' > "google_cloud_creds/sfsgt-credentials.json"
 
-      - name: Run golf automation
+      - name: Make logs directory
+        run: mkdir ./.ignore
+
+      - name: Run season
         run: |
           make run_2026
 
-      # Optional cleanup
       - name: Remove credentials file
         if: always()
         run: rm -f "google_cloud_creds/sfsgt-credentials.json"
