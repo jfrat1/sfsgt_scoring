@@ -11,7 +11,6 @@ scoring_cli = "python sources/app/run_sfsgt_scoring.py"
 
 [packages]
 click = "*"
-numpy = "*"
 pandas = "*"
 pydantic = "*"
 pydantic-yaml = "*"

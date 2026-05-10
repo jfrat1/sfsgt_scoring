@@ -1,4 +1,5 @@
 import re
+from typing import Sequence
 
 import google_sheet
 from google_sheet import utils as sheet_utils
@@ -100,7 +101,7 @@ def replace_column_letter_unknown_old(a1_notation: str, new_column_letter: str):
     return modified_notation
 
 
-def list_to_column_range_value(list: list[google_sheet.CellValueType]) -> CellValues:
+def list_to_column_range_value(list: Sequence[google_sheet.CellValueType]) -> CellValues:
     output: CellValues = []
     for value in list:
         output.append([value])

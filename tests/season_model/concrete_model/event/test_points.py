@@ -132,10 +132,12 @@ def test_verify_player_ranks_raises_error_if_rank_not_in_allowed_range() -> None
 
     player_ranks = TEST_PLAYER_RANKS_NO_TIES.copy()
 
-    player_ranks["Player_1"] = 51
+    # A number that's above the highest points config rank we have
+    player_ranks["Player_1"] = 300
     with pytest.raises(points.InvalidPlayerRanksError):
         points_._verify_player_ranks(player_ranks)
 
+    # A number below the lowest points config rank we have
     player_ranks["Player_1"] = 0
     with pytest.raises(points.InvalidPlayerRanksError):
         points_._verify_player_ranks(player_ranks)

@@ -95,6 +95,7 @@ class TestGoogleSheetSeasonViewConfig:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=sample_event_configs,
+            finale_config=None,
         )
 
     def test_construction(self, sample_config):
@@ -159,6 +160,7 @@ class TestGoogleSheetSeasonViewConfig:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=event_configs,
+            finale_config=None,
         )
 
         ordered_names = config.ordered_event_names
@@ -186,6 +188,7 @@ class TestGoogleSheetSeasonViewConfig:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=[],
+            finale_config=None,
         )
 
         assert config.event_names == []
@@ -207,6 +210,7 @@ class TestGoogleSheetSeasonViewConfig:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=event_configs,
+            finale_config=None,
         )
 
         assert config.event_names == ["Solo Event"]
@@ -235,6 +239,7 @@ class TestGoogleSheetSeasonViewConfig:
                 leaderboard_worksheet_name="Leaderboard",
                 players_worksheet_name="Players",
                 event_worksheet_configs=event_configs,
+                finale_config=None,
             )
 
         error_msg = str(exc_info.value)
@@ -263,6 +268,7 @@ class TestGoogleSheetSeasonViewConfig:
                 leaderboard_worksheet_name="Leaderboard",
                 players_worksheet_name="Players",
                 event_worksheet_configs=event_configs,
+                finale_config=None,
             )
 
         error_msg = str(exc_info.value)
@@ -285,6 +291,7 @@ class TestGoogleSheetSeasonViewConfig:
                 leaderboard_worksheet_name="Leaderboard",
                 players_worksheet_name="Players",
                 event_worksheet_configs=event_configs,
+                finale_config=None,
             )
 
         error_msg = str(exc_info.value)
@@ -307,6 +314,7 @@ class TestGoogleSheetSeasonViewConfig:
                 leaderboard_worksheet_name="Leaderboard",
                 players_worksheet_name="Players",
                 event_worksheet_configs=event_configs,
+                finale_config=None,
             )
 
         error_msg = str(exc_info.value)
@@ -341,6 +349,7 @@ class TestGoogleSheetSeasonViewConfig:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=event_configs,
+            finale_config=None,
         )
 
         # Verify the configuration works correctly
@@ -371,6 +380,7 @@ class TestGoogleSheetSeasonViewConfig:
                 leaderboard_worksheet_name="Leaderboard",
                 players_worksheet_name="Players",
                 event_worksheet_configs=event_configs,
+                finale_config=None,
             )
 
         error_msg = str(exc_info.value)
@@ -404,6 +414,7 @@ class TestGoogleSheetSeasonView:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=sample_event_configs,
+            finale_config=None,
         )
 
     @pytest.fixture
@@ -713,6 +724,7 @@ class TestGoogleSheetSeasonView:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=event_configs,
+            finale_config=None,
         )
 
         # Test ordered event names
@@ -730,6 +742,7 @@ class TestGoogleSheetSeasonView:
             leaderboard_worksheet_name="Leaderboard",
             players_worksheet_name="Players",
             event_worksheet_configs=[],
+            finale_config=None,
         )
 
         mock_controller = mock.MagicMock(spec=GoogleSheetController)

@@ -104,6 +104,7 @@ def build_test_season_view_write_data() -> season_view.SeasonViewWriteData:
                 ],
             )
         ],
+        finale=None,
     )
 
 
@@ -112,6 +113,7 @@ def test_model_to_view_delegate() -> None:
 
     delegate = model_to_view.SeasonModelToViewDelegate(
         model_results=season_model_result,
+        finale_data=None,
     )
 
     view_write_data = delegate.generate_view_write_data()

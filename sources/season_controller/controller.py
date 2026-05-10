@@ -75,6 +75,4 @@ class SeasonController:
                 f"The configured finale course named {finale_course_name} could not be found by the course "
                 "provider. Finale calculations will be skipped."
             )
-            return
-
-    # def finale_data(self, view_read_data: )
+            return None

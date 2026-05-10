@@ -16,21 +16,21 @@ class TestLeaderboardColumns:
         assert str(LeaderboardColumns.SEASON_RANK) == "B"
         assert str(LeaderboardColumns.PLAYER_NAME) == "C"
         assert str(LeaderboardColumns.SEASON_POINTS) == "D"
-        assert str(LeaderboardColumns.NUM_BIRDIES) == "E"
-        assert str(LeaderboardColumns.EVENTS_PLAYED) == "G"
-        assert str(LeaderboardColumns.EVENT_WINS) == "H"
-        assert str(LeaderboardColumns.EVENT_TOP_FIVES) == "I"
-        assert str(LeaderboardColumns.EVENT_TOP_TENS) == "J"
-        assert str(LeaderboardColumns.NET_STROKES_WINS) == "L"
-        assert str(LeaderboardColumns.NET_STROKES_TOP_FIVES) == "M"
-        assert str(LeaderboardColumns.NET_STROKES_TOP_TENS) == "N"
-        assert str(LeaderboardColumns.FIRST_EVENT) == "P"
+        assert str(LeaderboardColumns.EVENTS_PLAYED) == "E"
+        assert str(LeaderboardColumns.FIRST_EVENT) == "G"
+        assert str(LeaderboardColumns.EVENT_WINS) == "M"
+        assert str(LeaderboardColumns.EVENT_TOP_FIVES) == "N"
+        assert str(LeaderboardColumns.EVENT_TOP_TENS) == "O"
+        assert str(LeaderboardColumns.NET_STROKES_WINS) == "Q"
+        assert str(LeaderboardColumns.NET_STROKES_TOP_FIVES) == "R"
+        assert str(LeaderboardColumns.NET_STROKES_TOP_TENS) == "S"
+        assert str(LeaderboardColumns.NUM_BIRDIES) == "U"
 
     def test_column_addition(self):
         """Test that columns can be concatenated with strings."""
         assert LeaderboardColumns.SEASON_RANK + "4" == "B4"
         assert LeaderboardColumns.PLAYER_NAME + "10" == "C10"
-        assert LeaderboardColumns.FIRST_EVENT + "1" == "P1"
+        assert LeaderboardColumns.FIRST_EVENT + "1" == "G1"
 
 
 class TestLeaderboardWorksheet:
@@ -169,9 +169,9 @@ class TestLeaderboardWorksheet:
 
         # Check data format and content
         expected_values = [
-            [1, "John Doe", 150.0, 8],  # Rank 1 player
-            [2, "Jane Smith", 135.0, 6],  # Rank 2 player
-            [3, "Bob Wilson", 120.0, 4],  # Rank 3 player
+            [1, "John Doe", 150.0, 3],  # Rank 1 player
+            [2, "Jane Smith", 135.0, 3],  # Rank 2 player
+            [3, "Bob Wilson", 120.0, 2],  # Rank 3 player
         ]
         assert range_values.values == expected_values
 
@@ -181,13 +181,13 @@ class TestLeaderboardWorksheet:
         range_values = leaderboard_worksheet._event_finishes_write_range(sorted_players)
 
         # Check range format: G4:J6 (events played through event top tens)
-        assert range_values.range == "G4:J6"
+        assert range_values.range == "M4:O6"
 
         # Check data format and content
         expected_values = [
-            [3, 1, 2, 3],  # John: events_played, event_wins, event_top_fives, event_top_tens
-            [3, 0, 1, 2],  # Jane
-            [2, 0, 0, 1],  # Bob
+            [1, 2, 3],  # John: events_played, event_wins, event_top_fives, event_top_tens
+            [0, 1, 2],  # Jane
+            [0, 0, 1],  # Bob
         ]
         assert range_values.values == expected_values
 
@@ -197,7 +197,7 @@ class TestLeaderboardWorksheet:
         range_values = leaderboard_worksheet._net_strokes_finishes_write_range(sorted_players)
 
         # Check range format: L4:N6 (net strokes wins through net strokes top tens)
-        assert range_values.range == "L4:N6"
+        assert range_values.range == "Q4:S6"
 
         # Check data format and content
         expected_values = [
@@ -213,7 +213,7 @@ class TestLeaderboardWorksheet:
         range_values = leaderboard_worksheet._event_points_write_range(sorted_players)
 
         # Check range format: P4:R6 (3 events: P, Q, R)
-        assert range_values.range == "P4:R6"
+        assert range_values.range == "G4:I6"
 
         # Check data format and content (ordered by event names)
         expected_values = [
@@ -261,8 +261,8 @@ class TestLeaderboardWorksheet:
         sorted_players = worksheet._data.players_rank_sorted()
         range_values = worksheet._event_points_write_range(sorted_players)
 
-        # Range should be P4:T4 (P=16, Q=17, R=18, S=19, T=20) with single player
-        assert range_values.range == "P4:T4"
+        # Range should be G4:K4 (G=16, H=17, I=18, J=19, K=20) with single player
+        assert range_values.range == "G4:K4"
 
     def test_event_points_write_range_with_single_event(self, sample_leaderboard_data, mock_worksheet):
         """Test event points range calculation with single event."""
@@ -277,7 +277,7 @@ class TestLeaderboardWorksheet:
         range_values = worksheet._event_points_write_range(sorted_players)
 
         # Range should be P4:P6 (single column)
-        assert range_values.range == "P4:P6"
+        assert range_values.range == "G4:G6"
 
         # Data should only have Event 1 points
         expected_values = [
@@ -298,7 +298,7 @@ class TestLeaderboardWorksheet:
         call_args = mock_worksheet.write_multiple_ranges.call_args[0][0]
 
         # Should have 4 range values (standings, event finishes, net strokes, event points)
-        assert len(call_args) == 4
+        assert len(call_args) == 5
 
         # Verify all ranges are RangeValues objects
         for range_value in call_args:
@@ -306,10 +306,11 @@ class TestLeaderboardWorksheet:
 
         # Verify expected ranges are present
         ranges = [rv.range for rv in call_args]
-        assert "B4:E6" in ranges  # standings
-        assert "G4:J6" in ranges  # event finishes
-        assert "L4:N6" in ranges  # net strokes
-        assert "P4:R6" in ranges  # event points
+        assert "B4:E6" in ranges
+        assert "G4:I6" in ranges
+        assert "M4:O6" in ranges
+        assert "Q4:S6" in ranges
+        assert "U4:U6" in ranges
 
     def test_write_method_with_empty_leaderboard(self, mock_worksheet, ordered_events):
         """Test write method with empty player list."""

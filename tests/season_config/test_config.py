@@ -12,8 +12,16 @@ sheet_id: test_sheet_id
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
 finale_handicaps_sheet: {
-  enabled: true,
-  sheet_name: Finale - Corica
+  enabled: false,
+  sheet_name: Finale,
+  player_names_range: Y4:Y26,
+  season_handicap_column: Z,
+  finale_handicap_index_column: AB,
+  course_handicap_column: AC,
+  course_name: cinnabar mountain/canyon,
+  tees: {
+    mens_tee: cinnabar
+  }
 }
 events: {
   1: {

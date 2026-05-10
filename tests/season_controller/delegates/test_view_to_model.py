@@ -5,6 +5,7 @@ import season_config
 import season_model
 import season_view
 from season_common import player, scorecard
+from season_config import config
 from season_controller.delegate import view_to_model
 
 from tests.testing_utils.score_generator import (
@@ -54,6 +55,15 @@ def build_test_season_config() -> season_config.SeasonConfig:
         finale_handicaps_sheet=season_config.FinaleSheetConfig(
             enabled=False,
             sheet_name="",
+            player_names_range="Y4:Y26",
+            season_handicap_column="Z",
+            finale_handicap_index_column="AB",
+            course_handicap_column="AC",
+            course_name="cinnabar mountain/canyon",
+            tees=config.EventTeeConfig(
+                mens_tee="cinnabar",
+                womens_tee=None,
+            ),
         ),
         events={
             1: season_config.EventConfig(
