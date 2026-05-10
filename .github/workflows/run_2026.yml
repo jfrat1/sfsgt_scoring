@@ -1,3 +1,5 @@
+# This workflow will setup a python environment and execute the
+# 2026 season runner.
 name: Run 2026 Sheet Update
 
 on:
