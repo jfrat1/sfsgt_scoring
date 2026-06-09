@@ -27,16 +27,17 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8,
   },
-  # 2: {
-  #   event_name: Callippe,
-  #   sheet_name: Callippe,
-  #   course_name: callippe preserve,
-  #   tees: {
-  #     mens_tee: white,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  2: {
+    event_name: Coyote Creek,
+    sheet_name: Coyote Creek,
+    course_name: coyote creek,
+    tees: {
+      mens_tee: white,
+      womens_tee: red,
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
   # 3: {
   #   event_name: Poppy Hills,
   #   sheet_name: Poppy Hills,

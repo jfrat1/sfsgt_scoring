@@ -1,0 +1,9 @@
+name: cotoye creek valley
+hole_pars: [4, 5, 4, 4, 4, 5, 3, 4, 4, 4, 3, 4, 3, 5, 4, 4, 3, 5]
+mens_tees:
+  blue: {rating: 74.0, slope: 132}
+  white: {rating: 71.6, slope: 128}
+  gold: {rating: 69.6, slope: 124}
+womens_tees:
+  gold: {rating: 75.8, slope: 124}
+  red: {rating: 70.0, slope: 118}
