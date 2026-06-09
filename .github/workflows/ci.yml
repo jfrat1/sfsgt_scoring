@@ -23,8 +23,7 @@ jobs:
     - name: Set up Python 3.12
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12.13'
-        cache: 'pipenv'
+        python-version-file: "pyproject.toml"
 
     - name: Setup uv
       id: setup-uv
