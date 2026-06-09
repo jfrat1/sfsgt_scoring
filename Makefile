@@ -2,38 +2,38 @@
 
 python: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 python:
-	pipenv run python
+	uv run python
 
 test: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 test:
-	pipenv run test
+	uv run pytest
 
 format: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 format:
-	pipenv run fix
+	uv run sh scripts/lint_fix.sh
 
 lint: export PYTHONPATH=${PWD}/sources:${PWD}/tests
 lint:
-	pipenv run check
+	uv run sh scripts/lint_check.sh
 
 run_2024: export PYTHONPATH=${PWD}/sources
 run_2024:
-	pipenv run scoring_cli --season=2024
+	uv run python sources/app/run_sfsgt_scoring.py --season=2024
 
 run_2024_test: export PYTHONPATH=${PWD}/sources
 run_2024_test:
-	pipenv run scoring_cli --season=2024_test
+	uv run python sources/app/run_sfsgt_scoring.py --season=2024_test
 
 run_2025: export PYTHONPATH=${PWD}/sources
 run_2025:
-	pipenv run scoring_cli --season=2025
+	uv run python sources/app/run_sfsgt_scoring.py --season=2025
 
 
 run_2026: export PYTHONPATH=${PWD}/sources
 run_2026:
-	pipenv run scoring_cli --season=2026
+	uv run python sources/app/run_sfsgt_scoring.py --season=2026
 
 
 run_2026_test: export PYTHONPATH=${PWD}/sources
 run_2026_test:
-	pipenv run scoring_cli --season=2026_test
+	uv run python sources/app/run_sfsgt_scoring.py --season=2026_test

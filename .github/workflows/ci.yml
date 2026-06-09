@@ -26,11 +26,15 @@ jobs:
         python-version: '3.12.13'
         cache: 'pipenv'
 
-    - name: Install pipenv
-      run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+    - name: Setup uv
+      id: setup-uv
+      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      with:
+        enable-cache: true
 
+    # Install dependencies cleanly using the cache
     - name: Install dependencies
-      run: pipenv install --dev
+      run: uv sync --frozen
 
     - name: Lint checks
       run: make lint

@@ -1,3 +1,43 @@
+[project]
+name = "sfsgt-scoring"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.12.13"
+dependencies = [
+    "click==8.3.3",
+    "gspread==6.2.1",
+    "gspread-formatting==1.2.1",
+    "pandas==3.0.2",
+    "pydantic==2.13.4",
+    "pydantic-yaml==1.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipdb",
+    "mypy==2.0.0",
+    "pandas-stubs==3.0.0.260204",
+    "pdbpp==0.12.1",
+    "pytest==9.0.3",
+    "pytest-cov==7.1.0",
+    "ruff==0.15.12",
+    "types-openpyxl==3.1.5.20260508",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--cov",
+    "--cov-report=html",
+    "--cov-branch",
+    "-s",
+    "-k", "not integration",
+]
+markers = [
+    "integration: Slower tests which may perform network calls or interact with the file system.",
+]
+testpaths = ["tests"]
+
 [tool.ruff]
 line-length = 120
 exclude = [

@@ -24,14 +24,17 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12.13'
-          cache: 'pipenv'
+          python-version-file: "pyproject.toml"
 
-      - name: Install pipenv
-        run: pip install pipenv
+      - name: Setup uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
 
+      # Install dependencies cleanly using the cache
       - name: Install dependencies
-        run: pipenv install --deploy
+        run: uv sync --frozen
 
       - name: Create Google credentials file
         run: |
