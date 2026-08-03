@@ -38,16 +38,17 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8,
   },
-  # 3: {
-  #   event_name: Poppy Hills,
-  #   sheet_name: Poppy Hills,
-  #   course_name: poppy hills,
-  #   tees: {
-  #     mens_tee: blue,
-  #   },
-  #   type: major,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  3: {
+    event_name: Chardonnay,
+    sheet_name: Chardonnay,
+    course_name: chardonnay,
+    tees: {
+      mens_tee: double magnum,
+      womens_tee: bottle,
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
   # 4: {
   #   event_name: Presidio,
   #   sheet_name: Presidio,
