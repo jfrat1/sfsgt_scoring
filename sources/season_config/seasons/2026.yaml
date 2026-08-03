@@ -41,9 +41,10 @@ events: {
   3: {
     event_name: Chardonnay,
     sheet_name: Chardonnay,
-    course_name: Chardonnay Golf Club,
+    course_name: chardonnay,
     tees: {
       mens_tee: double magnum,
+      womens_tee: bottle,
     },
     type: standard,
     scorecard_sheet_start_cell: B8,
