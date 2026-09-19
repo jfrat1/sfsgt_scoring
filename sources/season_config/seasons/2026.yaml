@@ -49,16 +49,17 @@ events: {
     type: standard,
     scorecard_sheet_start_cell: B8,
   },
-  # 4: {
-  #   event_name: Presidio,
-  #   sheet_name: Presidio,
-  #   course_name: presidio,
-  #   tees: {
-  #     mens_tee: white,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  4: {
+    event_name: Poppy Ridge,
+    sheet_name: Poppy Ridge,
+    course_name: poppy ridge,
+    tees: {
+      mens_tee: blue,
+      womens_tee: gold,
+    },
+    type: major,
+    scorecard_sheet_start_cell: B8,
+  },
   # 5: {
   #   event_name: Corica,
   #   sheet_name: Corica,

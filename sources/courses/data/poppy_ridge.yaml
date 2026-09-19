@@ -1,0 +1,35 @@
+{
+  # Poppy Ridge's 18 hole course after their remodel in 2025
+  name: "poppy ridge",
+  hole_pars: [
+    4,
+    3,
+    4,
+    4,
+    5,
+    4,
+    3,
+    5,
+    4,
+    3,
+    4,
+    3,
+    4,
+    5,
+    4,
+    3,
+    4,
+    5,
+  ],
+  mens_tees: {
+    orange: {rating: 72.7, slope: 129},
+    blue: {rating: 70.9, slope: 124},
+    white: {rating: 68.3, slope: 118},
+  },
+  womens_tees: {
+    white: {rating: 74.3, slope: 125},
+    gold: {rating: 68.9, slope: 115},
+    green: {rating: 64.5, slope: 99},
+  }
+}
+
