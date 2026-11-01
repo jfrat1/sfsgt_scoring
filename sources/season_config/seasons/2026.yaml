@@ -60,14 +60,15 @@ events: {
     type: major,
     scorecard_sheet_start_cell: B8,
   },
-  # 5: {
-  #   event_name: Corica,
-  #   sheet_name: Corica,
-  #   course_name: corica park north,
-  #   tees: {
-  #     mens_tee: blue,
-  #   },
-  #   type: standard,
-  #   scorecard_sheet_start_cell: B8,
-  # },
+  5: {
+    event_name: Presidio,
+    sheet_name: Presidio,
+    course_name: presidio,
+    tees: {
+      mens_tee: blue,
+      womens_tee: red
+    },
+    type: standard,
+    scorecard_sheet_start_cell: B8,
+  },
 }
