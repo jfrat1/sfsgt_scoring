@@ -65,7 +65,7 @@ events: {
     sheet_name: Presidio,
     course_name: presidio,
     tees: {
-      mens_tee: blue,
+      mens_tee: white,
       womens_tee: red
     },
     type: standard,
