@@ -1,6 +1,7 @@
 import math
 from typing import NamedTuple
 
+import numpy as np
 from courses import Course
 from season_common import player
 from season_config import EventTeeConfig
@@ -83,6 +84,10 @@ class FinaleDataGenerator:
         MAX_GHIN_RATIO = 1.10
         MAX_STROKE_OFFSET = 0.75
         MAX_FINALE_HANDICAP = 18.0
+
+        # Accomodate NaN values when a finale handicap isn't set for the player yet
+        if np.isnan(ghin_handicap):
+            ghin_handicap = 0.0
 
         min_finale_handicap = min(
             ghin_handicap * MIN_GHIN_RATIO,

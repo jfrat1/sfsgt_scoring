@@ -4,15 +4,15 @@ sheet_id: 1as7VOgmfJTY6iUYrbrod_QunsJ2H1H0988Gpk9fzHvI
 players_sheet_name: Handicaps
 leaderboard_sheet_name: Leaderboard
 finale_handicaps_sheet: {
-  enabled: false,
+  enabled: true,
   sheet_name: Finale,
-  player_names_range: Y4:Y26,
-  season_handicap_column: Z,
-  finale_handicap_index_column: AB,
-  course_handicap_column: AC,
-  course_name: cinnabar mountain/canyon,
+  player_names_range: R4:R27,
+  season_handicap_column: S,
+  finale_handicap_index_column: U,
+  course_handicap_column: V,
+  course_name: corica park south,
   tees: {
-    mens_tee: cinnabar
+    mens_tee: blue
   }
 }
 events: {
