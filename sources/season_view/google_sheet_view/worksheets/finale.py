@@ -18,6 +18,7 @@ class FinaleWorksheet:
         worksheet_controller: google_sheet.GoogleWorksheet,
         player_names_range: str,
         season_handicap_column: str,
+        current_handicap_column: str,
         finale_handicap_index_column: str,
         course_handicap_column: str,
     ) -> None:
@@ -25,6 +26,7 @@ class FinaleWorksheet:
 
         self.player_names_range = player_names_range
         self.season_handicap_column = season_handicap_column
+        self.current_handicap_column = current_handicap_column
         self.finale_handicap_index_column = finale_handicap_index_column
         self.course_handicap_column = course_handicap_column
 
@@ -40,12 +42,14 @@ class FinaleWorksheet:
         players = self._worksheet_controller.range_to_df(range=self.player_names_range)[0].to_list()
 
         season_handicaps: list[float] = []
+        current_handicaps: list[float] = []
         finale_handicap_indices: list[float] = []
         finale_course_handicaps: list[int | None] = []
 
         for player in players:
             player_data = data.get_player(player)
             season_handicaps.append(player_data.season_handicap_index)
+            current_handicaps.append(player_data.ghin_handicap_index)
             finale_handicap_indices.append(player_data.finale_handicap_index)
             finale_course_handicaps.append(player_data.finale_course_handicap)
 
@@ -54,6 +58,15 @@ class FinaleWorksheet:
         season_handicap_range = replace_column_letter_unknown_old(self.player_names_range, self.season_handicap_column)
         write_ranges.append(
             google_sheet.RangeValues(range=season_handicap_range, values=list_to_column_range_value(season_handicaps))
+        )
+
+        current_handicaps_range = replace_column_letter_unknown_old(
+            self.player_names_range, self.current_handicap_column
+        )
+        write_ranges.append(
+            google_sheet.RangeValues(
+                range=current_handicaps_range, values=list_to_column_range_value(current_handicaps)
+            )
         )
 
         finale_indexes_range = replace_column_letter_unknown_old(

@@ -18,6 +18,7 @@ class GoogleSheetSeasonViewFinaleConfig(NamedTuple):
     workshet_name: str
     player_names_range: str
     season_handicap_column: str
+    current_handicap_column: str
     finale_handicap_index_column: str
     course_handicap_column: str
 
@@ -145,6 +146,7 @@ class GoogleSheetSeasonView(view.SeasonView):
             worksheets.FinaleWorksheet(
                 worksheet_controller=finale_worksheet_controller,
                 player_names_range=self._config.finale_config.player_names_range,
+                current_handicap_column=self._config.finale_config.current_handicap_column,
                 course_handicap_column=self._config.finale_config.course_handicap_column,
                 finale_handicap_index_column=self._config.finale_config.finale_handicap_index_column,
                 season_handicap_column=self._config.finale_config.season_handicap_column,

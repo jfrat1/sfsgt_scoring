@@ -44,6 +44,7 @@ class GoogleSheetViewConfigGenerator:
                 workshet_name=finale_config.sheet_name,
                 player_names_range=finale_config.player_names_range,
                 season_handicap_column=finale_config.season_handicap_column,
+                current_handicap_column=finale_config.current_handicap_column,
                 finale_handicap_index_column=finale_config.finale_handicap_index_column,
                 course_handicap_column=finale_config.course_handicap_column,
             )

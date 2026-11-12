@@ -54,6 +54,7 @@ class FinaleSheetConfig(pydantic.BaseModel):
     sheet_name: str
     player_names_range: str
     season_handicap_column: str
+    current_handicap_column: str
     finale_handicap_index_column: str
     course_handicap_column: str
 

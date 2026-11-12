@@ -6,10 +6,11 @@ leaderboard_sheet_name: Leaderboard
 finale_handicaps_sheet: {
   enabled: true,
   sheet_name: Finale,
-  player_names_range: R4:R27,
-  season_handicap_column: S,
-  finale_handicap_index_column: U,
-  course_handicap_column: V,
+  player_names_range: Q4:Q27,
+  season_handicap_column: R,
+  current_handicap_column: S,
+  finale_handicap_index_column: T,
+  course_handicap_column: U,
   course_name: corica park south,
   tees: {
     mens_tee: blue
