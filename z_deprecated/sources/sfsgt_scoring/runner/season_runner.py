@@ -80,7 +80,7 @@ class FinaleHandicapCalculator:
         MIN_GHIN_RATIO = 0.95
         MAX_GHIN_RATIO = 1.05
         MAX_STROKE_OFFSET = 0.5
-        MAX_FINALE_HANDICAP = 19.0
+        MAX_FINALE_HANDICAP = 40.0
 
         min_finale_handicap = min(
             ghin_handicap * MIN_GHIN_RATIO,

@@ -1,0 +1,8 @@
+name: corica park south
+hole_pars: [5, 4, 4, 4, 3, 5, 3, 4, 4, 4, 3, 4, 4, 4, 5, 3, 5, 4]
+mens_tees:
+  blue: {rating: 70.7, slope: 129}
+womens_tees:
+  white: {rating: 73.7, slope: 129}
+  red: {rating: 70.8, slope: 122}
+  yellow: {rating: 67.9, slope: 119}

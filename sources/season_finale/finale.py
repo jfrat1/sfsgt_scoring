@@ -83,7 +83,7 @@ class FinaleDataGenerator:
         MIN_GHIN_RATIO = 0.90
         MAX_GHIN_RATIO = 1.10
         MAX_STROKE_OFFSET = 0.75
-        MAX_FINALE_HANDICAP = 18.0
+        MAX_FINALE_HANDICAP = 40.0
 
         # Accomodate NaN values when a finale handicap isn't set for the player yet
         if np.isnan(ghin_handicap):

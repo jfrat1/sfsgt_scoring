@@ -13,7 +13,8 @@ finale_handicaps_sheet: {
   course_handicap_column: U,
   course_name: corica park south,
   tees: {
-    mens_tee: blue
+    mens_tee: blue,
+    womens_tee: red
   }
 }
 events: {
